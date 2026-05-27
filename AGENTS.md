@@ -30,8 +30,6 @@
 - Path alias: `@/*` → `./src/*`; always use it instead of relative `../` paths.
 - API route handlers export uppercase HTTP methods (`GET`, `POST`); validate input with Zod.
 - React hooks extract to `src/components/hooks/`.
-- Astro components for static content/layout; React components only when interactivity is needed.
-- TypeScript strict mode via `astro/tsconfigs/strict`; unused vars prefixed with `_`.
 
 ## CI Gate
 
@@ -43,3 +41,7 @@ GitHub Actions on push/PR to `master`: `npm run lint` → `npm run build`. Both 
 - Supabase local: `npx supabase start` (requires Docker).
 - Deploy: `npx wrangler deploy` (Cloudflare account + auth required).
 - Node.js v22.14.0 (see .nvmrc)
+
+## Lessons learned
+
+See: `context/foundation/lessons.md`
