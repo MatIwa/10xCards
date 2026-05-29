@@ -1,5 +1,5 @@
 {
-  "name": "10x-astro-starter",
+  "name": "10xcards",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -7,6 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "deploy": "npm run build && wrangler deploy",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write ."
