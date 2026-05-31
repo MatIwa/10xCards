@@ -6,7 +6,10 @@
     "source.fixAll.eslint": "explicit"
   },
   "chat.tools.terminal.autoApprove": {
-    "npx wrangler": true
+    "npx wrangler": true,
+    "npx astro": true,
+    "npx eslint": true,
+    "git add": true
   },
   "chat.mcp.discovery.enabled": {
     "claude-desktop": true,
