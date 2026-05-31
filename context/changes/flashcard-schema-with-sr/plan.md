@@ -190,9 +190,9 @@ Create `src/types.ts` with the Flashcard entity type and a source enum, matching
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npx astro check`
-- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.1 Type checking passes: `npx astro check` — d8d1a54
+- [x] 2.2 Linting passes: `npm run lint` — d8d1a54
 
 #### Manual
 
-- [x] 2.3 Types importable from `@/types` in any src/ file
+- [x] 2.3 Types importable from `@/types` in any src/ file — d8d1a54
