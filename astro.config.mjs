@@ -13,11 +13,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  adapter: cloudflare({
-    platformProxy: {
-      enabled: true,
-    },
-  }),
+  adapter: cloudflare(),
   env: {
     schema: {
       SUPABASE_URL: envField.string({ context: "server", access: "secret", optional: true }),
