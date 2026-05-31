@@ -309,15 +309,15 @@ Replace the dashboard stub with a React island that displays the user's flashcar
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npx astro check`
-- [x] 3.2 Linting passes: `npm run lint`
-- [x] 3.3 Build passes: `npm run build`
+- [x] 3.1 Type checking passes: `npx astro check` — de19ded
+- [x] 3.2 Linting passes: `npm run lint` — de19ded
+- [x] 3.3 Build passes: `npm run build` — de19ded
 
 #### Manual
 
-- [x] 3.4 Dashboard shows empty state for new user
-- [x] 3.5 Create card flow works end-to-end
-- [x] 3.6 Edit card flow works end-to-end
-- [x] 3.7 Delete with inline confirmation works
-- [x] 3.8 Validation errors display correctly
-- [x] 3.9 Responsive layout works on mobile viewport
+- [x] 3.4 Dashboard shows empty state for new user — de19ded
+- [x] 3.5 Create card flow works end-to-end — de19ded
+- [x] 3.6 Edit card flow works end-to-end — de19ded
+- [x] 3.7 Delete with inline confirmation works — de19ded
+- [x] 3.8 Validation errors display correctly — de19ded
+- [x] 3.9 Responsive layout works on mobile viewport — de19ded
