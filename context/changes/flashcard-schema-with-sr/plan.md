@@ -177,22 +177,22 @@ Create `src/types.ts` with the Flashcard entity type and a source enum, matching
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly: `npx supabase db reset`
-- [x] 1.2 No SQL syntax errors in the migration file
+- [x] 1.1 Migration applies cleanly: `npx supabase db reset` — 5f9d6b2
+- [x] 1.2 No SQL syntax errors in the migration file — 5f9d6b2
 
 #### Manual
 
-- [x] 1.3 Table visible in Supabase Studio with correct columns and types
-- [x] 1.4 RLS policies listed and functioning correctly
-- [x] 1.5 Cross-user access rejected by RLS
+- [x] 1.3 Table visible in Supabase Studio with correct columns and types — 5f9d6b2
+- [x] 1.4 RLS policies listed and functioning correctly — 5f9d6b2
+- [x] 1.5 Cross-user access rejected by RLS — 5f9d6b2
 
 ### Phase 2: TypeScript Types
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npx astro check`
-- [ ] 2.2 Linting passes: `npm run lint`
+- [x] 2.1 Type checking passes: `npx astro check`
+- [x] 2.2 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.3 Types importable from `@/types` in any src/ file
+- [x] 2.3 Types importable from `@/types` in any src/ file
