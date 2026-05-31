@@ -177,14 +177,14 @@ Create `src/types.ts` with the Flashcard entity type and a source enum, matching
 
 #### Automated
 
-- [ ] 1.1 Migration applies cleanly: `npx supabase db reset`
-- [ ] 1.2 No SQL syntax errors in the migration file
+- [x] 1.1 Migration applies cleanly: `npx supabase db reset`
+- [x] 1.2 No SQL syntax errors in the migration file
 
 #### Manual
 
-- [ ] 1.3 Table visible in Supabase Studio with correct columns and types
-- [ ] 1.4 RLS policies listed and functioning correctly
-- [ ] 1.5 Cross-user access rejected by RLS
+- [x] 1.3 Table visible in Supabase Studio with correct columns and types
+- [x] 1.4 RLS policies listed and functioning correctly
+- [x] 1.5 Cross-user access rejected by RLS
 
 ### Phase 2: TypeScript Types
 
