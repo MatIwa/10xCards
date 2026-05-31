@@ -61,3 +61,6 @@ create trigger trg_flashcards_set_updated_at
 before update on public.flashcards
 for each row
 execute function public.set_flashcards_updated_at();
+
+-- Reload PostgREST schema cache so the new table is immediately available via the REST API
+notify pgrst, 'reload schema';
