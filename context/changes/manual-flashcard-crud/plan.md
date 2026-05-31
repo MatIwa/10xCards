@@ -278,32 +278,32 @@ Replace the dashboard stub with a React island that displays the user's flashcar
 
 #### Automated
 
-- [x] 1.1 Zod installed: `npm ls zod` shows version
-- [x] 1.2 Type checking passes: `npx astro check`
-- [x] 1.3 Linting passes: `npm run lint`
-- [x] 1.4 Build passes: `npm run build`
+- [x] 1.1 Zod installed: `npm ls zod` shows version — d471b67
+- [x] 1.2 Type checking passes: `npx astro check` — d471b67
+- [x] 1.3 Linting passes: `npm run lint` — d471b67
+- [x] 1.4 Build passes: `npm run build` — d471b67
 
 #### Manual
 
-- [x] 1.5 Schemas reject invalid input when tested manually
+- [x] 1.5 Schemas reject invalid input when tested manually — d471b67
 
 ### Phase 2: API Routes
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npx astro check`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Build passes: `npm run build`
+- [x] 2.1 Type checking passes: `npx astro check`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 GET /api/flashcards returns 200 with empty array
-- [ ] 2.5 POST /api/flashcards creates card and returns 201
-- [ ] 2.6 POST with invalid body returns 400 with field errors
-- [ ] 2.7 PUT /api/flashcards/{id} updates card
-- [ ] 2.8 DELETE /api/flashcards/{id} returns 204
-- [ ] 2.9 Unauthenticated request returns 401
-- [ ] 2.10 Cross-user request returns 404 (RLS)
+- [x] 2.4 GET /api/flashcards returns 200 with empty array
+- [x] 2.5 POST /api/flashcards creates card and returns 201
+- [x] 2.6 POST with invalid body returns 400 with field errors
+- [x] 2.7 PUT /api/flashcards/{id} updates card
+- [x] 2.8 DELETE /api/flashcards/{id} returns 204
+- [x] 2.9 Unauthenticated request returns 401
+- [x] 2.10 Cross-user request returns 404 (RLS)
 
 ### Phase 3: Dashboard UI
 
