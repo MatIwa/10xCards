@@ -47,9 +47,16 @@ export async function createFlashcard(
 export async function updateFlashcard(
   supabase: SupabaseClient,
   id: string,
+  userId: string,
   input: UpdateFlashcardInput,
 ): Promise<DataResult<Flashcard>> {
-  const response = await supabase.from("flashcards").update(input).eq("id", id).select("*").maybeSingle();
+  const response = await supabase
+    .from("flashcards")
+    .update(input)
+    .eq("id", id)
+    .eq("user_id", userId)
+    .select("*")
+    .maybeSingle();
 
   if (response.error) {
     return { data: null, error: response.error.message };
@@ -62,8 +69,8 @@ export async function updateFlashcard(
   return { data: response.data as Flashcard, error: null };
 }
 
-export async function deleteFlashcard(supabase: SupabaseClient, id: string): Promise<ErrorResult> {
-  const response = await supabase.from("flashcards").delete({ count: "exact" }).eq("id", id);
+export async function deleteFlashcard(supabase: SupabaseClient, id: string, userId: string): Promise<ErrorResult> {
+  const response = await supabase.from("flashcards").delete({ count: "exact" }).eq("id", id).eq("user_id", userId);
 
   if (response.error) {
     return { error: response.error.message };

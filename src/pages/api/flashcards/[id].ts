@@ -48,7 +48,7 @@ export const PUT: APIRoute = async (context) => {
     return badRequest("Validation failed", parsedBody.error.issues);
   }
 
-  const { data, error } = await updateFlashcard(supabase, id, parsedBody.data);
+  const { data, error } = await updateFlashcard(supabase, id, context.locals.user.id, parsedBody.data);
   if (error === "Flashcard not found") {
     return Response.json({ error }, { status: 404 });
   }
@@ -78,7 +78,7 @@ export const DELETE: APIRoute = async (context) => {
     return badRequest("Validation failed");
   }
 
-  const { error } = await deleteFlashcard(supabase, id);
+  const { error } = await deleteFlashcard(supabase, id, context.locals.user.id);
   if (error === "Flashcard not found") {
     return Response.json({ error }, { status: 404 });
   }
