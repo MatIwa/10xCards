@@ -9,7 +9,8 @@
     "npx wrangler": true,
     "npx astro": true,
     "npx eslint": true,
-    "git add": true
+    "git add": true,
+    "npx prettier": true
   },
   "chat.mcp.discovery.enabled": {
     "claude-desktop": true,

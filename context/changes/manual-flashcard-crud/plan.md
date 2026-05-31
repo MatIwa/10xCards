@@ -291,33 +291,33 @@ Replace the dashboard stub with a React island that displays the user's flashcar
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npx astro check`
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 Build passes: `npm run build`
+- [x] 2.1 Type checking passes: `npx astro check` — 6ec94ed
+- [x] 2.2 Linting passes: `npm run lint` — 6ec94ed
+- [x] 2.3 Build passes: `npm run build` — 6ec94ed
 
 #### Manual
 
-- [x] 2.4 GET /api/flashcards returns 200 with empty array
-- [x] 2.5 POST /api/flashcards creates card and returns 201
-- [x] 2.6 POST with invalid body returns 400 with field errors
-- [x] 2.7 PUT /api/flashcards/{id} updates card
-- [x] 2.8 DELETE /api/flashcards/{id} returns 204
-- [x] 2.9 Unauthenticated request returns 401
-- [x] 2.10 Cross-user request returns 404 (RLS)
+- [x] 2.4 GET /api/flashcards returns 200 with empty array — 6ec94ed
+- [x] 2.5 POST /api/flashcards creates card and returns 201 — 6ec94ed
+- [x] 2.6 POST with invalid body returns 400 with field errors — 6ec94ed
+- [x] 2.7 PUT /api/flashcards/{id} updates card — 6ec94ed
+- [x] 2.8 DELETE /api/flashcards/{id} returns 204 — 6ec94ed
+- [x] 2.9 Unauthenticated request returns 401 — 6ec94ed
+- [x] 2.10 Cross-user request returns 404 (RLS) — 6ec94ed
 
 ### Phase 3: Dashboard UI
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npx astro check`
-- [ ] 3.2 Linting passes: `npm run lint`
-- [ ] 3.3 Build passes: `npm run build`
+- [x] 3.1 Type checking passes: `npx astro check`
+- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.3 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 3.4 Dashboard shows empty state for new user
-- [ ] 3.5 Create card flow works end-to-end
-- [ ] 3.6 Edit card flow works end-to-end
-- [ ] 3.7 Delete with inline confirmation works
-- [ ] 3.8 Validation errors display correctly
-- [ ] 3.9 Responsive layout works on mobile viewport
+- [x] 3.4 Dashboard shows empty state for new user
+- [x] 3.5 Create card flow works end-to-end
+- [x] 3.6 Edit card flow works end-to-end
+- [x] 3.7 Delete with inline confirmation works
+- [x] 3.8 Validation errors display correctly
+- [x] 3.9 Responsive layout works on mobile viewport
