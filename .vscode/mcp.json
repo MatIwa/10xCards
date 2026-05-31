@@ -1,29 +1,9 @@
 {
   "servers": {
-    // Broad Cloudflare account access through the token-efficient code mode server.
-    // VS Code should open the OAuth flow on first connect.
-    "cloudflare-api": {
-      "type": "http",
-      "url": "https://mcp.cloudflare.com/mcp"
-    },
-    // Up-to-date Cloudflare product and API documentation.
-    "cloudflare-docs": {
-      "type": "http",
-      "url": "https://docs.mcp.cloudflare.com/mcp"
-    },
-    // Workers-specific bindings, useful for KV, R2, D1, AI, and related primitives.
-    "cloudflare-bindings": {
-      "type": "http",
-      "url": "https://bindings.mcp.cloudflare.com/mcp"
-    },
-    // Runtime logs and analytics for the deployed Worker.
-    "cloudflare-observability": {
-      "type": "http",
-      "url": "https://observability.mcp.cloudflare.com/mcp"
-    },
-    "fetch": {
-      "command": "uvx",
-      "args": ["mcp-server-fetch"]
+    "linear": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"]
     }
   }
 }
