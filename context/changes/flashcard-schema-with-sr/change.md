@@ -1,7 +1,7 @@
 ---
 change_id: flashcard-schema-with-sr
 title: Flashcard table with SR scheduling metadata and RLS policies
-status: implementing
+status: implemented
 created: 2026-05-31
 updated: 2026-05-31
 archived_at: null
