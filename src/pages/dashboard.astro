@@ -16,14 +16,22 @@ const { user } = Astro.locals;
           Welcome, <span class="font-semibold text-white">{user?.email}</span>
         </p>
       </div>
-      <form method="POST" action="/api/auth/signout">
-        <button
-          type="submit"
-          class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm transition-colors hover:bg-white/20"
+      <div class="flex flex-wrap items-center gap-2">
+        <a
+          href="/dashboard/review"
+          class="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-900 transition-colors hover:bg-white/90"
         >
-          Sign out
-        </button>
-      </form>
+          Review
+        </a>
+        <form method="POST" action="/api/auth/signout">
+          <button
+            type="submit"
+            class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm transition-colors hover:bg-white/20"
+          >
+            Sign out
+          </button>
+        </form>
+      </div>
     </div>
 
     <FlashcardList client:load />
