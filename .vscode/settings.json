@@ -10,7 +10,11 @@
     "npx astro": true,
     "npx eslint": true,
     "git add": true,
-    "npx prettier": true
+    "npx prettier": true,
+    "npx -y @modelcontextprotocol/inspector": true,
+    "git rev-parse": true,
+    "git remote": true,
+    "Get-Command": true
   },
   "chat.mcp.discovery.enabled": {
     "claude-desktop": true,

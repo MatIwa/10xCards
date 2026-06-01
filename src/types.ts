@@ -6,10 +6,16 @@ export interface Flashcard {
   front: string;
   back: string;
   source: FlashcardSource;
-  interval: number;
-  ease_factor: number;
-  repetitions: number;
-  next_review_at: string;
+  due: string;
+  stability: number;
+  difficulty: number;
+  elapsed_days: number;
+  scheduled_days: number;
+  learning_steps: number;
+  reps: number;
+  lapses: number;
+  state: 0 | 1 | 2 | 3;
+  last_review: string | null;
   created_at: string;
   updated_at: string;
 }
