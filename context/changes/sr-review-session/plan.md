@@ -349,13 +349,13 @@ Add a `/dashboard/review` Astro page hosting a `ReviewSession` React island that
 
 #### Automated
 
-- [x] 4.1 `npm run build` succeeds
-- [x] 4.2 `npm run lint` passes
+- [x] 4.1 `npm run build` succeeds — a89461a
+- [x] 4.2 `npm run lint` passes — a89461a
 
 #### Manual
 
-- [x] 4.3 Full review walkthrough across 3 seeded cards with different ratings updates Supabase correctly
-- [x] 4.4 Empty state shows "All caught up!" + "Practice anyway" button
-- [x] 4.5 Practice mode does NOT mutate row state in Supabase
-- [x] 4.6 Keyboard shortcuts (Space, 1/2/3/4) work
-- [x] 4.7 Logged-out access to `/dashboard/review` redirects to `/auth/signin`
+- [x] 4.3 Full review walkthrough across 3 seeded cards with different ratings updates Supabase correctly — a89461a
+- [x] 4.4 Empty state shows "All caught up!" + "Practice anyway" button — a89461a
+- [x] 4.5 Practice mode does NOT mutate row state in Supabase — a89461a
+- [x] 4.6 Keyboard shortcuts (Space, 1/2/3/4) work — a89461a
+- [x] 4.7 Logged-out access to `/dashboard/review` redirects to `/auth/signin` — a89461a
