@@ -335,27 +335,27 @@ Add a `/dashboard/review` Astro page hosting a `ReviewSession` React island that
 
 #### Automated
 
-- [x] 3.1 `npm run build` succeeds
-- [x] 3.2 `npm run lint` passes
+- [x] 3.1 `npm run build` succeeds — 584f118
+- [x] 3.2 `npm run lint` passes — 584f118
 
 #### Manual
 
-- [x] 3.3 `GET /api/flashcards/review/queue` returns due cards with `preview` field when authed; 401 when not
-- [x] 3.4 `POST /api/flashcards/<id>/review` with `{rating:3}` mutates the row
-- [x] 3.5 `POST` with `{rating:3, practice:true}` returns `skipped:true` and leaves the row unchanged
-- [x] 3.6 `POST` with invalid rating returns Zod validation error
+- [x] 3.3 `GET /api/flashcards/review/queue` returns due cards with `preview` field when authed; 401 when not — 584f118
+- [x] 3.4 `POST /api/flashcards/<id>/review` with `{rating:3}` mutates the row — 584f118
+- [x] 3.5 `POST` with `{rating:3, practice:true}` returns `skipped:true` and leaves the row unchanged — 584f118
+- [x] 3.6 `POST` with invalid rating returns Zod validation error — 584f118
 
 ### Phase 4: Review page & React island
 
 #### Automated
 
-- [ ] 4.1 `npm run build` succeeds
-- [ ] 4.2 `npm run lint` passes
+- [x] 4.1 `npm run build` succeeds
+- [x] 4.2 `npm run lint` passes
 
 #### Manual
 
-- [ ] 4.3 Full review walkthrough across 3 seeded cards with different ratings updates Supabase correctly
-- [ ] 4.4 Empty state shows "All caught up!" + "Practice anyway" button
-- [ ] 4.5 Practice mode does NOT mutate row state in Supabase
-- [ ] 4.6 Keyboard shortcuts (Space, 1/2/3/4) work
-- [ ] 4.7 Logged-out access to `/dashboard/review` redirects to `/auth/signin`
+- [x] 4.3 Full review walkthrough across 3 seeded cards with different ratings updates Supabase correctly
+- [x] 4.4 Empty state shows "All caught up!" + "Practice anyway" button
+- [x] 4.5 Practice mode does NOT mutate row state in Supabase
+- [x] 4.6 Keyboard shortcuts (Space, 1/2/3/4) work
+- [x] 4.7 Logged-out access to `/dashboard/review` redirects to `/auth/signin`
