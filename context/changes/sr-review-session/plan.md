@@ -309,27 +309,27 @@ Add a `/dashboard/review` Astro page hosting a `ReviewSession` React island that
 
 #### Automated
 
-- [x] 1.1 `npx supabase db reset` applies cleanly with no errors
-- [x] 1.2 `npm run build` succeeds
-- [x] 1.3 `npm run lint` passes
+- [x] 1.1 `npx supabase db reset` applies cleanly with no errors — 3864771
+- [x] 1.2 `npm run build` succeeds — 3864771
+- [x] 1.3 `npm run lint` passes — 3864771
 
 #### Manual
 
-- [x] 1.4 Information_schema confirms FSRS columns present and SM-2 columns absent
-- [x] 1.5 `idx_flashcards_user_due` exists in `pg_indexes`
-- [x] 1.6 Manual CRUD on `/dashboard` still works end-to-end
+- [x] 1.4 Information_schema confirms FSRS columns present and SM-2 columns absent — 3864771
+- [x] 1.5 `idx_flashcards_user_due` exists in `pg_indexes` — 3864771
+- [x] 1.6 Manual CRUD on `/dashboard` still works end-to-end — 3864771
 
 ### Phase 2: Review service & scheduler
 
 #### Automated
 
-- [ ] 2.1 `npm run build` succeeds
-- [ ] 2.2 `npm run lint` passes
-- [ ] 2.3 `npm ls ts-fsrs` shows the package installed
+- [x] 2.1 `npm run build` succeeds
+- [x] 2.2 `npm run lint` passes
+- [x] 2.3 `npm ls ts-fsrs` shows the package installed
 
 #### Manual
 
-- [ ] 2.4 Rehydrate → scheduler.next → serialize round-trips a sample row cleanly
+- [x] 2.4 Rehydrate → scheduler.next → serialize round-trips a sample row cleanly
 
 ### Phase 3: API routes
 
