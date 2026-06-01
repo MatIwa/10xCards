@@ -323,27 +323,27 @@ Add a `/dashboard/review` Astro page hosting a `ReviewSession` React island that
 
 #### Automated
 
-- [x] 2.1 `npm run build` succeeds
-- [x] 2.2 `npm run lint` passes
-- [x] 2.3 `npm ls ts-fsrs` shows the package installed
+- [x] 2.1 `npm run build` succeeds — b36ff1b
+- [x] 2.2 `npm run lint` passes — b36ff1b
+- [x] 2.3 `npm ls ts-fsrs` shows the package installed — b36ff1b
 
 #### Manual
 
-- [x] 2.4 Rehydrate → scheduler.next → serialize round-trips a sample row cleanly
+- [x] 2.4 Rehydrate → scheduler.next → serialize round-trips a sample row cleanly — b36ff1b
 
 ### Phase 3: API routes
 
 #### Automated
 
-- [ ] 3.1 `npm run build` succeeds
-- [ ] 3.2 `npm run lint` passes
+- [x] 3.1 `npm run build` succeeds
+- [x] 3.2 `npm run lint` passes
 
 #### Manual
 
-- [ ] 3.3 `GET /api/flashcards/review/queue` returns due cards with `preview` field when authed; 401 when not
-- [ ] 3.4 `POST /api/flashcards/<id>/review` with `{rating:3}` mutates the row
-- [ ] 3.5 `POST` with `{rating:3, practice:true}` returns `skipped:true` and leaves the row unchanged
-- [ ] 3.6 `POST` with invalid rating returns Zod validation error
+- [x] 3.3 `GET /api/flashcards/review/queue` returns due cards with `preview` field when authed; 401 when not
+- [x] 3.4 `POST /api/flashcards/<id>/review` with `{rating:3}` mutates the row
+- [x] 3.5 `POST` with `{rating:3, practice:true}` returns `skipped:true` and leaves the row unchanged
+- [x] 3.6 `POST` with invalid rating returns Zod validation error
 
 ### Phase 4: Review page & React island
 
