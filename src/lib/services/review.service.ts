@@ -32,13 +32,11 @@ export function rehydrate(row: Flashcard): Card {
 }
 
 export function serialize(card: Card): Partial<Flashcard> {
-  const { elapsed_days: elapsedDays } = card as unknown as { elapsed_days: number };
-
   return {
     due: card.due.toISOString(),
     stability: card.stability,
     difficulty: card.difficulty,
-    elapsed_days: elapsedDays,
+    elapsed_days: card.elapsed_days,
     scheduled_days: card.scheduled_days,
     learning_steps: card.learning_steps,
     reps: card.reps,
