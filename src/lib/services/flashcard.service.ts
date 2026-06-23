@@ -32,7 +32,7 @@ export async function createFlashcard(
       user_id: userId,
       front: input.front,
       back: input.back,
-      source: "manual",
+      source: input.source,
     })
     .select("*")
     .single();
