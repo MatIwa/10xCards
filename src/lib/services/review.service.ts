@@ -36,6 +36,7 @@ export function serialize(card: Card): Partial<Flashcard> {
     due: card.due.toISOString(),
     stability: card.stability,
     difficulty: card.difficulty,
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- The current flashcards schema stores this ts-fsrs field.
     elapsed_days: card.elapsed_days,
     scheduled_days: card.scheduled_days,
     learning_steps: card.learning_steps,
