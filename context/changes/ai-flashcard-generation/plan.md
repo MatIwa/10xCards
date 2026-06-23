@@ -346,35 +346,35 @@ Add `/dashboard/generate` page and the `GenerateFlashcards` React island that ow
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npx astro check`
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Build passes: `npm run build`
-- [x] 1.4 No source-text logging: `grep -rE "console\.(log|error|warn|info|debug).*source[_]?[Tt]ext" src/` returns nothing
+- [x] 1.1 Type checking passes: `npx astro check` — de9f8f9
+- [x] 1.2 Linting passes: `npm run lint` — de9f8f9
+- [x] 1.3 Build passes: `npm run build` — de9f8f9
+- [x] 1.4 No source-text logging: `grep -rE "console\.(log|error|warn|info|debug).*source[_]?[Tt]ext" src/` returns nothing — de9f8f9
 
 #### Manual
 
-- [x] 1.5 With a valid OPENROUTER_API_KEY, generateProposals returns a Proposal[] of 1–15 cards
-- [x] 1.6 With an empty/missing key, generateProposals resolves to { error: { code: 'missing_api_key' } } without throwing
-- [x] 1.7 Manual create through the existing dashboard form still saves with source: 'manual'
-- [x] 1.8 With OpenRouter unreachable, generateProposals resolves to { error: { code: 'provider_unavailable' } } within ~60s
+- [x] 1.5 With a valid OPENROUTER_API_KEY, generateProposals returns a Proposal[] of 1–15 cards — de9f8f9
+- [x] 1.6 With an empty/missing key, generateProposals resolves to { error: { code: 'missing_api_key' } } without throwing — de9f8f9
+- [x] 1.7 Manual create through the existing dashboard form still saves with source: 'manual' — de9f8f9
+- [x] 1.8 With OpenRouter unreachable, generateProposals resolves to { error: { code: 'provider_unavailable' } } within ~60s — de9f8f9
 
 ### Phase 2: Generation API Route
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npx astro check`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Build passes: `npm run build`
+- [x] 2.1 Type checking passes: `npx astro check`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 2.4 Authenticated POST /api/flashcards/generate with valid body returns 200 { proposals: [...] }
-- [ ] 2.5 Unauthenticated request returns 401
-- [ ] 2.6 source_text < 200 chars returns 400 with Zod issue
-- [ ] 2.7 source_text > 25,000 chars returns 400
-- [ ] 2.8 Missing source_text returns 400
-- [ ] 2.9 With OPENROUTER_API_KEY unset, the route returns 500 { code: "missing_api_key" }
-- [ ] 2.10 wrangler tail / dev console shows no occurrence of the submitted source text
+- [x] 2.4 Authenticated POST /api/flashcards/generate with valid body returns 200 { proposals: [...] }
+- [x] 2.5 Unauthenticated request returns 401
+- [x] 2.6 source_text < 200 chars returns 400 with Zod issue
+- [x] 2.7 source_text > 25,000 chars returns 400
+- [x] 2.8 Missing source_text returns 400
+- [x] 2.9 With OPENROUTER_API_KEY unset, the route returns 500 { code: "missing_api_key" }
+- [x] 2.10 wrangler tail / dev console shows no occurrence of the submitted source text
 
 ### Phase 3: Generate Page + React Island
 
