@@ -1,0 +1,27 @@
+---
+import GenerateFlashcards from "@/components/dashboard/GenerateFlashcards";
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout title="Generate">
+  <div class="bg-cosmic min-h-screen py-8 text-white">
+    <div class="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+          Generate flashcards
+        </h1>
+        <p class="mt-1 text-sm text-blue-100/80">
+          Paste study material and let the AI propose flashcards. You decide what to keep.
+        </p>
+      </div>
+      <a
+        href="/dashboard"
+        class="inline-flex h-9 items-center justify-center rounded-md border border-white/25 bg-white/10 px-4 py-2 text-sm font-medium text-blue-100 transition-colors hover:bg-white/15 hover:text-white"
+      >
+        Back to dashboard
+      </a>
+    </div>
+
+    <GenerateFlashcards client:load />
+  </div>
+</Layout>

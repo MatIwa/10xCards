@@ -362,38 +362,38 @@ Add `/dashboard/generate` page and the `GenerateFlashcards` React island that ow
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npx astro check`
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 Build passes: `npm run build`
+- [x] 2.1 Type checking passes: `npx astro check` — e67e556
+- [x] 2.2 Linting passes: `npm run lint` — e67e556
+- [x] 2.3 Build passes: `npm run build` — e67e556
 
 #### Manual
 
-- [x] 2.4 Authenticated POST /api/flashcards/generate with valid body returns 200 { proposals: [...] }
-- [x] 2.5 Unauthenticated request returns 401
-- [x] 2.6 source_text < 200 chars returns 400 with Zod issue
-- [x] 2.7 source_text > 25,000 chars returns 400
-- [x] 2.8 Missing source_text returns 400
-- [x] 2.9 With OPENROUTER_API_KEY unset, the route returns 500 { code: "missing_api_key" }
-- [x] 2.10 wrangler tail / dev console shows no occurrence of the submitted source text
+- [x] 2.4 Authenticated POST /api/flashcards/generate with valid body returns 200 { proposals: [...] } — e67e556
+- [x] 2.5 Unauthenticated request returns 401 — e67e556
+- [x] 2.6 source_text < 200 chars returns 400 with Zod issue — e67e556
+- [x] 2.7 source_text > 25,000 chars returns 400 — e67e556
+- [x] 2.8 Missing source_text returns 400 — e67e556
+- [x] 2.9 With OPENROUTER_API_KEY unset, the route returns 500 { code: "missing_api_key" } — e67e556
+- [x] 2.10 wrangler tail / dev console shows no occurrence of the submitted source text — e67e556
 
 ### Phase 3: Generate Page + React Island
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npx astro check`
-- [ ] 3.2 Linting passes: `npm run lint`
-- [ ] 3.3 Build passes: `npm run build`
+- [x] 3.1 Type checking passes: `npx astro check`
+- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.3 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 3.4 Pasting <200 chars disables Generate and shows amber indicator
-- [ ] 3.5 Pasting >25,000 chars disables Generate and shows red indicator
-- [ ] 3.6 Generate shows spinner with progress label; button disabled while in-flight
-- [ ] 3.7 Successful generation renders 1–15 proposals with editable front/back
-- [ ] 3.8 Accepting unedited proposal POSTs with source: 'ai_full' and the card appears on the dashboard
-- [ ] 3.9 Editing then accepting POSTs with source: 'ai_edited'; dashboard badge reads "AI edited"
-- [ ] 3.10 Rejecting a proposal removes it with no network call
-- [ ] 3.11 After all proposals are acted on, the view returns to the paste form
-- [ ] 3.12 Forced server error shows the error banner with textarea preserved; Retry re-runs the request
-- [ ] 3.13 During a successful generation, no log line contains the submitted source text
-- [ ] 3.14 Visiting /dashboard/generate while logged out redirects to /auth/signin
+- [x] 3.4 Pasting <200 chars disables Generate and shows amber indicator
+- [x] 3.5 Pasting >25,000 chars disables Generate and shows red indicator
+- [x] 3.6 Generate shows spinner with progress label; button disabled while in-flight
+- [x] 3.7 Successful generation renders 1–15 proposals with editable front/back
+- [x] 3.8 Accepting unedited proposal POSTs with source: 'ai_full' and the card appears on the dashboard
+- [x] 3.9 Editing then accepting POSTs with source: 'ai_edited'; dashboard badge reads "AI edited"
+- [x] 3.10 Rejecting a proposal removes it with no network call
+- [x] 3.11 After all proposals are acted on, the view returns to the paste form
+- [x] 3.12 Forced server error shows the error banner with textarea preserved; Retry re-runs the request
+- [x] 3.13 During a successful generation, no log line contains the submitted source text
+- [x] 3.14 Visiting /dashboard/generate while logged out redirects to /auth/signin
