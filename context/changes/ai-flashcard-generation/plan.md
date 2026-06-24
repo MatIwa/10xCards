@@ -380,20 +380,20 @@ Add `/dashboard/generate` page and the `GenerateFlashcards` React island that ow
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npx astro check`
-- [x] 3.2 Linting passes: `npm run lint`
-- [x] 3.3 Build passes: `npm run build`
+- [x] 3.1 Type checking passes: `npx astro check` — 5c6bd15
+- [x] 3.2 Linting passes: `npm run lint` — 5c6bd15
+- [x] 3.3 Build passes: `npm run build` — 5c6bd15
 
 #### Manual
 
-- [x] 3.4 Pasting <200 chars disables Generate and shows amber indicator
-- [x] 3.5 Pasting >25,000 chars disables Generate and shows red indicator
-- [x] 3.6 Generate shows spinner with progress label; button disabled while in-flight
-- [x] 3.7 Successful generation renders 1–15 proposals with editable front/back
-- [x] 3.8 Accepting unedited proposal POSTs with source: 'ai_full' and the card appears on the dashboard
-- [x] 3.9 Editing then accepting POSTs with source: 'ai_edited'; dashboard badge reads "AI edited"
-- [x] 3.10 Rejecting a proposal removes it with no network call
-- [x] 3.11 After all proposals are acted on, the view returns to the paste form
-- [x] 3.12 Forced server error shows the error banner with textarea preserved; Retry re-runs the request
-- [x] 3.13 During a successful generation, no log line contains the submitted source text
-- [x] 3.14 Visiting /dashboard/generate while logged out redirects to /auth/signin
+- [x] 3.4 Pasting <200 chars disables Generate and shows amber indicator — 5c6bd15
+- [x] 3.5 Pasting >25,000 chars disables Generate and shows red indicator — 5c6bd15
+- [x] 3.6 Generate shows spinner with progress label; button disabled while in-flight — 5c6bd15
+- [x] 3.7 Successful generation renders 1–15 proposals with editable front/back — 5c6bd15
+- [x] 3.8 Accepting unedited proposal POSTs with source: 'ai_full' and the card appears on the dashboard — 5c6bd15
+- [x] 3.9 Editing then accepting POSTs with source: 'ai_edited'; dashboard badge reads "AI edited" — 5c6bd15
+- [x] 3.10 Rejecting a proposal removes it with no network call — 5c6bd15
+- [x] 3.11 After all proposals are acted on, the view returns to the paste form — 5c6bd15
+- [x] 3.12 Forced server error shows the error banner with textarea preserved; Retry re-runs the request — 5c6bd15
+- [x] 3.13 During a successful generation, no log line contains the submitted source text — 5c6bd15
+- [x] 3.14 Visiting /dashboard/generate while logged out redirects to /auth/signin — 5c6bd15
