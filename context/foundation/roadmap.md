@@ -3,7 +3,7 @@ project: "10xCards"
 version: 1
 status: draft
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-24
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -33,6 +33,7 @@ Creating flashcards manually discourages learners from using spaced repetition �
 | S-01 | manual-flashcard-crud | create, view, edit, and delete flashcards | F-01 | FR-007, FR-008, FR-009, FR-010 | proposed |
 | S-02 | sr-review-session | start a review session, answer cards, and rate recall | F-01, S-01 | FR-011, FR-012, FR-013 | proposed |
 | S-03 | ai-flashcard-generation | paste text, trigger AI generation, accept/edit/reject proposals | F-01 | US-01, FR-004, FR-005, FR-006 | proposed |
+| S-04 | account-deletion-gdpr | permanently delete their account and all personal data (GDPR right to erasure) | F-01 | FR-014 | proposed |
 
 ## Streams
 
@@ -42,6 +43,7 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 |---|---|---|---|
 | A | Core review loop | `F-01` → `S-01` → `S-02` | Shortest dependency chain to north star; speed goal means this ships first. |
 | B | AI differentiator | `S-03` | Parallel with Stream A after `F-01` lands; delivers the product wedge. |
+| C | Compliance | `S-04` | GDPR right to erasure for EU users; parallel with Streams A/B after `F-01` lands. |
 
 ## Baseline
 
@@ -110,6 +112,20 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** Depends on external LLM provider (OpenRouter); latency and cost are runtime risks. Privacy NFR (source text not retained after generation) must be enforced at implementation. Parallel to Stream A so neither track blocks the other.
 - **Status:** proposed
 
+### S-04: Account deletion (GDPR)
+
+- **Outcome:** user can permanently delete their account from a settings/profile area; the action requires explicit confirmation, then wipes all personal data (flashcards, profile, Supabase auth record) and signs the user out. Satisfies the GDPR Article 17 right to erasure for EU users.
+- **Change ID:** account-deletion-gdpr
+- **PRD refs:** FR-014
+- **Prerequisites:** F-01
+- **Parallel with:** S-01, S-02, S-03
+- **Blockers:** —
+- **Unknowns:**
+  - Where the "Delete account" entry point lives (settings page vs. profile menu) — Owner: tech decision at `/10x-plan` time. Block: no.
+  - Whether deletion calls `auth.admin.deleteUser` from a server endpoint with the service-role key, or relies on a Supabase database trigger from a user-initiated row deletion — Owner: tech decision at `/10x-plan` time. Block: no.
+- **Risk:** Erasure must be complete and irreversible — partial deletes (e.g., orphaned flashcards after auth-user removal) would breach GDPR. Mitigation: rely on `ON DELETE CASCADE` from `flashcards.user_id` → `auth.users.id` so a single auth-user delete cleans all owned rows; add a verification check in the deletion endpoint. Service-role key must stay server-side only.
+- **Status:** proposed
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID | Suggested issue title | Ready for `/10x-plan` | Notes |
@@ -118,6 +134,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-01 | manual-flashcard-crud | Manual flashcard CRUD (create, view, edit, delete) | no | Awaits F-01 |
 | S-02 | sr-review-session | Spaced repetition review session | no | Awaits F-01, S-01 |
 | S-03 | ai-flashcard-generation | AI flashcard generation from pasted text | no | Awaits F-01; parallel with S-01 |
+| S-04 | account-deletion-gdpr | Account deletion with full data erasure (GDPR) | no | Awaits F-01; parallel with S-01, S-02, S-03 |
 
 ## Open Roadmap Questions
 
