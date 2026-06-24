@@ -12,6 +12,7 @@ Repository: MatIwa/10xCards
 | `slice` | #0e8a16 | Vertical user-facing slice |
 | `stream:A` | #1d76db | Core review loop |
 | `stream:B` | #e99695 | AI differentiator |
+| `stream:C` | #d93f0b | Compliance |
 
 ## Issues
 
@@ -21,6 +22,7 @@ Repository: MatIwa/10xCards
 | S-01 | #2 | Manual flashcard CRUD (create, view, edit, delete) | slice, stream:A | #1 | CLOSED |
 | S-02 | #3 | Spaced repetition review session | slice, stream:A | #1, #2 | CLOSED |
 | S-03 | #4 | AI flashcard generation from pasted text | slice, stream:B | #1 | CLOSED |
+| S-04 | #5 | Account deletion with full data erasure (GDPR) | slice, stream:C | #1 | OPEN |
 
 ## Dependency Graph
 
@@ -28,5 +30,6 @@ Repository: MatIwa/10xCards
 F-01 (#1)
 ├── S-01 (#2)
 │   └── S-02 (#3)  ← North Star
-└── S-03 (#4)
+├── S-03 (#4)
+└── S-04 (#5)
 ```

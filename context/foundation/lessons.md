@@ -8,3 +8,10 @@
 - **Problem**: The developer used `_.filter()` even though Lodash is not part of the project. This would add an unnecessary dependency and violate the local convention of using native APIs.
 - **Rule**: Do not add Lodash without a clear indication. The project prefers native JS/TS functions in the 2026+ standard.
 - **Applies to**: plan, implement, impl-review
+
+## User-scoped tables must cascade on `auth.users` delete AND be covered by the orphan-check
+
+- **Context**: Account deletion (GDPR) requires complete erasure of all user-owned rows when an `auth.users` row is deleted via `auth.admin.deleteUser`. The deletion endpoint runs a post-delete verification that queries every user-scoped table and returns 500 if any orphan rows remain.
+- **Problem**: When a new user-scoped table is added (any table whose rows belong to a specific user), it's easy to declare the `user_id` column without `on delete cascade`, OR to add the cascade but forget to extend `src/lib/services/account.service.ts` to include the new table in the orphan-check. The first failure silently leaves orphan rows in the database after deletion. The second failure makes the endpoint certify "complete erasure" while orphans persist — a GDPR contract break.
+- **Rule**: Any new table with a `user_id` column referencing `auth.users(id)` MUST (a) declare `on delete cascade` in its migration AND (b) be added to the orphan-check in `src/lib/services/account.service.ts` (the `deleteAccount` verification step). Both edits land in the same change. Plans that introduce user-scoped tables must include both steps explicitly; reviewers flag a missing cascade or a missing orphan-check entry as a critical finding.
+- **Applies to**: plan, implement, impl-review, plan-review

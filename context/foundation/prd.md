@@ -62,6 +62,8 @@ The insight: existing tools like Anki are powerful for reviewing cards but treat
   > Socrates: Counter-argument considered: "supporting multiple auth methods doubles the surface to build, test, and secure." Resolution: narrowed to email+password only for MVP.
 - FR-003: User can log out. Priority: must-have
   > Socrates: No counter-argument; trivial consequence of auth.
+- FR-014: User can permanently delete their account along with all personal data (flashcards, profile, auth record) — satisfying the GDPR Article 17 right to erasure for EU users. Priority: must-have
+  > Socrates: Counter-argument considered: "a soft-delete with a grace period reduces accidental loss." Resolution: GDPR right to erasure requires actual deletion, not retention; a confirmation step in the UI is the appropriate accident guard. Deletion is immediate and irreversible from the user's perspective.
 
 ### AI Generation
 - FR-004: User can paste source text for AI flashcard generation. Priority: must-have
