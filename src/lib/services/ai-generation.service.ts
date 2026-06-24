@@ -11,6 +11,10 @@ export interface GenerationError {
 export type GenerateResult = { data: Proposal[]; error: null } | { data: null; error: GenerationError };
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
+// Swapped from the planned `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free` to this lighter
+// free-tier model after the original proved unreliable on OpenRouter during implementation.
+// See the addendum at the bottom of `context/changes/ai-flashcard-generation/plan.md` and the
+// Phase 1 note in `context/changes/ai-flashcard-generation/change.md`.
 const MODEL_ID = "liquid/lfm-2.5-1.2b-instruct:free";
 const REQUEST_TIMEOUT_MS = 30000;
 const MAX_OUTPUT_TOKENS = 2500;

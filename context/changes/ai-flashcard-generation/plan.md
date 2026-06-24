@@ -276,6 +276,26 @@ Add `/dashboard/generate` page and the `GenerateFlashcards` React island that ow
 - Pasting <200 chars disables the Generate button and shows the char-count indicator in amber.
 - Pasting >25,000 chars disables the Generate button and shows the char-count indicator in red.
 - Pasting valid-length text and clicking Generate shows the spinner with the progress label; the button is disabled while in-flight.
+
+## Addenda
+
+### A1 — Model swap: liquid replaces nemotron (post-Phase-1, 2026-06-24)
+
+The plan above pins the OpenRouter model to `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free` based on a pre-implementation smoke test. The shipped code uses `liquid/lfm-2.5-1.2b-instruct:free` instead.
+
+**Why:** during Phase 1 manual verification the planned nemotron model became unreliable on the OpenRouter free tier (intermittent provider-side errors). The liquid model satisfies the same constraints used in the original smoke test — accepts `response_format: { type: "json_object" }`, returns `usage.cost: 0` on the free tier — and passed manual checks 1.5 (Phase 1 service smoke), 2.4 (Phase 2 API contract), and 3.7 (Phase 3 end-to-end).
+
+**Scope of the change:** the swap is limited to the `MODEL_ID` module-level constant in `src/lib/services/ai-generation.service.ts`. All other contracts (prompt, JSON-mode, timeout knob, error taxonomy) are unchanged.
+
+**Not verified:** side-by-side output quality comparison between the two models on the same input. Future agents revisiting model choice should re-run the smoke test before reverting.
+
+### A2 — Generation timeout: 30s server / 35s client (post-Phase-1, 2026-06-24)
+
+Plan §Phase 1 specifies a 60-second `AbortController` timeout. The shipped code uses 30s server-side (`REQUEST_TIMEOUT_MS` in `src/lib/services/ai-generation.service.ts`) and 35s client-side (`src/components/dashboard/GenerateFlashcards.tsx`). The 5s buffer ensures the server's typed `provider_unavailable` reaches the client before the client's own AbortController fires.
+
+**Why:** in manual smoke testing on the free-tier liquid model with 25,000-char input, p99 wall-clock stayed under 25s; a 60s window felt punitive for users hitting a real provider stall. The 30s/35s pair keeps the typed error path intact (server times out first, client surfaces the typed error) while shortening the worst-case user wait by half.
+
+**Risk accepted:** rare slow-tail responses (p99.9 on degraded provider days) may surface as `provider_unavailable` instead of completing. If that becomes a user complaint, revisit before scaling beyond MVP.
 - On a successful generation, the proposal list renders 1–15 cards with editable front/back fields.
 - Accepting an unedited proposal POSTs with `source: 'ai_full'` and removes the proposal from the list; the card appears on the dashboard list.
 - Editing a proposal's front or back, then accepting it, POSTs with `source: 'ai_edited'`; the badge on the dashboard reads "AI edited".

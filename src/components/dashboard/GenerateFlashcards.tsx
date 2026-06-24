@@ -1,5 +1,6 @@
 import { Check, LoaderCircle, RotateCcw, Sparkles, X } from "lucide-react";
 import { useMemo, useState } from "react";
+import { flushSync } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -214,8 +215,13 @@ export default function GenerateFlashcards() {
   }
 
   function rejectProposal(proposalId: string) {
-    const nextProposals = proposals.filter((proposal) => proposal.id !== proposalId);
-    setProposals(nextProposals);
+    let nextProposals: ProposalState[] = [];
+    flushSync(() => {
+      setProposals((prev) => {
+        nextProposals = prev.filter((proposal) => proposal.id !== proposalId);
+        return nextProposals;
+      });
+    });
     finishIfLastProposal(nextProposals, savedCount);
   }
 
@@ -259,10 +265,20 @@ export default function GenerateFlashcards() {
         return;
       }
 
-      const nextSavedCount = savedCount + 1;
-      const nextProposals = proposals.filter((item) => item.id !== proposalId);
-      setSavedCount(nextSavedCount);
-      setProposals(nextProposals);
+      // Use flushSync + functional setState so concurrent Accept resolutions read the latest
+      // proposals/savedCount (not a stale closure snapshot). See impl-review F3.
+      let nextSavedCount = 0;
+      let nextProposals: ProposalState[] = [];
+      flushSync(() => {
+        setSavedCount((prev) => {
+          nextSavedCount = prev + 1;
+          return nextSavedCount;
+        });
+        setProposals((prev) => {
+          nextProposals = prev.filter((item) => item.id !== proposalId);
+          return nextProposals;
+        });
+      });
       finishIfLastProposal(nextProposals, nextSavedCount);
     } catch {
       setProposals((currentProposals) =>
