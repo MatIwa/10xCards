@@ -11,8 +11,9 @@ export interface GenerationError {
 export type GenerateResult = { data: Proposal[]; error: null } | { data: null; error: GenerationError };
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL_ID = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
-const REQUEST_TIMEOUT_MS = 60000;
+const MODEL_ID = "liquid/lfm-2.5-1.2b-instruct:free";
+const REQUEST_TIMEOUT_MS = 30000;
+const MAX_OUTPUT_TOKENS = 2500;
 
 const SYSTEM_PROMPT = `You generate flashcards from study material. Read the user's text and extract up to 15 testable knowledge units as question/answer pairs.
 
@@ -57,6 +58,7 @@ async function fetchOpenRouter(sourceText: string): Promise<Response> {
       body: JSON.stringify({
         model: MODEL_ID,
         temperature: 0.1,
+        max_tokens: MAX_OUTPUT_TOKENS,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
