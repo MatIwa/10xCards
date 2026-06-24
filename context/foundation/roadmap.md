@@ -34,6 +34,7 @@ Creating flashcards manually discourages learners from using spaced repetition �
 | S-02 | sr-review-session | start a review session, answer cards, and rate recall | F-01, S-01 | FR-011, FR-012, FR-013 | proposed |
 | S-03 | ai-flashcard-generation | paste text, trigger AI generation, accept/edit/reject proposals | F-01 | US-01, FR-004, FR-005, FR-006 | proposed |
 | S-04 | account-deletion-gdpr | permanently delete their account and all personal data (GDPR right to erasure) | F-01 | FR-014 | proposed |
+| S-05 | ux-improvements | use bulk actions on AI candidate review, reset a review session, and see consistent loading states | F-01 | FR-006, FR-011, FR-012 | planned |
 
 ## Streams
 
@@ -44,6 +45,7 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 | A | Core review loop | `F-01` → `S-01` → `S-02` | Shortest dependency chain to north star; speed goal means this ships first. |
 | B | AI differentiator | `S-03` | Parallel with Stream A after `F-01` lands; delivers the product wedge. |
 | C | Compliance | `S-04` | GDPR right to erasure for EU users; parallel with Streams A/B after `F-01` lands. |
+| D | UX polish | `S-05` | Cross-cutting UX fixes surfaced during S-01–S-03; parallel with `S-04` after `F-01` lands. |
 
 ## Baseline
 
@@ -123,8 +125,21 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Where the "Delete account" entry point lives (settings page vs. profile menu) — Owner: tech decision at `/10x-plan` time. Block: no.
   - Whether deletion calls `auth.admin.deleteUser` from a server endpoint with the service-role key, or relies on a Supabase database trigger from a user-initiated row deletion — Owner: tech decision at `/10x-plan` time. Block: no.
-- **Risk:** Erasure must be complete and irreversible — partial deletes (e.g., orphaned flashcards after auth-user removal) would breach GDPR. Mitigation: rely on `ON DELETE CASCADE` from `flashcards.user_id` → `auth.users.id` so a single auth-user delete cleans all owned rows; add a verification check in the deletion endpoint. Service-role key must stay server-side only.
 - **Status:** proposed
+
+### S-05: UX improvements
+
+- **Outcome:** user can apply bulk actions (accept/reject all, accept/reject selected) on the AI candidate review screen, reset an in-progress SR review session back to its starting state, and sees consistent loading/skeleton states across generation, CRUD, and review flows.
+- **Change ID:** ux-improvements
+- **PRD refs:** FR-006 (per-card review extended with bulk), FR-011, FR-012 (review session reset)
+- **Prerequisites:** F-01
+- **Parallel with:** S-04
+- **Blockers:** —
+- **Unknowns:**
+  - Reset semantics: discard ratings from the current session only, or also roll back any persisted SR state changes? — Owner: tech decision at `/10x-plan` time. Block: no.
+  - Bulk-action granularity on candidate review ("all" vs. "all visible" vs. "selected") — Owner: user. Block: no.
+- **Risk:** Discovered during S-01–S-03 implementation, so scope can drift as more friction is found. Mitigation: lock the three problem areas (bulk actions, session reset, loading states) at `/10x-plan` time and route any new UX issues into a follow-up slice rather than expanding S-05.
+- **Status:** planned
 
 ## Backlog Handoff
 
@@ -135,6 +150,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-02 | sr-review-session | Spaced repetition review session | no | Awaits F-01, S-01 |
 | S-03 | ai-flashcard-generation | AI flashcard generation from pasted text | no | Awaits F-01; parallel with S-01 |
 | S-04 | account-deletion-gdpr | Account deletion with full data erasure (GDPR) | no | Awaits F-01; parallel with S-01, S-02, S-03 |
+| S-05 | ux-improvements | UX improvements (bulk candidate actions, review reset, loading states) | no | Awaits F-01; parallel with S-04 |
 
 ## Open Roadmap Questions
 
