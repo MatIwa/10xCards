@@ -1,7 +1,7 @@
 # GitHub Issues — Roadmap Migration
 
 Created: 2026-05-31
-Updated: 2026-06-01
+Updated: 2026-06-24
 Repository: MatIwa/10xCards
 
 ## Labels
@@ -20,7 +20,7 @@ Repository: MatIwa/10xCards
 | F-01 | #1 | Flashcard table with SR metadata + RLS | foundation, stream:A, stream:B | — | CLOSED |
 | S-01 | #2 | Manual flashcard CRUD (create, view, edit, delete) | slice, stream:A | #1 | CLOSED |
 | S-02 | #3 | Spaced repetition review session | slice, stream:A | #1, #2 | CLOSED |
-| S-03 | #4 | AI flashcard generation from pasted text | slice, stream:B | #1 | OPEN |
+| S-03 | #4 | AI flashcard generation from pasted text | slice, stream:B | #1 | CLOSED |
 
 ## Dependency Graph
 
