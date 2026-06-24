@@ -1,7 +1,7 @@
 ---
 change_id: ai-flashcard-generation
 title: AI flashcard generation from pasted text
-status: implemented
+status: impl_reviewed
 created: 2026-06-23
 updated: 2026-06-24
 archived_at: null
@@ -21,3 +21,6 @@ GitHub issue: **#4** (`context/foundation/tasks-github.md`) — labels: `slice`,
 - Source text input boundaries (min/max char count) — roadmap open question #1.
 - LLM provider integration (OpenRouter per PRD) — latency/cost risk.
 - Privacy NFR: source text must NOT be retained after generation completes — hard rule in `AGENTS.md`.
+
+**Implementation notes (post-plan):**
+- Phase 1: shipped with `liquid/lfm-2.5-1.2b-instruct:free` instead of the planned `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`. Reason: the planned model proved unreliable on the OpenRouter free tier during manual smoke testing; the liquid model returns valid JSON-mode output with `usage.cost: 0` and was verified against manual checks 1.5 / 2.4 / 3.7. See the addendum at the bottom of `plan.md`.
