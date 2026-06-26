@@ -1,7 +1,7 @@
 # GitHub Issues — Roadmap Migration
 
 Created: 2026-05-31
-Updated: 2026-06-24
+Updated: 2026-06-26
 Repository: MatIwa/10xCards
 
 ## Labels
@@ -23,8 +23,8 @@ Repository: MatIwa/10xCards
 | S-01 | #2 | Manual flashcard CRUD (create, view, edit, delete) | slice, stream:A | #1 | CLOSED |
 | S-02 | #3 | Spaced repetition review session | slice, stream:A | #1, #2 | CLOSED |
 | S-03 | #4 | AI flashcard generation from pasted text | slice, stream:B | #1 | CLOSED |
-| S-04 | #5 | Account deletion with full data erasure (GDPR) | slice, stream:C | #1 | OPEN |
-| S-05 | #6 | UX improvements (bulk candidate actions, review reset, loading states) | slice, stream:D | #1 | OPEN |
+| S-04 | #5 | Account deletion with full data erasure (GDPR) | slice, stream:C | #1 | CLOSED |
+| S-05 | #6 | UX improvements (bulk candidate actions, review reset, loading states) | slice, stream:D | #1 | CLOSED |
 
 ## Dependency Graph
 
