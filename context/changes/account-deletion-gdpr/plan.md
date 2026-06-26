@@ -380,38 +380,38 @@ No schema migration in this slice. The existing `ON DELETE CASCADE` declared in 
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npx astro check`
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Build passes: `npm run build`
-- [x] 1.4 No client bundle references the admin key: `grep -r "SUPABASE_SERVICE_ROLE_KEY" dist/` returns no matches
+- [x] 1.1 Type checking passes: `npx astro check` — 63c9322
+- [x] 1.2 Linting passes: `npm run lint` — 63c9322
+- [x] 1.3 Build passes: `npm run build` — 63c9322
+- [x] 1.4 No client bundle references the admin key: `grep -r "SUPABASE_SERVICE_ROLE_KEY" dist/` returns no matches — 63c9322
 
 #### Manual
 
-- [x] 1.5 `POST /api/account/delete` with `{"confirmation":"DELETE"}` returns a 303 redirect to `/auth/signin?deleted=1`
-- [x] 1.6 `select 1 from auth.users where id = <test_uid>` returns 0 rows after the call
-- [x] 1.7 `select count(*) from public.flashcards where user_id = <test_uid>` returns 0 after the call
-- [x] 1.8 `POST /api/account/delete` without `confirmation: "DELETE"` returns 400 with Zod issues
-- [x] 1.9 `POST /api/account/delete` unauthenticated returns 401 JSON (not a redirect)
-- [x] 1.10 Worker logs show a single `{ event: "account_deleted", ... }` line on success
+- [x] 1.5 `POST /api/account/delete` with `{"confirmation":"DELETE"}` returns a 303 redirect to `/auth/signin?deleted=1` — 63c9322
+- [x] 1.6 `select 1 from auth.users where id = <test_uid>` returns 0 rows after the call — 63c9322
+- [x] 1.7 `select count(*) from public.flashcards where user_id = <test_uid>` returns 0 after the call — 63c9322
+- [x] 1.8 `POST /api/account/delete` without `confirmation: "DELETE"` returns 400 with Zod issues — 63c9322
+- [x] 1.9 `POST /api/account/delete` unauthenticated returns 401 JSON (not a redirect) — 63c9322
+- [x] 1.10 Worker logs show a single `{ event: "account_deleted", ... }` line on success — 63c9322
 
 ### Phase 2: Frontend — settings page + confirmation UX
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npx astro check`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Build passes: `npm run build`
-- [ ] 2.4 `src/components/ui/dialog.tsx` exists after running `npx shadcn@latest add dialog`
+- [x] 2.1 Type checking passes: `npx astro check`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Build passes: `npm run build`
+- [x] 2.4 `src/components/ui/dialog.tsx` exists after running `npx shadcn@latest add dialog`
 
 #### Manual
 
-- [ ] 2.5 Topbar shows "Settings" link when signed in; clicking it lands on `/dashboard/settings`
-- [ ] 2.6 `/dashboard/settings` shows the Danger zone card with the user's actual flashcard count
-- [ ] 2.7 Clicking "Delete account" opens the modal with the destructive button disabled
-- [ ] 2.8 Typing anything other than `DELETE` keeps the button disabled
-- [ ] 2.9 Typing `DELETE` exactly enables the button
-- [ ] 2.10 Clicking the enabled destructive button erases the account and lands the browser on `/auth/signin?deleted=1`
-- [ ] 2.11 A success banner reads "Your account and all your data have been permanently deleted." on that page
-- [ ] 2.12 Attempting to sign in with the deleted credentials fails with the standard sign-in error
-- [ ] 2.13 Signing up with the same email creates a fresh account with zero flashcards
-- [ ] 2.14 Hitting `/dashboard/settings` unauthenticated redirects to `/auth/signin`
+- [x] 2.5 Topbar shows "Settings" link when signed in; clicking it lands on `/dashboard/settings`
+- [x] 2.6 `/dashboard/settings` shows the Danger zone card with the user's actual flashcard count
+- [x] 2.7 Clicking "Delete account" opens the modal with the destructive button disabled
+- [x] 2.8 Typing anything other than `DELETE` keeps the button disabled
+- [x] 2.9 Typing `DELETE` exactly enables the button
+- [x] 2.10 Clicking the enabled destructive button erases the account and lands the browser on `/auth/signin?deleted=1`
+- [x] 2.11 A success banner reads "Your account and all your data have been permanently deleted." on that page
+- [x] 2.12 Attempting to sign in with the deleted credentials fails with the standard sign-in error
+- [x] 2.13 Signing up with the same email creates a fresh account with zero flashcards
+- [x] 2.14 Hitting `/dashboard/settings` unauthenticated redirects to `/auth/signin`
