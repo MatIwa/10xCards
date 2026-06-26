@@ -1,25 +1,25 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-interface DeleteAccountResult {
-  deletedFlashcards: number;
+interface DataResult<T> {
+  data: T | null;
   error: string | null;
 }
 
-export async function deleteAccount(adminClient: SupabaseClient, userId: string): Promise<DeleteAccountResult> {
+export async function deleteAccount(adminClient: SupabaseClient, userId: string): Promise<DataResult<number>> {
   const flashcardCountResponse = await adminClient
     .from("flashcards")
     .select("*", { count: "exact", head: true })
     .eq("user_id", userId);
 
   if (flashcardCountResponse.error) {
-    return { deletedFlashcards: 0, error: flashcardCountResponse.error.message };
+    return { data: null, error: flashcardCountResponse.error.message };
   }
 
   const deletedFlashcards = flashcardCountResponse.count ?? 0;
   const deleteUserResponse = await adminClient.auth.admin.deleteUser(userId);
 
   if (deleteUserResponse.error) {
-    return { deletedFlashcards: 0, error: deleteUserResponse.error.message };
+    return { data: null, error: deleteUserResponse.error.message };
   }
 
   // TABLES: this orphan-check must list every user-scoped table.
@@ -29,12 +29,12 @@ export async function deleteAccount(adminClient: SupabaseClient, userId: string)
   const orphanedFlashcardsResponse = await adminClient.from("flashcards").select("id").eq("user_id", userId).limit(1);
 
   if (orphanedFlashcardsResponse.error) {
-    return { deletedFlashcards, error: orphanedFlashcardsResponse.error.message };
+    return { data: null, error: orphanedFlashcardsResponse.error.message };
   }
 
   if (orphanedFlashcardsResponse.data.length > 0) {
-    return { deletedFlashcards, error: "Verification failed: orphaned flashcards remain" };
+    return { data: null, error: "Verification failed: orphaned flashcards remain" };
   }
 
-  return { deletedFlashcards, error: null };
+  return { data: deletedFlashcards, error: null };
 }

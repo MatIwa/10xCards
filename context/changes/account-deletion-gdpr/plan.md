@@ -206,7 +206,7 @@ return context.redirect("/auth/signin?deleted=1", 303);
 - Type checking passes: `npx astro check`
 - Linting passes: `npm run lint`
 - Build passes: `npm run build`
-- No client bundle references the admin key: `grep -r "SUPABASE_SERVICE_ROLE_KEY" dist/` after build returns no matches.
+- No client bundle references the admin key: `grep -r "SUPABASE_SERVICE_ROLE_KEY" dist/client/` after build returns no matches.
 
 #### Manual Verification
 
@@ -383,7 +383,7 @@ No schema migration in this slice. The existing `ON DELETE CASCADE` declared in 
 - [x] 1.1 Type checking passes: `npx astro check` — 63c9322
 - [x] 1.2 Linting passes: `npm run lint` — 63c9322
 - [x] 1.3 Build passes: `npm run build` — 63c9322
-- [x] 1.4 No client bundle references the admin key: `grep -r "SUPABASE_SERVICE_ROLE_KEY" dist/` returns no matches — 63c9322
+- [x] 1.4 No client bundle references the admin key: `grep -r "SUPABASE_SERVICE_ROLE_KEY" dist/client/` returns no matches — 63c9322
 
 #### Manual
 
