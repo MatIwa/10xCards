@@ -31,7 +31,7 @@ Creating flashcards manually discourages learners from using spaced repetition �
 |---|---|---|---|---|---|
 | F-01 | flashcard-schema-with-sr | (foundation) flashcard table with SR metadata and RLS policies landed | — | FR-007, FR-011 | done |
 | S-01 | manual-flashcard-crud | create, view, edit, and delete flashcards | F-01 | FR-007, FR-008, FR-009, FR-010 | done |
-| S-02 | sr-review-session | start a review session, answer cards, and rate recall | F-01, S-01 | FR-011, FR-012, FR-013 | proposed |
+| S-02 | sr-review-session | start a review session, answer cards, and rate recall | F-01, S-01 | FR-011, FR-012, FR-013 | done |
 | S-03 | ai-flashcard-generation | paste text, trigger AI generation, accept/edit/reject proposals | F-01 | US-01, FR-004, FR-005, FR-006 | proposed |
 | S-04 | account-deletion-gdpr | permanently delete their account and all personal data (GDPR right to erasure) | F-01 | FR-014 | done |
 | S-05 | ux-improvements | use bulk actions on AI candidate review, reset a review session, and see consistent loading states | F-01 | FR-006, FR-011, FR-012 | planned |
@@ -99,7 +99,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - What recall rating granularity (binary / 3-level / 5-level)? Depends on chosen SR library. — Owner: tech decision at `/10x-plan` time. Block: no.
 - **Risk:** North star slice — validates the "when to review" promise. Placed after S-01 because review without cards is meaningless; SR library integration is the technical risk, mitigated by PRD non-goal (ready-made library, no custom algorithm).
-- **Status:** proposed
+- **Status:** done
 
 ### S-03: AI flashcard generation
 
@@ -172,3 +172,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-04: user can permanently delete their account from a settings/profile area; the action requires explicit confirmation, then wipes all personal data (flashcards, profile, Supabase auth record) and signs the user out. Satisfies the GDPR Article 17 right to erasure for EU users.** — Archived 2026-06-26 → `context/archive/2026-06-24-account-deletion-gdpr/`. Lesson: —.
 - **F-01: (foundation) flashcard table with SR metadata and RLS policies landed** — Archived 2026-06-26 → `context/archive/2026-05-31-flashcard-schema-with-sr/`. Lesson: —.
 - **S-01: user can create a flashcard (front and back), view all their flashcards, edit an existing flashcard, and delete a flashcard.** — Archived 2026-06-26 → `context/archive/2026-05-31-manual-flashcard-crud/`. Lesson: —.
+- **S-02: user can start a spaced repetition review session, see a card's front, reveal the back, rate their recall, and have the next review date scheduled automatically.** — Archived 2026-06-26 → `context/archive/2026-05-31-sr-review-session/`. Lesson: —.
