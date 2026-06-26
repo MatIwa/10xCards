@@ -30,7 +30,7 @@ Creating flashcards manually discourages learners from using spaced repetition �
 | ID | Change ID | Outcome (user can …) | Prerequisites | PRD refs | Status |
 |---|---|---|---|---|---|
 | F-01 | flashcard-schema-with-sr | (foundation) flashcard table with SR metadata and RLS policies landed | — | FR-007, FR-011 | done |
-| S-01 | manual-flashcard-crud | create, view, edit, and delete flashcards | F-01 | FR-007, FR-008, FR-009, FR-010 | proposed |
+| S-01 | manual-flashcard-crud | create, view, edit, and delete flashcards | F-01 | FR-007, FR-008, FR-009, FR-010 | done |
 | S-02 | sr-review-session | start a review session, answer cards, and rate recall | F-01, S-01 | FR-011, FR-012, FR-013 | proposed |
 | S-03 | ai-flashcard-generation | paste text, trigger AI generation, accept/edit/reject proposals | F-01 | US-01, FR-004, FR-005, FR-006 | proposed |
 | S-04 | account-deletion-gdpr | permanently delete their account and all personal data (GDPR right to erasure) | F-01 | FR-014 | done |
@@ -86,7 +86,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Sequenced before the north star because SR review requires cards to exist; this is the shortest path to a populated deck and unblocks S-02.
-- **Status:** proposed
+- **Status:** done
 
 ### S-02: Spaced repetition review session
 
@@ -171,3 +171,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **S-04: user can permanently delete their account from a settings/profile area; the action requires explicit confirmation, then wipes all personal data (flashcards, profile, Supabase auth record) and signs the user out. Satisfies the GDPR Article 17 right to erasure for EU users.** — Archived 2026-06-26 → `context/archive/2026-06-24-account-deletion-gdpr/`. Lesson: —.
 - **F-01: (foundation) flashcard table with SR metadata and RLS policies landed** — Archived 2026-06-26 → `context/archive/2026-05-31-flashcard-schema-with-sr/`. Lesson: —.
+- **S-01: user can create a flashcard (front and back), view all their flashcards, edit an existing flashcard, and delete a flashcard.** — Archived 2026-06-26 → `context/archive/2026-05-31-manual-flashcard-crud/`. Lesson: —.

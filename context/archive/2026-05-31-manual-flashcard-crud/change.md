@@ -1,10 +1,10 @@
 ---
 change_id: manual-flashcard-crud
 title: Manual flashcard create, view, edit, and delete
-status: impl_reviewed
+status: archived
 created: 2026-05-31
-updated: 2026-05-31
-archived_at: null
+updated: 2026-06-26
+archived_at: 2026-06-26T13:08:55Z
 ---
 
 ## Notes
