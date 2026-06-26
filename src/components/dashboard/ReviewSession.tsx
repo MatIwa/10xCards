@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { Flashcard } from "@/types";
 
@@ -199,7 +200,19 @@ export default function ReviewSession() {
   }
 
   if (state === "loading") {
-    return renderShell(<p className="text-sm text-blue-100/80">Loading review queue...</p>);
+    return renderShell(
+      <div className="space-y-5" aria-label="Loading review queue">
+        <div className="space-y-4">
+          <Skeleton className="h-44 w-full rounded-lg bg-white/15" />
+          <Skeleton className="h-44 w-full rounded-lg bg-white/15" />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={index} className="h-12 w-full rounded-md bg-white/15" />
+          ))}
+        </div>
+      </div>,
+    );
   }
 
   if (state === "error") {

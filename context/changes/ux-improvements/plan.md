@@ -324,18 +324,18 @@ No data migration. No schema changes. No API contract changes.
 
 #### Automated
 
-- [ ] 1.1 TypeScript compiles cleanly: `npm run build`
-- [ ] 1.2 ESLint passes: `npm run lint`
-- [ ] 1.3 The file `src/components/ui/skeleton.tsx` exists and exports `Skeleton`
-- [ ] 1.4 No occurrence of the literal strings "Loading flashcards…", "Loading flashcards...", "Loading review queue…", or "Loading review queue..." remains under `src/components/`
+- [x] 1.1 TypeScript compiles cleanly: `npm run build`
+- [x] 1.2 ESLint passes: `npm run lint`
+- [x] 1.3 The file `src/components/ui/skeleton.tsx` exists and exports `Skeleton`
+- [x] 1.4 No occurrence of the literal strings "Loading flashcards…", "Loading flashcards...", "Loading review queue…", or "Loading review queue..." remains under `src/components/`
 
 #### Manual
 
-- [ ] 1.5 Loading the dashboard's flashcard list shows shape-matching skeletons during the initial fetch
-- [ ] 1.6 Starting a review session shows two large skeleton blocks + four rating-button skeletons during queue load
-- [ ] 1.7 Triggering AI generation shows the spinner banner AND 3 proposal-shaped skeletons during generating
-- [ ] 1.8 Per-card accept buttons in candidate review still show their LoaderCircle spinner during save (regression)
-- [ ] 1.9 "Saving…" label on the flashcard form button still appears during submit (regression)
+- [x] 1.5 Loading the dashboard's flashcard list shows shape-matching skeletons during the initial fetch
+- [x] 1.6 Starting a review session shows two large skeleton blocks + four rating-button skeletons during queue load
+- [x] 1.7 Triggering AI generation shows the spinner banner AND 3 proposal-shaped skeletons during generating
+- [x] 1.8 Per-card accept buttons in candidate review still show their LoaderCircle spinner during save (regression)
+- [x] 1.9 "Saving…" label on the flashcard form button still appears during submit (regression)
 
 ### Phase 2: Bulk candidate actions
 

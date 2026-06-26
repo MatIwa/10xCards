@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import FlashcardForm from "@/components/dashboard/FlashcardForm";
 import type { Flashcard } from "@/types";
 
@@ -167,7 +168,15 @@ export default function FlashcardList() {
             />
           ) : null}
 
-          {isLoading ? <p className="text-sm text-blue-100/80">Loading flashcards...</p> : null}
+          {isLoading ? (
+            <ul className="space-y-3" aria-label="Loading flashcards">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <li key={index}>
+                  <Skeleton className="h-16 w-full rounded-lg bg-white/15" />
+                </li>
+              ))}
+            </ul>
+          ) : null}
 
           {!isLoading && flashcards.length === 0 ? (
             <div className="rounded-lg border border-dashed border-white/30 p-8 text-center text-blue-100/90">
