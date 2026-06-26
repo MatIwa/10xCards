@@ -103,6 +103,7 @@ Wire `SUPABASE_SERVICE_ROLE_KEY` as a server-only secret, build a single-purpose
 **Intent**: Single export that builds a service-role Supabase client for admin operations. Distinct module so the service-role key has exactly one import site; any future code review can scan for imports of this file to audit privilege boundaries.
 
 **Contract**:
+
 - Exports `createAdminClient(): SupabaseClient | null`
 - Returns `null` when `SUPABASE_URL` or `SUPABASE_SERVICE_ROLE_KEY` is unset
 - Built with `@supabase/supabase-js` `createClient` (not `@supabase/ssr`) — no cookies, no session persistence: pass `auth: { persistSession: false, autoRefreshToken: false }`
@@ -115,6 +116,7 @@ Wire `SUPABASE_SERVICE_ROLE_KEY` as a server-only secret, build a single-purpose
 **Intent**: Validate the JSON body of the deletion request. Even though the typed-confirmation UX guards the client, the server must independently verify the confirmation token to refuse stray/malicious requests.
 
 **Contract**:
+
 - `deleteAccountSchema` validates `{ confirmation: z.literal("DELETE") }`
 - Exports `DeleteAccountInput` inferred type
 
@@ -125,6 +127,7 @@ Wire `SUPABASE_SERVICE_ROLE_KEY` as a server-only secret, build a single-purpose
 **Intent**: Encapsulate the destructive sequence: delete the auth user via the admin client, then verify no orphaned flashcards remain. Mirrors the structure of [flashcard.service.ts](../../../src/lib/services/flashcard.service.ts) (returns `{ data, error }` or `{ error }`).
 
 **Contract**:
+
 - `deleteAccount(adminClient: SupabaseClient, userId: string): Promise<{ deletedFlashcards: number; error: string | null }>`
   - Step 1: count the rows that are about to be wiped: `await adminClient.from("flashcards").select("*", { count: "exact", head: true }).eq("user_id", userId)` and read `response.count` (default to `0` if null). `head: true` skips the row body so the request returns no data — only the count. This read happens BEFORE the delete so the count reflects what was wiped, not what survived.
   - Step 2: `await adminClient.auth.admin.deleteUser(userId)` — if it errors, return `{ deletedFlashcards: 0, error: <message> }` without proceeding.
@@ -145,6 +148,7 @@ Wire `SUPABASE_SERVICE_ROLE_KEY` as a server-only secret, build a single-purpose
 **Intent**: HTTP boundary that ties everything together: authenticate via the user's session, validate the typed-confirmation body, call the service, log the audit record, sign the user out, redirect to `/auth/signin?deleted=1`.
 
 **Contract**:
+
 - `POST` handler exported as `APIRoute`
 - Build both the user-scoped client (`createClient(request.headers, cookies)`) and the admin client (`createAdminClient()`); return 500 `{ error: "Account deletion is not configured" }` if either is null.
 - 401 `{ error: "Unauthorized" }` if `context.locals.user` is falsy.
@@ -173,12 +177,14 @@ if (error) {
   console.error("account_delete_failed", { user_id: context.locals.user.id, error });
   return Response.json({ error: "Deletion failed — please try again later." }, { status: 500 });
 }
-console.log(JSON.stringify({
-  event: "account_deleted",
-  user_id: context.locals.user.id,
-  flashcards_deleted_count: deletedFlashcards,
-  timestamp: new Date().toISOString(),
-}));
+console.log(
+  JSON.stringify({
+    event: "account_deleted",
+    user_id: context.locals.user.id,
+    flashcards_deleted_count: deletedFlashcards,
+    timestamp: new Date().toISOString(),
+  }),
+);
 // Local scope: cookie clear only, no server round-trip to the deleted user's session.
 // Errors are deliberately ignored — the destructive work succeeded and we must still redirect.
 await userSupabase.auth.signOut({ scope: "local" }).catch(() => {});
@@ -200,7 +206,7 @@ return context.redirect("/auth/signin?deleted=1", 303);
 - Type checking passes: `npx astro check`
 - Linting passes: `npm run lint`
 - Build passes: `npm run build`
-- No client bundle references the admin key: `grep -r "SUPABASE_SERVICE_ROLE_KEY" dist/` after build returns no matches.
+- No client bundle references the admin key: `grep -r "SUPABASE_SERVICE_ROLE_KEY" dist/client/` after build returns no matches.
 
 #### Manual Verification
 
@@ -236,6 +242,7 @@ Install the shadcn `dialog` component, build `/dashboard/settings.astro` with a 
 **Intent**: Astro SSR page protected by the existing `/dashboard` middleware prefix. Hosts the Topbar, page title, and a single "Danger zone" card containing the React deletion island. Page also fetches the user's flashcard count server-side so the island starts with an accurate number (avoids a loading flash inside the modal).
 
 **Contract**:
+
 - Reads `Astro.locals.user`; builds the user-scoped Supabase client via `createClient`; queries `select count from flashcards` (head: true, count: "exact") to get the current card count for the signed-in user.
 - Renders a "Settings" heading and a single "Danger zone" `<Card>` with explanatory copy and the `<DeleteAccountDialog client:load flashcardCount={count} userEmail={user.email} />` island.
 - Renders the existing Topbar at the top.
@@ -247,6 +254,7 @@ Install the shadcn `dialog` component, build `/dashboard/settings.astro` with a 
 **Intent**: React component that owns the destructive confirmation flow. Trigger button opens the dialog; dialog shows what will be deleted; the destructive "Delete account" button is disabled until the user types `DELETE` (case-sensitive) into a confirmation `<Input>`. On submit, the component performs a native form POST to `/api/account/delete` with `{ confirmation: "DELETE" }` so the server's 303 redirect navigates the browser to `/auth/signin?deleted=1` automatically.
 
 **Contract**:
+
 - Props: `{ flashcardCount: number; userEmail: string }`
 - Trigger button copy: "Delete account" — destructive styling (red background; reuse `Button` variant or className).
 - Dialog body must include: irreversibility warning, the literal sentence `All your flashcards (N) will be permanently deleted.` with `N` interpolated, and the user's email as identity affirmation.
@@ -372,38 +380,38 @@ No schema migration in this slice. The existing `ON DELETE CASCADE` declared in 
 
 #### Automated
 
-- [ ] 1.1 Type checking passes: `npx astro check`
-- [ ] 1.2 Linting passes: `npm run lint`
-- [ ] 1.3 Build passes: `npm run build`
-- [ ] 1.4 No client bundle references the admin key: `grep -r "SUPABASE_SERVICE_ROLE_KEY" dist/` returns no matches
+- [x] 1.1 Type checking passes: `npx astro check` — 63c9322
+- [x] 1.2 Linting passes: `npm run lint` — 63c9322
+- [x] 1.3 Build passes: `npm run build` — 63c9322
+- [x] 1.4 No client bundle references the admin key: `grep -r "SUPABASE_SERVICE_ROLE_KEY" dist/client/` returns no matches — 63c9322
 
 #### Manual
 
-- [ ] 1.5 `POST /api/account/delete` with `{"confirmation":"DELETE"}` returns a 303 redirect to `/auth/signin?deleted=1`
-- [ ] 1.6 `select 1 from auth.users where id = <test_uid>` returns 0 rows after the call
-- [ ] 1.7 `select count(*) from public.flashcards where user_id = <test_uid>` returns 0 after the call
-- [ ] 1.8 `POST /api/account/delete` without `confirmation: "DELETE"` returns 400 with Zod issues
-- [ ] 1.9 `POST /api/account/delete` unauthenticated returns 401 JSON (not a redirect)
-- [ ] 1.10 Worker logs show a single `{ event: "account_deleted", ... }` line on success
+- [x] 1.5 `POST /api/account/delete` with `{"confirmation":"DELETE"}` returns a 303 redirect to `/auth/signin?deleted=1` — 63c9322
+- [x] 1.6 `select 1 from auth.users where id = <test_uid>` returns 0 rows after the call — 63c9322
+- [x] 1.7 `select count(*) from public.flashcards where user_id = <test_uid>` returns 0 after the call — 63c9322
+- [x] 1.8 `POST /api/account/delete` without `confirmation: "DELETE"` returns 400 with Zod issues — 63c9322
+- [x] 1.9 `POST /api/account/delete` unauthenticated returns 401 JSON (not a redirect) — 63c9322
+- [x] 1.10 Worker logs show a single `{ event: "account_deleted", ... }` line on success — 63c9322
 
 ### Phase 2: Frontend — settings page + confirmation UX
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npx astro check`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Build passes: `npm run build`
-- [ ] 2.4 `src/components/ui/dialog.tsx` exists after running `npx shadcn@latest add dialog`
+- [x] 2.1 Type checking passes: `npx astro check` — cd07554
+- [x] 2.2 Linting passes: `npm run lint` — cd07554
+- [x] 2.3 Build passes: `npm run build` — cd07554
+- [x] 2.4 `src/components/ui/dialog.tsx` exists after running `npx shadcn@latest add dialog` — cd07554
 
 #### Manual
 
-- [ ] 2.5 Topbar shows "Settings" link when signed in; clicking it lands on `/dashboard/settings`
-- [ ] 2.6 `/dashboard/settings` shows the Danger zone card with the user's actual flashcard count
-- [ ] 2.7 Clicking "Delete account" opens the modal with the destructive button disabled
-- [ ] 2.8 Typing anything other than `DELETE` keeps the button disabled
-- [ ] 2.9 Typing `DELETE` exactly enables the button
-- [ ] 2.10 Clicking the enabled destructive button erases the account and lands the browser on `/auth/signin?deleted=1`
-- [ ] 2.11 A success banner reads "Your account and all your data have been permanently deleted." on that page
-- [ ] 2.12 Attempting to sign in with the deleted credentials fails with the standard sign-in error
-- [ ] 2.13 Signing up with the same email creates a fresh account with zero flashcards
-- [ ] 2.14 Hitting `/dashboard/settings` unauthenticated redirects to `/auth/signin`
+- [x] 2.5 Topbar shows "Settings" link when signed in; clicking it lands on `/dashboard/settings` — cd07554
+- [x] 2.6 `/dashboard/settings` shows the Danger zone card with the user's actual flashcard count — cd07554
+- [x] 2.7 Clicking "Delete account" opens the modal with the destructive button disabled — cd07554
+- [x] 2.8 Typing anything other than `DELETE` keeps the button disabled — cd07554
+- [x] 2.9 Typing `DELETE` exactly enables the button — cd07554
+- [x] 2.10 Clicking the enabled destructive button erases the account and lands the browser on `/auth/signin?deleted=1` — cd07554
+- [x] 2.11 A success banner reads "Your account and all your data have been permanently deleted." on that page — cd07554
+- [x] 2.12 Attempting to sign in with the deleted credentials fails with the standard sign-in error — cd07554
+- [x] 2.13 Signing up with the same email creates a fresh account with zero flashcards — cd07554
+- [x] 2.14 Hitting `/dashboard/settings` unauthenticated redirects to `/auth/signin` — cd07554
