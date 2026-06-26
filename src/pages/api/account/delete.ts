@@ -33,12 +33,16 @@ export const POST: APIRoute = async (context) => {
     return badRequest("Validation failed", parsed.error.issues);
   }
 
-  const { deletedFlashcards, error } = await deleteAccount(adminSupabase, context.locals.user.id);
+  const { data: deletedFlashcards, error } = await deleteAccount(adminSupabase, context.locals.user.id);
   if (error) {
+    // GDPR audit log — required by plan §7; do not strip.
+    // eslint-disable-next-line no-console
     console.error("account_delete_failed", { user_id: context.locals.user.id, error });
     return Response.json({ error: "Deletion failed — please try again later." }, { status: 500 });
   }
 
+  // GDPR audit log — required by plan §7; do not strip.
+  // eslint-disable-next-line no-console
   console.log(
     JSON.stringify({
       event: "account_deleted",
