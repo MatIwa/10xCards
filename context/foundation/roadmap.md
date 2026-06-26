@@ -3,7 +3,7 @@ project: "10xCards"
 version: 1
 status: draft
 created: 2026-05-31
-updated: 2026-06-24
+updated: 2026-06-26
 prd_version: 1
 main_goal: speed
 top_blocker: time
@@ -33,7 +33,7 @@ Creating flashcards manually discourages learners from using spaced repetition �
 | S-01 | manual-flashcard-crud | create, view, edit, and delete flashcards | F-01 | FR-007, FR-008, FR-009, FR-010 | proposed |
 | S-02 | sr-review-session | start a review session, answer cards, and rate recall | F-01, S-01 | FR-011, FR-012, FR-013 | proposed |
 | S-03 | ai-flashcard-generation | paste text, trigger AI generation, accept/edit/reject proposals | F-01 | US-01, FR-004, FR-005, FR-006 | proposed |
-| S-04 | account-deletion-gdpr | permanently delete their account and all personal data (GDPR right to erasure) | F-01 | FR-014 | proposed |
+| S-04 | account-deletion-gdpr | permanently delete their account and all personal data (GDPR right to erasure) | F-01 | FR-014 | done |
 | S-05 | ux-improvements | use bulk actions on AI candidate review, reset a review session, and see consistent loading states | F-01 | FR-006, FR-011, FR-012 | planned |
 
 ## Streams
@@ -125,7 +125,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Where the "Delete account" entry point lives (settings page vs. profile menu) — Owner: tech decision at `/10x-plan` time. Block: no.
   - Whether deletion calls `auth.admin.deleteUser` from a server endpoint with the service-role key, or relies on a Supabase database trigger from a user-initiated row deletion — Owner: tech decision at `/10x-plan` time. Block: no.
-- **Status:** proposed
+- **Status:** done
 
 ### S-05: UX improvements
 
@@ -169,4 +169,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Done
 
-(Empty on first generation. `/10x-archive` appends entries here when a change is archived.)
+- **S-04: user can permanently delete their account from a settings/profile area; the action requires explicit confirmation, then wipes all personal data (flashcards, profile, Supabase auth record) and signs the user out. Satisfies the GDPR Article 17 right to erasure for EU users.** — Archived 2026-06-26 → `context/archive/2026-06-24-account-deletion-gdpr/`. Lesson: —.
