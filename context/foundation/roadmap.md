@@ -34,7 +34,7 @@ Creating flashcards manually discourages learners from using spaced repetition �
 | S-02 | sr-review-session | start a review session, answer cards, and rate recall | F-01, S-01 | FR-011, FR-012, FR-013 | done |
 | S-03 | ai-flashcard-generation | paste text, trigger AI generation, accept/edit/reject proposals | F-01 | US-01, FR-004, FR-005, FR-006 | done |
 | S-04 | account-deletion-gdpr | permanently delete their account and all personal data (GDPR right to erasure) | F-01 | FR-014 | done |
-| S-05 | ux-improvements | use bulk actions on AI candidate review, reset a review session, and see consistent loading states | F-01 | FR-006, FR-011, FR-012 | planned |
+| S-05 | ux-improvements | use bulk actions on AI candidate review, reset a review session, and see consistent loading states | F-01 | FR-006, FR-011, FR-012 | done |
 
 ## Streams
 
@@ -139,7 +139,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Reset semantics: discard ratings from the current session only, or also roll back any persisted SR state changes? — Owner: tech decision at `/10x-plan` time. Block: no.
   - Bulk-action granularity on candidate review ("all" vs. "all visible" vs. "selected") — Owner: user. Block: no.
 - **Risk:** Discovered during S-01–S-03 implementation, so scope can drift as more friction is found. Mitigation: lock the three problem areas (bulk actions, session reset, loading states) at `/10x-plan` time and route any new UX issues into a follow-up slice rather than expanding S-05.
-- **Status:** planned
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -169,6 +169,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Done
 
+- **S-05: user can apply bulk actions (accept/reject all, accept/reject selected) on the AI candidate review screen, reset an in-progress SR review session back to its starting state, and sees consistent loading/skeleton states across generation, CRUD, and review flows.** — Archived 2026-06-26 → `context/archive/2026-06-24-ux-improvements/`. Lesson: —.
 - **S-04: user can permanently delete their account from a settings/profile area; the action requires explicit confirmation, then wipes all personal data (flashcards, profile, Supabase auth record) and signs the user out. Satisfies the GDPR Article 17 right to erasure for EU users.** — Archived 2026-06-26 → `context/archive/2026-06-24-account-deletion-gdpr/`. Lesson: —.
 - **F-01: (foundation) flashcard table with SR metadata and RLS policies landed** — Archived 2026-06-26 → `context/archive/2026-05-31-flashcard-schema-with-sr/`. Lesson: —.
 - **S-01: user can create a flashcard (front and back), view all their flashcards, edit an existing flashcard, and delete a flashcard.** — Archived 2026-06-26 → `context/archive/2026-05-31-manual-flashcard-crud/`. Lesson: —.
