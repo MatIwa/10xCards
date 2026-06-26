@@ -361,17 +361,17 @@ No data migration. No schema changes. No API contract changes.
 
 #### Automated
 
-- [x] 3.1 TypeScript compiles: `npm run build`
-- [x] 3.2 ESLint passes: `npm run lint`
-- [x] 3.3 The file `src/components/ui/alert-dialog.tsx` exists
+- [x] 3.1 TypeScript compiles: `npm run build` — 741ab95
+- [x] 3.2 ESLint passes: `npm run lint` — 741ab95
+- [x] 3.3 The file `src/components/ui/alert-dialog.tsx` exists — 741ab95
 
 #### Manual
 
-- [ ] 3.4 "Reset" button appears in the review header during reviewing/revealed states (deliberately hidden during submitting to avoid the in-flight POST race)
-- [ ] 3.5 "Reset" button is hidden on loading/error/empty/practiceEmpty/submitting states
-- [ ] 3.6 Clicking Reset opens a centered modal with title, description, Cancel, and Reload Queue buttons
-- [ ] 3.7 Clicking Cancel (or Esc) closes the modal with no state change
-- [ ] 3.8 Clicking Reload Queue closes modal, shows skeleton briefly, then displays a fresh queue in the current session mode
-- [ ] 3.9 While the dialog is open, pressing `1`/`2`/`3`/`4` does NOT grade the underlying card; pressing Space does NOT toggle reveal
-- [ ] 3.10 Cards graded before reset retain their persisted FSRS state (verify via Supabase studio or later review session)
-- [ ] 3.11 After reset, the progress counter shows `1 / N` again
+- [x] 3.4 "Reset" button appears in the review header during reviewing/revealed states (deliberately hidden during submitting to avoid the in-flight POST race) — 741ab95
+- [x] 3.5 "Reset" button is hidden on loading/error/empty/practiceEmpty/submitting states — 741ab95
+- [x] 3.6 Clicking Reset opens a centered modal with title, description, Cancel, and Reload Queue buttons — 741ab95
+- [x] 3.7 Clicking Cancel (or Esc) closes the modal with no state change — 741ab95
+- [x] 3.8 Clicking Reload Queue closes modal, shows skeleton briefly, then displays a fresh queue in the current session mode — 741ab95
+- [x] 3.9 While the dialog is open, pressing `1`/`2`/`3`/`4` does NOT grade the underlying card; pressing Space does NOT toggle reveal — 741ab95
+- [x] 3.10 Cards graded before reset retain their persisted FSRS state (verify via Supabase studio or later review session) — 741ab95
+- [x] 3.11 After reset, the progress counter shows `1 / N` again — 741ab95
