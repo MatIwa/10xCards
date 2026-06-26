@@ -1,0 +1,51 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Topbar from "@/components/Topbar.astro";
+import DeleteAccountDialog from "@/components/dashboard/DeleteAccountDialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createClient } from "@/lib/supabase";
+
+const { user } = Astro.locals;
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+let flashcardCount = 0;
+
+if (user && supabase) {
+  const { count } = await supabase
+    .from("flashcards")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", user.id);
+  flashcardCount = count ?? 0;
+}
+---
+
+<Layout title="Settings">
+  <div class="bg-cosmic min-h-screen py-8 text-white">
+    <div class="mx-auto w-full max-w-5xl px-4">
+      <Topbar />
+
+      <div class="mb-8">
+        <h1 class="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+          Settings
+        </h1>
+        <p class="mt-1 text-sm text-blue-100/80">Manage account-level settings for {user?.email}</p>
+      </div>
+
+      <Card className="border-red-300/30 bg-white/10 text-white shadow-xl backdrop-blur">
+        <CardHeader>
+          <CardTitle className="text-2xl text-red-100">Danger zone</CardTitle>
+          <p class="text-sm text-blue-100/80">
+            Permanently delete your account and erase all flashcards associated with it.
+          </p>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p class="text-sm text-blue-100/80">Current flashcards</p>
+            <p class="mt-1 text-3xl font-semibold text-white">{flashcardCount}</p>
+          </div>
+          <DeleteAccountDialog client:load flashcardCount={flashcardCount} userEmail={user?.email ?? "this account"} />
+        </CardContent>
+      </Card>
+    </div>
+  </div>
+</Layout>
