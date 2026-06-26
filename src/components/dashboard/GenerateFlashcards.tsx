@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { FlashcardSource } from "@/types";
@@ -352,9 +353,18 @@ export default function GenerateFlashcards() {
         </div>
 
         {state === "generating" ? (
-          <div className="flex items-center gap-3 rounded-md border border-white/20 bg-black/20 p-3 text-sm text-blue-100">
-            <LoaderCircle className="animate-spin" aria-hidden="true" />
-            <span>Generating cards from your text...</span>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 rounded-md border border-white/20 bg-black/20 p-3 text-sm text-blue-100">
+              <LoaderCircle className="animate-spin" aria-hidden="true" />
+              <span>Generating cards from your text...</span>
+            </div>
+            <ul className="space-y-3" aria-label="Loading generated proposals">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <li key={index}>
+                  <Skeleton className="h-32 w-full rounded-lg bg-white/15" />
+                </li>
+              ))}
+            </ul>
           </div>
         ) : null}
 
