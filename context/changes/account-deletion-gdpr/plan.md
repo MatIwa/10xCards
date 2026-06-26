@@ -398,20 +398,20 @@ No schema migration in this slice. The existing `ON DELETE CASCADE` declared in 
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npx astro check`
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 Build passes: `npm run build`
-- [x] 2.4 `src/components/ui/dialog.tsx` exists after running `npx shadcn@latest add dialog`
+- [x] 2.1 Type checking passes: `npx astro check` — cd07554
+- [x] 2.2 Linting passes: `npm run lint` — cd07554
+- [x] 2.3 Build passes: `npm run build` — cd07554
+- [x] 2.4 `src/components/ui/dialog.tsx` exists after running `npx shadcn@latest add dialog` — cd07554
 
 #### Manual
 
-- [x] 2.5 Topbar shows "Settings" link when signed in; clicking it lands on `/dashboard/settings`
-- [x] 2.6 `/dashboard/settings` shows the Danger zone card with the user's actual flashcard count
-- [x] 2.7 Clicking "Delete account" opens the modal with the destructive button disabled
-- [x] 2.8 Typing anything other than `DELETE` keeps the button disabled
-- [x] 2.9 Typing `DELETE` exactly enables the button
-- [x] 2.10 Clicking the enabled destructive button erases the account and lands the browser on `/auth/signin?deleted=1`
-- [x] 2.11 A success banner reads "Your account and all your data have been permanently deleted." on that page
-- [x] 2.12 Attempting to sign in with the deleted credentials fails with the standard sign-in error
-- [x] 2.13 Signing up with the same email creates a fresh account with zero flashcards
-- [x] 2.14 Hitting `/dashboard/settings` unauthenticated redirects to `/auth/signin`
+- [x] 2.5 Topbar shows "Settings" link when signed in; clicking it lands on `/dashboard/settings` — cd07554
+- [x] 2.6 `/dashboard/settings` shows the Danger zone card with the user's actual flashcard count — cd07554
+- [x] 2.7 Clicking "Delete account" opens the modal with the destructive button disabled — cd07554
+- [x] 2.8 Typing anything other than `DELETE` keeps the button disabled — cd07554
+- [x] 2.9 Typing `DELETE` exactly enables the button — cd07554
+- [x] 2.10 Clicking the enabled destructive button erases the account and lands the browser on `/auth/signin?deleted=1` — cd07554
+- [x] 2.11 A success banner reads "Your account and all your data have been permanently deleted." on that page — cd07554
+- [x] 2.12 Attempting to sign in with the deleted credentials fails with the standard sign-in error — cd07554
+- [x] 2.13 Signing up with the same email creates a fresh account with zero flashcards — cd07554
+- [x] 2.14 Hitting `/dashboard/settings` unauthenticated redirects to `/auth/signin` — cd07554

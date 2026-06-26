@@ -1,7 +1,7 @@
 ---
 change_id: account-deletion-gdpr
 title: Account deletion with full data erasure (GDPR)
-status: implementing
+status: implemented
 created: 2026-06-24
 updated: 2026-06-26
 archived_at: null
