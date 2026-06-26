@@ -32,7 +32,7 @@ Creating flashcards manually discourages learners from using spaced repetition �
 | F-01 | flashcard-schema-with-sr | (foundation) flashcard table with SR metadata and RLS policies landed | — | FR-007, FR-011 | done |
 | S-01 | manual-flashcard-crud | create, view, edit, and delete flashcards | F-01 | FR-007, FR-008, FR-009, FR-010 | done |
 | S-02 | sr-review-session | start a review session, answer cards, and rate recall | F-01, S-01 | FR-011, FR-012, FR-013 | done |
-| S-03 | ai-flashcard-generation | paste text, trigger AI generation, accept/edit/reject proposals | F-01 | US-01, FR-004, FR-005, FR-006 | proposed |
+| S-03 | ai-flashcard-generation | paste text, trigger AI generation, accept/edit/reject proposals | F-01 | US-01, FR-004, FR-005, FR-006 | done |
 | S-04 | account-deletion-gdpr | permanently delete their account and all personal data (GDPR right to erasure) | F-01 | FR-014 | done |
 | S-05 | ux-improvements | use bulk actions on AI candidate review, reset a review session, and see consistent loading states | F-01 | FR-006, FR-011, FR-012 | planned |
 
@@ -112,7 +112,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Source text input boundaries (min/max character count)? — Owner: user. Block: no.
 - **Risk:** Depends on external LLM provider (OpenRouter); latency and cost are runtime risks. Privacy NFR (source text not retained after generation) must be enforced at implementation. Parallel to Stream A so neither track blocks the other.
-- **Status:** proposed
+- **Status:** done
 
 ### S-04: Account deletion (GDPR)
 
@@ -173,3 +173,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **F-01: (foundation) flashcard table with SR metadata and RLS policies landed** — Archived 2026-06-26 → `context/archive/2026-05-31-flashcard-schema-with-sr/`. Lesson: —.
 - **S-01: user can create a flashcard (front and back), view all their flashcards, edit an existing flashcard, and delete a flashcard.** — Archived 2026-06-26 → `context/archive/2026-05-31-manual-flashcard-crud/`. Lesson: —.
 - **S-02: user can start a spaced repetition review session, see a card's front, reveal the back, rate their recall, and have the next review date scheduled automatically.** — Archived 2026-06-26 → `context/archive/2026-05-31-sr-review-session/`. Lesson: —.
+- **S-03: user can paste source text, trigger AI flashcard generation, review a list of AI-generated proposals, and accept, edit, or reject each card individually — with accepted cards saved to their collection immediately.** — Archived 2026-06-26 → `context/archive/2026-06-23-ai-flashcard-generation/`. Lesson: —.
