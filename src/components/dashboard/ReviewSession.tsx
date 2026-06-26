@@ -1,7 +1,19 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowRight, RotateCcw } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { Flashcard } from "@/types";
 
@@ -68,6 +80,7 @@ export default function ReviewSession() {
   const [state, setState] = useState<ReviewState>("loading");
   const [practiceMode, setPracticeMode] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
 
   const currentCard = cards[currentIndex];
   const progressLabel = useMemo(() => {
@@ -155,6 +168,10 @@ export default function ReviewSession() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (resetDialogOpen) {
+        return;
+      }
+
       const target = event.target as HTMLElement | null;
       const isTyping = target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable;
       if (isTyping) {
@@ -177,29 +194,78 @@ export default function ReviewSession() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [gradeCurrentCard, revealAnswer, state]);
+  }, [gradeCurrentCard, resetDialogOpen, revealAnswer, state]);
 
   function renderShell(content: React.ReactNode) {
+    const canResetSession = state === "reviewing" || state === "revealed";
+
     return (
-      <section className="mx-auto w-full max-w-5xl px-4 py-8 text-white">
-        <Card className="border-white/20 bg-white/10 shadow-xl backdrop-blur">
-          <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <CardTitle className="text-2xl text-white">Review session</CardTitle>
-              <p className="mt-1 text-sm text-blue-100/80">{practiceMode ? "Practice mode" : "Due cards"}</p>
-            </div>
-            <span className="rounded-full border border-white/20 bg-black/20 px-3 py-1 text-sm text-blue-100">
-              {progressLabel}
-            </span>
-          </CardHeader>
-          <CardContent>{content}</CardContent>
-        </Card>
-      </section>
+      <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
+        <section className="mx-auto w-full max-w-5xl px-4 py-8 text-white">
+          <Card className="border-white/20 bg-white/10 shadow-xl backdrop-blur">
+            <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <CardTitle className="text-2xl text-white">Review session</CardTitle>
+                <p className="mt-1 text-sm text-blue-100/80">{practiceMode ? "Practice mode" : "Due cards"}</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-full border border-white/20 bg-black/20 px-3 py-1 text-sm text-blue-100">
+                  {progressLabel}
+                </span>
+                {canResetSession ? (
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="border-white/30 bg-transparent text-blue-100 hover:bg-white/15 hover:text-white"
+                    >
+                      Reset
+                    </Button>
+                  </AlertDialogTrigger>
+                ) : null}
+              </div>
+            </CardHeader>
+            <CardContent>{content}</CardContent>
+          </Card>
+        </section>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset review session?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Reload the queue from scratch. Ratings already submitted will be kept.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive hover:bg-destructive/90 text-white"
+              onClick={() => {
+                void loadQueue(practiceMode ? "practice" : "due");
+              }}
+            >
+              Reload queue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     );
   }
 
   if (state === "loading") {
-    return renderShell(<p className="text-sm text-blue-100/80">Loading review queue...</p>);
+    return renderShell(
+      <div className="space-y-5" aria-label="Loading review queue">
+        <div className="space-y-4">
+          <Skeleton className="h-44 w-full rounded-lg bg-white/15" />
+          <Skeleton className="h-44 w-full rounded-lg bg-white/15" />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={index} className="h-12 w-full rounded-md bg-white/15" />
+          ))}
+        </div>
+      </div>,
+    );
   }
 
   if (state === "error") {

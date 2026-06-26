@@ -324,54 +324,54 @@ No data migration. No schema changes. No API contract changes.
 
 #### Automated
 
-- [ ] 1.1 TypeScript compiles cleanly: `npm run build`
-- [ ] 1.2 ESLint passes: `npm run lint`
-- [ ] 1.3 The file `src/components/ui/skeleton.tsx` exists and exports `Skeleton`
-- [ ] 1.4 No occurrence of the literal strings "Loading flashcards…", "Loading flashcards...", "Loading review queue…", or "Loading review queue..." remains under `src/components/`
+- [x] 1.1 TypeScript compiles cleanly: `npm run build` — 9f1655e
+- [x] 1.2 ESLint passes: `npm run lint` — 9f1655e
+- [x] 1.3 The file `src/components/ui/skeleton.tsx` exists and exports `Skeleton` — 9f1655e
+- [x] 1.4 No occurrence of the literal strings "Loading flashcards…", "Loading flashcards...", "Loading review queue…", or "Loading review queue..." remains under `src/components/` — 9f1655e
 
 #### Manual
 
-- [ ] 1.5 Loading the dashboard's flashcard list shows shape-matching skeletons during the initial fetch
-- [ ] 1.6 Starting a review session shows two large skeleton blocks + four rating-button skeletons during queue load
-- [ ] 1.7 Triggering AI generation shows the spinner banner AND 3 proposal-shaped skeletons during generating
-- [ ] 1.8 Per-card accept buttons in candidate review still show their LoaderCircle spinner during save (regression)
-- [ ] 1.9 "Saving…" label on the flashcard form button still appears during submit (regression)
+- [x] 1.5 Loading the dashboard's flashcard list shows shape-matching skeletons during the initial fetch — 9f1655e
+- [x] 1.6 Starting a review session shows two large skeleton blocks + four rating-button skeletons during queue load — 9f1655e
+- [x] 1.7 Triggering AI generation shows the spinner banner AND 3 proposal-shaped skeletons during generating — 9f1655e
+- [x] 1.8 Per-card accept buttons in candidate review still show their LoaderCircle spinner during save (regression) — 9f1655e
+- [x] 1.9 "Saving…" label on the flashcard form button still appears during submit (regression) — 9f1655e
 
 ### Phase 2: Bulk candidate actions
 
 #### Automated
 
-- [ ] 2.1 TypeScript compiles: `npm run build`
-- [ ] 2.2 ESLint passes: `npm run lint`
-- [ ] 2.3 No new dependencies added to `package.json`
+- [x] 2.1 TypeScript compiles: `npm run build` — ddbc84f
+- [x] 2.2 ESLint passes: `npm run lint` — ddbc84f
+- [x] 2.3 No new dependencies added to `package.json` — ddbc84f
 
 #### Manual
 
-- [ ] 2.4 After AI generation completes, every proposal appears with its checkbox already ticked
-- [ ] 2.5 "Select none" unchecks all; "Select all" re-checks all; selection count in toolbar updates live
-- [ ] 2.6 Bulk accept of 8 valid proposals shows progress "Accepting 1/8…" → … → ends with "Accepted 8" summary
-- [ ] 2.7 Bulk accept with 6 valid + 2 invalid produces "Accepted 6, skipped 2 (validation errors)" and invalid cards remain
-- [ ] 2.8 Reject selected removes only the selected proposals; unselected remain
-- [ ] 2.9 Per-card Accept/Reject are disabled during a bulk run and re-enabled after
-- [ ] 2.10 Per-card accept still works as before — `ai_full` vs `ai_edited` source attribution intact (regression)
-- [ ] 2.11 The summary `statusMessage` banner appears after a bulk run completes (visible in both `renderPasteView` after a list-emptying run and `renderReviewView` after a partial run) and clears on the next generate
-- [ ] 2.12 If a bulk-accept network call fails for one card, summary reports `failed` and that card stays in the list with `saveError`
+- [x] 2.4 After AI generation completes, every proposal appears with its checkbox already ticked — ddbc84f
+- [x] 2.5 "Select none" unchecks all; "Select all" re-checks all; selection count in toolbar updates live — ddbc84f
+- [x] 2.6 Bulk accept of 8 valid proposals shows progress "Accepting 1/8…" → … → ends with "Accepted 8" summary — ddbc84f
+- [x] 2.7 Bulk accept with 6 valid + 2 invalid produces "Accepted 6, skipped 2 (validation errors)" and invalid cards remain — ddbc84f
+- [x] 2.8 Reject selected removes only the selected proposals; unselected remain — ddbc84f
+- [x] 2.9 Per-card Accept/Reject are disabled during a bulk run and re-enabled after — ddbc84f
+- [x] 2.10 Per-card accept still works as before — `ai_full` vs `ai_edited` source attribution intact (regression) — ddbc84f
+- [x] 2.11 The summary `statusMessage` banner appears after a bulk run completes (visible in both `renderPasteView` after a list-emptying run and `renderReviewView` after a partial run) and clears on the next generate — ddbc84f
+- [x] 2.12 If a bulk-accept network call fails for one card, summary reports `failed` and that card stays in the list with `saveError` — ddbc84f
 
 ### Phase 3: Review session reset
 
 #### Automated
 
-- [ ] 3.1 TypeScript compiles: `npm run build`
-- [ ] 3.2 ESLint passes: `npm run lint`
-- [ ] 3.3 The file `src/components/ui/alert-dialog.tsx` exists
+- [x] 3.1 TypeScript compiles: `npm run build` — 741ab95
+- [x] 3.2 ESLint passes: `npm run lint` — 741ab95
+- [x] 3.3 The file `src/components/ui/alert-dialog.tsx` exists — 741ab95
 
 #### Manual
 
-- [ ] 3.4 "Reset" button appears in the review header during reviewing/revealed states (deliberately hidden during submitting to avoid the in-flight POST race)
-- [ ] 3.5 "Reset" button is hidden on loading/error/empty/practiceEmpty/submitting states
-- [ ] 3.6 Clicking Reset opens a centered modal with title, description, Cancel, and Reload Queue buttons
-- [ ] 3.7 Clicking Cancel (or Esc) closes the modal with no state change
-- [ ] 3.8 Clicking Reload Queue closes modal, shows skeleton briefly, then displays a fresh queue in the current session mode
-- [ ] 3.9 While the dialog is open, pressing `1`/`2`/`3`/`4` does NOT grade the underlying card; pressing Space does NOT toggle reveal
-- [ ] 3.10 Cards graded before reset retain their persisted FSRS state (verify via Supabase studio or later review session)
-- [ ] 3.11 After reset, the progress counter shows `1 / N` again
+- [x] 3.4 "Reset" button appears in the review header during reviewing/revealed states (deliberately hidden during submitting to avoid the in-flight POST race) — 741ab95
+- [x] 3.5 "Reset" button is hidden on loading/error/empty/practiceEmpty/submitting states — 741ab95
+- [x] 3.6 Clicking Reset opens a centered modal with title, description, Cancel, and Reload Queue buttons — 741ab95
+- [x] 3.7 Clicking Cancel (or Esc) closes the modal with no state change — 741ab95
+- [x] 3.8 Clicking Reload Queue closes modal, shows skeleton briefly, then displays a fresh queue in the current session mode — 741ab95
+- [x] 3.9 While the dialog is open, pressing `1`/`2`/`3`/`4` does NOT grade the underlying card; pressing Space does NOT toggle reveal — 741ab95
+- [x] 3.10 Cards graded before reset retain their persisted FSRS state (verify via Supabase studio or later review session) — 741ab95
+- [x] 3.11 After reset, the progress counter shows `1 / N` again — 741ab95

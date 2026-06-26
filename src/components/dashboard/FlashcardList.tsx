@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import FlashcardForm from "@/components/dashboard/FlashcardForm";
 import type { Flashcard } from "@/types";
 
@@ -167,7 +168,15 @@ export default function FlashcardList() {
             />
           ) : null}
 
-          {isLoading ? <p className="text-sm text-blue-100/80">Loading flashcards...</p> : null}
+          {isLoading ? (
+            <ul className="space-y-3" aria-label="Loading flashcards">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <li key={index}>
+                  <Skeleton className="h-16 w-full rounded-lg bg-white/15" />
+                </li>
+              ))}
+            </ul>
+          ) : null}
 
           {!isLoading && flashcards.length === 0 ? (
             <div className="rounded-lg border border-dashed border-white/30 p-8 text-center text-blue-100/90">
@@ -190,49 +199,37 @@ export default function FlashcardList() {
                       }}
                     />
                   ) : (
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="truncate text-base font-semibold text-white">{truncate(card.front, 120)}</h3>
-                          <span className="rounded-full border border-blue-200/30 bg-blue-300/20 px-2 py-0.5 text-xs text-blue-100">
-                            {sourceLabel(card.source)}
-                          </span>
+                    <div className="space-y-3">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="truncate text-base font-semibold text-white">{truncate(card.front, 120)}</h3>
+                            <span className="rounded-full border border-blue-200/30 bg-blue-300/20 px-2 py-0.5 text-xs text-blue-100">
+                              {sourceLabel(card.source)}
+                            </span>
+                          </div>
+                          <p className="mt-2 text-sm text-blue-100/80">{truncate(card.back, 200)}</p>
+                          <p className="mt-2 text-xs text-blue-100/60">Created {formatDate(card.created_at)}</p>
                         </div>
-                        <p className="mt-2 text-sm text-blue-100/80">{truncate(card.back, 200)}</p>
-                        <p className="mt-2 text-xs text-blue-100/60">Created {formatDate(card.created_at)}</p>
-                      </div>
 
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="border-white/30 bg-transparent text-blue-100 hover:bg-white/15 hover:text-white"
-                          onClick={() => {
-                            setEditingId(card.id);
-                            setPendingDeleteId(null);
-                          }}
-                        >
-                          Edit
-                        </Button>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="border-white/30 bg-transparent text-blue-100 hover:bg-white/15 hover:text-white"
+                            onClick={() => {
+                              setEditingId(card.id);
+                              setPendingDeleteId(null);
+                            }}
+                          >
+                            Edit
+                          </Button>
 
-                        {pendingDeleteId === card.id ? (
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs text-red-100">Are you sure?</span>
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              className="h-8 px-3"
-                              disabled={isDeletingId === card.id}
-                              onClick={() => {
-                                void handleDelete(card.id);
-                              }}
-                            >
-                              {isDeletingId === card.id ? "Deleting..." : "Yes"}
-                            </Button>
+                          {pendingDeleteId === card.id ? (
                             <Button
                               type="button"
                               variant="outline"
-                              className="h-8 border-white/30 bg-transparent text-blue-100 hover:bg-white/15 hover:text-white"
+                              className="border-white/30 bg-transparent text-blue-100 hover:bg-white/15 hover:text-white"
                               disabled={isDeletingId === card.id}
                               onClick={() => {
                                 setPendingDeleteId(null);
@@ -240,20 +237,39 @@ export default function FlashcardList() {
                             >
                               Cancel
                             </Button>
+                          ) : (
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              onClick={() => {
+                                setPendingDeleteId(card.id);
+                                setEditingId(null);
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+
+                      {pendingDeleteId === card.id ? (
+                        <div className="flex flex-col gap-3 rounded-md border border-red-300/40 bg-red-500/15 p-3 text-sm text-red-100 sm:flex-row sm:items-center sm:justify-between">
+                          <div>
+                            <p className="font-medium text-white">Delete this flashcard?</p>
+                            <p className="mt-1 text-xs text-red-100/80">This cannot be undone.</p>
                           </div>
-                        ) : (
                           <Button
                             type="button"
                             variant="destructive"
+                            disabled={isDeletingId === card.id}
                             onClick={() => {
-                              setPendingDeleteId(card.id);
-                              setEditingId(null);
+                              void handleDelete(card.id);
                             }}
                           >
-                            Delete
+                            {isDeletingId === card.id ? "Deleting..." : "Delete"}
                           </Button>
-                        )}
-                      </div>
+                        </div>
+                      ) : null}
                     </div>
                   )}
                 </li>
