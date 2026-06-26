@@ -281,7 +281,7 @@ export default function GenerateFlashcards() {
     );
   }
 
-  function rejectProposal(proposalId: string) {
+  function rejectProposal(proposalId: string): ProposalState[] {
     let nextProposals: ProposalState[] = [];
     flushSync(() => {
       setProposals((prev) => {
@@ -290,7 +290,7 @@ export default function GenerateFlashcards() {
       });
       removeSelectedId(proposalId);
     });
-    finishIfLastProposal(nextProposals, savedCount);
+    return nextProposals;
   }
 
   async function acceptProposal(proposalId: string): Promise<AcceptOutcome> {
@@ -428,8 +428,9 @@ export default function GenerateFlashcards() {
     const selectedProposalIds = Array.from(selectedIds).filter((proposalId) => proposalIds.has(proposalId));
 
     setBulkAction({ kind: "rejecting", total: selectedProposalIds.length, done: 0 });
+    let nextProposals: ProposalState[] = proposals;
     for (const proposalId of selectedProposalIds) {
-      rejectProposal(proposalId);
+      nextProposals = rejectProposal(proposalId);
       setBulkAction((currentBulkAction) =>
         currentBulkAction.kind === "rejecting"
           ? { ...currentBulkAction, done: currentBulkAction.done + 1 }
@@ -439,6 +440,7 @@ export default function GenerateFlashcards() {
 
     setStatusMessage(`Rejected ${selectedProposalIds.length}`);
     setBulkAction({ kind: "idle" });
+    finishIfLastProposal(nextProposals, savedCount);
   }
 
   function renderPasteView() {
@@ -606,7 +608,6 @@ export default function GenerateFlashcards() {
                     type="checkbox"
                     checked={selectedIds.has(proposal.id)}
                     disabled={isBulkRunning}
-                    aria-label={`Select proposal ${index + 1}`}
                     onChange={(event) => {
                       toggleSelectedId(proposal.id, event.target.checked);
                     }}
@@ -687,7 +688,8 @@ export default function GenerateFlashcards() {
                         variant="destructive"
                         disabled={isBulkRunning || proposal.isSaving}
                         onClick={() => {
-                          rejectProposal(proposal.id);
+                          const nextProposals = rejectProposal(proposal.id);
+                          finishIfLastProposal(nextProposals, savedCount);
                         }}
                       >
                         <X aria-hidden="true" />
