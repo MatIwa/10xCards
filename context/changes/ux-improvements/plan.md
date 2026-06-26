@@ -324,38 +324,38 @@ No data migration. No schema changes. No API contract changes.
 
 #### Automated
 
-- [x] 1.1 TypeScript compiles cleanly: `npm run build`
-- [x] 1.2 ESLint passes: `npm run lint`
-- [x] 1.3 The file `src/components/ui/skeleton.tsx` exists and exports `Skeleton`
-- [x] 1.4 No occurrence of the literal strings "Loading flashcards…", "Loading flashcards...", "Loading review queue…", or "Loading review queue..." remains under `src/components/`
+- [x] 1.1 TypeScript compiles cleanly: `npm run build` — 9f1655e
+- [x] 1.2 ESLint passes: `npm run lint` — 9f1655e
+- [x] 1.3 The file `src/components/ui/skeleton.tsx` exists and exports `Skeleton` — 9f1655e
+- [x] 1.4 No occurrence of the literal strings "Loading flashcards…", "Loading flashcards...", "Loading review queue…", or "Loading review queue..." remains under `src/components/` — 9f1655e
 
 #### Manual
 
-- [x] 1.5 Loading the dashboard's flashcard list shows shape-matching skeletons during the initial fetch
-- [x] 1.6 Starting a review session shows two large skeleton blocks + four rating-button skeletons during queue load
-- [x] 1.7 Triggering AI generation shows the spinner banner AND 3 proposal-shaped skeletons during generating
-- [x] 1.8 Per-card accept buttons in candidate review still show their LoaderCircle spinner during save (regression)
-- [x] 1.9 "Saving…" label on the flashcard form button still appears during submit (regression)
+- [x] 1.5 Loading the dashboard's flashcard list shows shape-matching skeletons during the initial fetch — 9f1655e
+- [x] 1.6 Starting a review session shows two large skeleton blocks + four rating-button skeletons during queue load — 9f1655e
+- [x] 1.7 Triggering AI generation shows the spinner banner AND 3 proposal-shaped skeletons during generating — 9f1655e
+- [x] 1.8 Per-card accept buttons in candidate review still show their LoaderCircle spinner during save (regression) — 9f1655e
+- [x] 1.9 "Saving…" label on the flashcard form button still appears during submit (regression) — 9f1655e
 
 ### Phase 2: Bulk candidate actions
 
 #### Automated
 
-- [ ] 2.1 TypeScript compiles: `npm run build`
-- [ ] 2.2 ESLint passes: `npm run lint`
-- [ ] 2.3 No new dependencies added to `package.json`
+- [x] 2.1 TypeScript compiles: `npm run build`
+- [x] 2.2 ESLint passes: `npm run lint`
+- [x] 2.3 No new dependencies added to `package.json`
 
 #### Manual
 
-- [ ] 2.4 After AI generation completes, every proposal appears with its checkbox already ticked
-- [ ] 2.5 "Select none" unchecks all; "Select all" re-checks all; selection count in toolbar updates live
-- [ ] 2.6 Bulk accept of 8 valid proposals shows progress "Accepting 1/8…" → … → ends with "Accepted 8" summary
-- [ ] 2.7 Bulk accept with 6 valid + 2 invalid produces "Accepted 6, skipped 2 (validation errors)" and invalid cards remain
-- [ ] 2.8 Reject selected removes only the selected proposals; unselected remain
-- [ ] 2.9 Per-card Accept/Reject are disabled during a bulk run and re-enabled after
-- [ ] 2.10 Per-card accept still works as before — `ai_full` vs `ai_edited` source attribution intact (regression)
-- [ ] 2.11 The summary `statusMessage` banner appears after a bulk run completes (visible in both `renderPasteView` after a list-emptying run and `renderReviewView` after a partial run) and clears on the next generate
-- [ ] 2.12 If a bulk-accept network call fails for one card, summary reports `failed` and that card stays in the list with `saveError`
+- [x] 2.4 After AI generation completes, every proposal appears with its checkbox already ticked
+- [x] 2.5 "Select none" unchecks all; "Select all" re-checks all; selection count in toolbar updates live
+- [x] 2.6 Bulk accept of 8 valid proposals shows progress "Accepting 1/8…" → … → ends with "Accepted 8" summary
+- [x] 2.7 Bulk accept with 6 valid + 2 invalid produces "Accepted 6, skipped 2 (validation errors)" and invalid cards remain
+- [x] 2.8 Reject selected removes only the selected proposals; unselected remain
+- [x] 2.9 Per-card Accept/Reject are disabled during a bulk run and re-enabled after
+- [x] 2.10 Per-card accept still works as before — `ai_full` vs `ai_edited` source attribution intact (regression)
+- [x] 2.11 The summary `statusMessage` banner appears after a bulk run completes (visible in both `renderPasteView` after a list-emptying run and `renderReviewView` after a partial run) and clears on the next generate
+- [x] 2.12 If a bulk-accept network call fails for one card, summary reports `failed` and that card stays in the list with `saveError`
 
 ### Phase 3: Review session reset
 
