@@ -341,29 +341,29 @@ No data migration. No schema changes. No API contract changes.
 
 #### Automated
 
-- [x] 2.1 TypeScript compiles: `npm run build`
-- [x] 2.2 ESLint passes: `npm run lint`
-- [x] 2.3 No new dependencies added to `package.json`
+- [x] 2.1 TypeScript compiles: `npm run build` — ddbc84f
+- [x] 2.2 ESLint passes: `npm run lint` — ddbc84f
+- [x] 2.3 No new dependencies added to `package.json` — ddbc84f
 
 #### Manual
 
-- [x] 2.4 After AI generation completes, every proposal appears with its checkbox already ticked
-- [x] 2.5 "Select none" unchecks all; "Select all" re-checks all; selection count in toolbar updates live
-- [x] 2.6 Bulk accept of 8 valid proposals shows progress "Accepting 1/8…" → … → ends with "Accepted 8" summary
-- [x] 2.7 Bulk accept with 6 valid + 2 invalid produces "Accepted 6, skipped 2 (validation errors)" and invalid cards remain
-- [x] 2.8 Reject selected removes only the selected proposals; unselected remain
-- [x] 2.9 Per-card Accept/Reject are disabled during a bulk run and re-enabled after
-- [x] 2.10 Per-card accept still works as before — `ai_full` vs `ai_edited` source attribution intact (regression)
-- [x] 2.11 The summary `statusMessage` banner appears after a bulk run completes (visible in both `renderPasteView` after a list-emptying run and `renderReviewView` after a partial run) and clears on the next generate
-- [x] 2.12 If a bulk-accept network call fails for one card, summary reports `failed` and that card stays in the list with `saveError`
+- [x] 2.4 After AI generation completes, every proposal appears with its checkbox already ticked — ddbc84f
+- [x] 2.5 "Select none" unchecks all; "Select all" re-checks all; selection count in toolbar updates live — ddbc84f
+- [x] 2.6 Bulk accept of 8 valid proposals shows progress "Accepting 1/8…" → … → ends with "Accepted 8" summary — ddbc84f
+- [x] 2.7 Bulk accept with 6 valid + 2 invalid produces "Accepted 6, skipped 2 (validation errors)" and invalid cards remain — ddbc84f
+- [x] 2.8 Reject selected removes only the selected proposals; unselected remain — ddbc84f
+- [x] 2.9 Per-card Accept/Reject are disabled during a bulk run and re-enabled after — ddbc84f
+- [x] 2.10 Per-card accept still works as before — `ai_full` vs `ai_edited` source attribution intact (regression) — ddbc84f
+- [x] 2.11 The summary `statusMessage` banner appears after a bulk run completes (visible in both `renderPasteView` after a list-emptying run and `renderReviewView` after a partial run) and clears on the next generate — ddbc84f
+- [x] 2.12 If a bulk-accept network call fails for one card, summary reports `failed` and that card stays in the list with `saveError` — ddbc84f
 
 ### Phase 3: Review session reset
 
 #### Automated
 
-- [ ] 3.1 TypeScript compiles: `npm run build`
-- [ ] 3.2 ESLint passes: `npm run lint`
-- [ ] 3.3 The file `src/components/ui/alert-dialog.tsx` exists
+- [x] 3.1 TypeScript compiles: `npm run build`
+- [x] 3.2 ESLint passes: `npm run lint`
+- [x] 3.3 The file `src/components/ui/alert-dialog.tsx` exists
 
 #### Manual
 
