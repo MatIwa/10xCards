@@ -68,6 +68,36 @@ const astroConfig = tseslint.config({
   },
 });
 
+const restrictedAdminClientConfig = tseslint.config({
+  files: [
+    "src/pages/api/flashcards/**",
+    "src/pages/api/dashboard/**",
+    "src/lib/services/flashcard.service.ts",
+    "src/lib/services/review.service.ts",
+  ],
+  rules: {
+    "no-restricted-imports": [
+      "error",
+      {
+        patterns: [
+          {
+            group: [
+              "@/lib/supabase-admin",
+              "@/lib/supabase-admin/**",
+              "src/lib/supabase-admin",
+              "src/lib/supabase-admin/**",
+              "../lib/supabase-admin",
+              "../../lib/supabase-admin",
+            ],
+            message:
+              "The flashcards CRUD surface must run on the anon client only. See context/changes/testing-rls-cross-user-access/plan.md Phase 3.",
+          },
+        ],
+      },
+    ],
+  },
+});
+
 export default tseslint.config(
   includeIgnoreFile(gitignorePath),
   baseConfig,
@@ -75,5 +105,6 @@ export default tseslint.config(
   eslintPluginAstro.configs["flat/recommended"],
   ...eslintPluginAstro.configs["flat/jsx-a11y-recommended"],
   astroConfig,
+  restrictedAdminClientConfig,
   eslintPluginPrettier,
 );

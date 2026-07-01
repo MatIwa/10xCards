@@ -14,7 +14,8 @@
     "npx -y @modelcontextprotocol/inspector": true,
     "git rev-parse": true,
     "git remote": true,
-    "Get-Command": true
+    "Get-Command": true,
+    "npx vitest": true
   },
   "chat.mcp.discovery.enabled": {
     "claude-desktop": true,
