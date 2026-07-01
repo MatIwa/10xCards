@@ -1,7 +1,7 @@
 ---
 change_id: testing-ai-generation-critical-path
 title: Bootstrap Vitest + AI generation critical-path tests
-status: implemented
+status: impl_reviewed
 created: 2026-07-01
 updated: 2026-07-01
 archived_at: null

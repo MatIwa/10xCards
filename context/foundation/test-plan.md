@@ -124,6 +124,7 @@ the relevant rollout phase ships; before that, the sub-section reads
 - **Run command**: `npm run test:unit` for the unit project, or `npx vitest run <path>` for a single file.
 - **Reference test**: `src/lib/services/ai-generation.service.test.ts`.
 - **Pattern**: mock external HTTP boundaries with `vi.stubGlobal("fetch", vi.fn())`; construct provider responses inline from the module's schema/PRD oracle; assert on the typed return contract (`{ data, error }`), never on private implementation details.
+- **Env mocks**: the global `astro:env/server` alias (`test/setup/astro-env-server.ts`, wired in `vitest.config.ts`) is the default — no per-test setup needed if you only read env values. When a test needs to mutate an env value per case (e.g., the "missing API key" branch in the reference test), use the `vi.hoisted` + getter pattern shown at the top of `ai-generation.service.test.ts`. Do not add a static `vi.mock("astro:env/server", ...)` inside test files — it duplicates the alias.
 
 ### 6.2 Adding an integration test (service + API route)
 
@@ -152,6 +153,8 @@ TBD — see §3 Phase 3 (FSRS wiring phase will establish the pattern: assert th
 (Optional. After each phase lands, `/10x-implement` appends a 2–3 line note here capturing anything surprising the rollout phase taught — e.g., "Phase 1 chose Vitest workspace mode because Astro's Vite plugin conflicts with a flat config.")
 
 Phase 1 reference tests exposed two harness details worth keeping: dynamic API-route imports need a Vitest alias for `astro:env/server`, and route-level fetch stubs must delegate non-app requests to the original `fetch` so Supabase REST calls remain real. The `@supabase/ssr` cookie value uses the `sb-<project-ref>-auth-token` key with a `base64-` encoded session JSON, captured in `test/helpers/supabase-session.ts`.
+
+The API-route fetch stub (`test/helpers/api-route-fetch-stub.ts`) implements the full `APIContext["cookies"]` surface (`get`, `getAll`, `has`, `set`, `delete`, `merge`, `headers`) — not just `set` — so any future route that reads cookies before creating the Supabase client (e.g., `cookies.get("sb-...-auth-token")`) works out of the box. Reads are backed by the session cookie the test already puts in the request header; writes are no-ops because we do not exercise token refresh in tests.
 
 ## 7. What We Deliberately Don't Test
 

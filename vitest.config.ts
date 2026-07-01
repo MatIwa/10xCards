@@ -25,7 +25,6 @@ export default defineConfig({
           environment: "node",
           include: ["src/**/*.test.ts"],
           exclude: ["src/**/*.integration.test.{ts,tsx}"],
-          setupFiles: ["./test/setup/env.ts"],
         },
       },
       {
@@ -39,7 +38,7 @@ export default defineConfig({
           name: "integration",
           environment: "jsdom",
           include: ["src/**/*.integration.test.{ts,tsx}", "test/**/*.integration.test.{ts,tsx}"],
-          setupFiles: ["./test/setup/env.ts", "./test/setup/jest-dom.ts"],
+          setupFiles: ["./test/setup/jest-dom.ts"],
           globalSetup: ["./test/setup/global-integration.ts"],
           testTimeout: 30000,
         },

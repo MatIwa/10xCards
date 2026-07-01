@@ -365,7 +365,16 @@ This change _is_ the testing strategy. The tests it lands are the reference test
 
 ## Migration Notes
 
-None. This change is additive: new files, three new npm scripts, no changes to existing production code.
+Mostly additive: new files, three new npm scripts.
+
+Two small defensive changes to existing production code (introduced during Phase 2, retained after impl review):
+
+- `src/lib/supabase-admin.ts` — env values guarded via a `getServerEnvValue()` helper (accepts only non-empty strings) so a test-env mock returning `undefined` cannot flow into `createClient()`. Behavior in production is unchanged (real `astro:env/server` values are always non-empty strings).
+- `src/lib/supabase.ts` — same helper mirrored on `SUPABASE_URL` / `SUPABASE_KEY` for symmetry, so both server-side supabase entry points share one env-validation shape.
+
+Documented here so future reviewers see the deviation from "no prod changes" was intentional and reviewed (F1 from `reviews/impl-review.md`).
+
+Post-review cleanup (F3): `test/setup/env.ts` was removed. The `astro:env/server` alias in `vitest.config.ts` pointing at `test/setup/astro-env-server.ts` is now the single source of truth for env values inside tests; per-test overrides still use `vi.mock("astro:env/server", ...)` as shown in `src/lib/services/ai-generation.service.test.ts`.
 
 ## References
 

@@ -1,4 +1,5 @@
 import type { APIContext } from "astro";
+import { parseCookieHeader } from "@supabase/ssr";
 import { vi } from "vitest";
 
 interface ProposalResponse {
@@ -13,11 +14,27 @@ interface InstallApiRouteFetchStubOptions {
   generateProposalsResponse: ProposalResponse[];
 }
 
-function createCookieSink(): APIContext["cookies"] {
+// Astro's APIContext["cookies"] surface is used by supabase.ts (setAll callback
+// during token refresh) and would be reached by any API route calling
+// `cookies.get()` / `cookies.getAll()` before creating the supabase client.
+// Reads are backed by the same session cookie the test sends in the request
+// header; writes are no-ops because the test does not exercise refresh flows.
+function createCookieSink(sessionCookie: string): APIContext["cookies"] {
+  const parsed = parseCookieHeader(sessionCookie).map(({ name, value }) => ({
+    name,
+    value: value ?? "",
+  }));
   return {
-    set() {
-      return undefined;
+    get: (name: string) => {
+      const entry = parsed.find((c) => c.name === name);
+      return entry ? { value: entry.value } : undefined;
     },
+    getAll: () => parsed.map(({ name, value }) => ({ name, value })),
+    has: (name: string) => parsed.some((c) => c.name === name),
+    set: () => undefined,
+    delete: () => undefined,
+    merge: () => undefined,
+    headers: () => [] as string[],
   } as unknown as APIContext["cookies"];
 }
 
@@ -73,7 +90,7 @@ export function installApiRouteFetchStub({
       const { POST } = await import("@/pages/api/flashcards/index");
       const context = {
         request: createRouteRequest(url, init, sessionCookie),
-        cookies: createCookieSink(),
+        cookies: createCookieSink(sessionCookie),
         locals: {
           user: { id: userId },
         },
