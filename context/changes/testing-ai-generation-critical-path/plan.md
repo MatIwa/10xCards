@@ -418,15 +418,15 @@ None. This change is additive: new files, three new npm scripts, no changes to e
 
 #### Automated
 
-- [x] 3.1 New integration test passes: `npx vitest run src/components/dashboard/GenerateFlashcards.integration.test.tsx`.
-- [x] 3.2 Full integration project passes: `npm run test:integration`.
-- [x] 3.3 Full suite passes: `npm test`.
-- [x] 3.4 Lint stays green: `npm run lint`.
-- [x] 3.5 Format stays green: `npx prettier --check "src/components/dashboard/GenerateFlashcards.integration.test.tsx" "test/helpers/**" "context/foundation/test-plan.md"`.
+- [x] 3.1 New integration test passes: `npx vitest run src/components/dashboard/GenerateFlashcards.integration.test.tsx`. — f58ca76
+- [x] 3.2 Full integration project passes: `npm run test:integration`. — f58ca76
+- [x] 3.3 Full suite passes: `npm test`. — f58ca76
+- [x] 3.4 Lint stays green: `npm run lint`. — f58ca76
+- [x] 3.5 Format stays green: `npx prettier --check "src/components/dashboard/GenerateFlashcards.integration.test.tsx" "test/helpers/**" "context/foundation/test-plan.md"`. — f58ca76
 
 #### Manual
 
-- [x] 3.6 Cookbook §6.2 reads correctly and is enough for a future contributor to write their own integration test.
-- [x] 3.7 Deliberately breaking the component (e.g., making "Accept selected" also POST rejected cards) causes the test to fail with a clear assertion (extra rows in DB).
-- [x] 3.8 Running the integration test with Supabase down produces the fail-fast message defined in `global-integration.ts`.
-- [x] 3.9 Manually running the wedge flow in the browser after this phase still works — nothing in the test infra leaked into production behavior.
+- [x] 3.6 Cookbook §6.2 reads correctly and is enough for a future contributor to write their own integration test. — f58ca76
+- [x] 3.7 Deliberately breaking the component (e.g., making "Accept selected" also POST rejected cards) causes the test to fail with a clear assertion (extra rows in DB). — f58ca76
+- [x] 3.8 Running the integration test with Supabase down produces the fail-fast message defined in `global-integration.ts`. — f58ca76
+- [x] 3.9 Manually running the wedge flow in the browser after this phase still works — nothing in the test infra leaked into production behavior. — f58ca76
