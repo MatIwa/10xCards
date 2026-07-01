@@ -136,6 +136,14 @@ the relevant rollout phase ships; before that, the sub-section reads
 - **Helpers**: `test/helpers/api-route-fetch-stub.ts`, `test/helpers/supabase-session.ts`, `test/helpers/db.ts`.
 - **Pattern**: RTL + jsdom drives the real component; a fetch stub matches app API calls by `URL.pathname + method`, routes `POST /api/flashcards` to the real Astro handler with a synthetic APIContext carrying the seeded user's Supabase session cookie, delegates Supabase network calls back to the original `fetch`, and asserts final DB state through a service-role query.
 
+#### Two-user / N-user harness
+
+- **Factory helper**: `test/helpers/integration-user.ts` exposes `createIntegrationUser()` for hermetic per-test users.
+- **Direct route helper**: `test/helpers/invoke-api-route.ts` exposes `invokeApiRoute()` for calling Astro API handlers with explicit method, path, params, body, and session.
+- **Admin post-check reader**: `test/helpers/db.ts` exposes `readFlashcardById()` for verifying final DB state without RLS filtering the assertion itself.
+- **Reference test**: `test/rls/flashcards-cross-user.integration.test.ts`.
+- **Pattern**: spin two hermetic users via `createIntegrationUser()`, invoke Astro handlers via `invokeApiRoute()` with the target user's cookies, assert on HTTP response AND on DB state via admin-client post-checks.
+
 ### 6.3 Adding a test for a new API endpoint
 
 TBD — see §3 Phase 2 (server-boundary contracts phase will establish the canonical two-user RLS pattern, the source-text-leakage pattern, and the Zod-at-boundary pattern).
@@ -155,6 +163,8 @@ TBD — see §3 Phase 3 (FSRS wiring phase will establish the pattern: assert th
 Phase 1 reference tests exposed two harness details worth keeping: dynamic API-route imports need a Vitest alias for `astro:env/server`, and route-level fetch stubs must delegate non-app requests to the original `fetch` so Supabase REST calls remain real. The `@supabase/ssr` cookie value uses the `sb-<project-ref>-auth-token` key with a `base64-` encoded session JSON, captured in `test/helpers/supabase-session.ts`.
 
 The API-route fetch stub (`test/helpers/api-route-fetch-stub.ts`) implements the full `APIContext["cookies"]` surface (`get`, `getAll`, `has`, `set`, `delete`, `merge`, `headers`) — not just `set` — so any future route that reads cookies before creating the Supabase client (e.g., `cookies.get("sb-...-auth-token")`) works out of the box. Reads are backed by the session cookie the test already puts in the request header; writes are no-ops because we do not exercise token refresh in tests.
+
+**Phase 2 (Risk #3):** Direct `APIContext` fabrication is cheap; the `AstroCookies` sink only needs `.get`/`.getAll`/`.has` populated from the request `Cookie` header — writes are no-ops. ESLint `no-restricted-imports` with file-scoped overrides gave us an edit-time regression net over the admin-client surface at zero runtime cost.
 
 ## 7. What We Deliberately Don't Test
 

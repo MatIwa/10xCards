@@ -321,22 +321,22 @@ Extend [context/foundation/test-plan.md](../../foundation/test-plan.md) §6.2 wi
 
 #### Automated
 
-- [x] 3.1 `npm run lint` exits 0 on the current codebase.
-- [x] 3.2 Deliberately adding the import to any of the four scoped files causes lint to fail with the plan-referenced message. Revert.
-- [x] 3.3 `src/pages/api/account/delete.ts` still lints clean.
+- [x] 3.1 `npm run lint` exits 0 on the current codebase. — d74bbbb
+- [x] 3.2 Deliberately adding the import to any of the four scoped files causes lint to fail with the plan-referenced message. Revert. — d74bbbb
+- [x] 3.3 `src/pages/api/account/delete.ts` still lints clean. — d74bbbb
 
 #### Manual
 
-- [x] 3.4 The "deliberately add the import" experiment on each of `flashcard.service.ts`, `review.service.ts`, and `src/pages/api/flashcards/index.ts` fails lint. Revert each.
+- [x] 3.4 The "deliberately add the import" experiment on each of `flashcard.service.ts`, `review.service.ts`, and `src/pages/api/flashcards/index.ts` fails lint. Revert each. — d74bbbb
 
 ### Phase 4: Cookbook sync
 
 #### Automated
 
-- [ ] 4.1 `npx prettier --check "context/foundation/test-plan.md"` exits 0.
-- [ ] 4.2 `npm run lint` stays green.
+- [x] 4.1 `npx prettier --check "context/foundation/test-plan.md"` exits 0.
+- [x] 4.2 `npm run lint` stays green.
 
 #### Manual
 
-- [ ] 4.3 A reader landing on §6.2 can locate the reference test and helpers in one hop.
-- [ ] 4.4 §6.6 phase note reads as one paragraph, not a bullet dump.
+- [x] 4.3 A reader landing on §6.2 can locate the reference test and helpers in one hop.
+- [x] 4.4 §6.6 phase note reads as one paragraph, not a bullet dump.
