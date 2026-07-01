@@ -92,6 +92,7 @@ Install dependencies, write the config, wire scripts, prove the two projects (`u
 **Intent**: Add the minimal set of test devDependencies and three npm scripts. Nothing more (no coverage tool, no reporter, no watch script — `vitest --watch` is one keystroke on top of `npm test`).
 
 **Contract**:
+
 - Add devDependencies: `vitest`, `@vitest/ui` (optional local convenience — include only if trivial; skip if it adds transitive weight), `@testing-library/react`, `@testing-library/user-event`, `@testing-library/jest-dom`, `jsdom`, `@types/node` (if not already resolved via Astro's toolchain).
 - Add scripts:
   - `"test": "vitest run"` — runs both projects, exits 0/1.
@@ -106,6 +107,7 @@ Install dependencies, write the config, wire scripts, prove the two projects (`u
 **Intent**: Define `unit` and `integration` as Vitest projects split by filename suffix so the two test kinds get the right environment and timeouts without cross-contamination.
 
 **Contract**:
+
 - Import `defineConfig` from `vitest/config`.
 - `resolve.alias` for `@/*` → `./src/*` (mirror the tsconfig alias so tests use the same import syntax as production code).
 - `test.projects`: two entries.
@@ -136,6 +138,7 @@ Install dependencies, write the config, wire scripts, prove the two projects (`u
 **Intent**: Before the integration project runs, verify local Supabase is up, reset the DB once, seed the test user. Return a teardown fn (no-op — the test user is preserved for reruns).
 
 **Contract**:
+
 - Export `default async function setup()`.
 - Read `TEST_SUPABASE_URL`, `TEST_SUPABASE_ANON_KEY`, `TEST_SUPABASE_SERVICE_ROLE_KEY` from `process.env`; if any is missing, throw with the message: `"Integration tests require local Supabase. Run \`npx supabase start\` and export TEST_SUPABASE_URL / TEST_SUPABASE_ANON_KEY / TEST_SUPABASE_SERVICE_ROLE_KEY. See test-plan §6.2."`
 - Attempt `supabase.auth.admin.createUser({ email: 'test@integration.local', password: '<constant test password>', email_confirm: true })` via a service-role client. Ignore `'User already registered'` — rerun-safe.
@@ -345,7 +348,7 @@ The §6.6 phase note is 2–3 lines: what was surprising during rollout (e.g., "
 
 ## Testing Strategy
 
-This change *is* the testing strategy. The tests it lands are the reference tests. No meta-tests-for-the-tests.
+This change _is_ the testing strategy. The tests it lands are the reference tests. No meta-tests-for-the-tests.
 
 ### Manual Testing Steps:
 
@@ -401,15 +404,15 @@ None. This change is additive: new files, three new npm scripts, no changes to e
 
 #### Automated
 
-- [ ] 2.1 New unit test passes: `npx vitest run src/lib/services/ai-generation.service.test.ts`.
-- [ ] 2.2 Full unit project passes: `npm run test:unit`.
-- [ ] 2.3 Lint stays green: `npm run lint`.
-- [ ] 2.4 Format stays green: `npx prettier --check "src/lib/services/ai-generation.service.test.ts" "context/foundation/test-plan.md"`.
+- [x] 2.1 New unit test passes: `npx vitest run src/lib/services/ai-generation.service.test.ts`.
+- [x] 2.2 Full unit project passes: `npm run test:unit`.
+- [x] 2.3 Lint stays green: `npm run lint`.
+- [x] 2.4 Format stays green: `npx prettier --check "src/lib/services/ai-generation.service.test.ts" "context/foundation/test-plan.md"`.
 
 #### Manual
 
-- [ ] 2.5 Cookbook §6.1 reads correctly and is enough for a future contributor to write their own unit test without asking questions.
-- [ ] 2.6 Deliberately breaking `generateProposals` (e.g., changing the empty-cards branch to return `{ data: [], error: null }`) causes the empty-result test to fail — proves the test locks the contract, not the current line-count.
+- [x] 2.5 Cookbook §6.1 reads correctly and is enough for a future contributor to write their own unit test without asking questions.
+- [x] 2.6 Deliberately breaking `generateProposals` (e.g., changing the empty-cards branch to return `{ data: [], error: null }`) causes the empty-result test to fail — proves the test locks the contract, not the current line-count.
 
 ### Phase 3: Risk #2 — candidate save reference integration test
 

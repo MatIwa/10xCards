@@ -6,7 +6,7 @@ const INTEGRATION_ENV_ERROR =
   "Integration tests require local Supabase. Run `npx supabase start` and export TEST_SUPABASE_URL / TEST_SUPABASE_ANON_KEY / TEST_SUPABASE_SERVICE_ROLE_KEY. See test-plan §6.2.";
 
 function exitWithIntegrationEnvError(): never {
-  console.error(INTEGRATION_ENV_ERROR);
+  process.stderr.write(`${INTEGRATION_ENV_ERROR}\n`);
   process.exit(1);
 }
 
