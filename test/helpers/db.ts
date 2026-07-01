@@ -43,3 +43,14 @@ export async function readFlashcards(userId: string) {
 
   return data as Flashcard[];
 }
+
+export async function readFlashcardById(id: string) {
+  const supabase = createServiceRoleClient();
+  const response = await supabase.from("flashcards").select("*").eq("id", id).maybeSingle();
+
+  if (response.error) {
+    throw response.error;
+  }
+
+  return response.data as Flashcard | null;
+}

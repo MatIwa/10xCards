@@ -2,6 +2,11 @@ import { createClient } from "@supabase/supabase-js";
 
 import { TEST_USER_EMAIL, TEST_USER_PASSWORD } from "./integration-user";
 
+interface SignInCredentials {
+  email: string;
+  password: string;
+}
+
 function getRequiredEnv(name: string) {
   const value = process.env[name];
 
@@ -22,6 +27,10 @@ function getSupabaseAuthCookieName(supabaseUrl: string) {
 }
 
 export async function signInTestUser() {
+  return signInUser({ email: TEST_USER_EMAIL, password: TEST_USER_PASSWORD });
+}
+
+export async function signInUser({ email, password }: SignInCredentials) {
   const supabaseUrl = getRequiredEnv("TEST_SUPABASE_URL");
   const supabaseAnonKey = getRequiredEnv("TEST_SUPABASE_ANON_KEY");
   const supabase = createClient(supabaseUrl, supabaseAnonKey, {
@@ -32,8 +41,8 @@ export async function signInTestUser() {
   });
 
   const { data, error } = await supabase.auth.signInWithPassword({
-    email: TEST_USER_EMAIL,
-    password: TEST_USER_PASSWORD,
+    email,
+    password,
   });
 
   if (error) {
