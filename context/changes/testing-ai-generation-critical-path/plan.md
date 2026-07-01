@@ -385,17 +385,17 @@ None. This change is additive: new files, three new npm scripts, no changes to e
 
 #### Automated
 
-- [x] 1.1 Dependencies install: `npm install` succeeds.
-- [x] 1.2 Config resolves: `npx vitest --project unit --list` and `npx vitest --project integration --list` both print the smoke tests.
-- [x] 1.3 Unit smoke passes: `npm run test:unit`.
-- [x] 1.4 Integration smoke passes: `npm run test:integration` (with local Supabase running).
-- [x] 1.5 Combined script passes: `npm test`.
-- [x] 1.6 Lint stays green: `npm run lint`.
+- [x] 1.1 Dependencies install: `npm install` succeeds. — f0f7274
+- [x] 1.2 Config resolves: `npx vitest --project unit --list` and `npx vitest --project integration --list` both print the smoke tests. — f0f7274
+- [x] 1.3 Unit smoke passes: `npm run test:unit`. — f0f7274
+- [x] 1.4 Integration smoke passes: `npm run test:integration` (with local Supabase running). — f0f7274
+- [x] 1.5 Combined script passes: `npm test`. — f0f7274
+- [x] 1.6 Lint stays green: `npm run lint`. — f0f7274
 
 #### Manual
 
-- [x] 1.7 Running `npm run test:integration` with Supabase stopped produces the documented "Run `npx supabase start` first" error (not a stack trace).
-- [x] 1.8 Test files are discoverable in the Vitest VS Code extension (if installed) — no config panic.
+- [x] 1.7 Running `npm run test:integration` with Supabase stopped produces the documented "Run `npx supabase start` first" error (not a stack trace). — f0f7274
+- [x] 1.8 Test files are discoverable in the Vitest VS Code extension (if installed) — no config panic. — f0f7274
 
 ### Phase 2: Risk #1 — AI-generation parser reference unit test
 
