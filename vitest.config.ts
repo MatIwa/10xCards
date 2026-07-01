@@ -3,12 +3,14 @@ import { fileURLToPath } from "node:url";
 
 const srcAlias = fileURLToPath(new URL("./src", import.meta.url));
 const astroEnvServerAlias = fileURLToPath(new URL("./test/setup/astro-env-server.ts", import.meta.url));
+const astroMiddlewareAlias = fileURLToPath(new URL("./test/setup/astro-middleware.ts", import.meta.url));
 
 export default defineConfig({
   resolve: {
     alias: {
       "@": srcAlias,
       "astro:env/server": astroEnvServerAlias,
+      "astro:middleware": astroMiddlewareAlias,
     },
   },
   test: {
@@ -18,6 +20,7 @@ export default defineConfig({
           alias: {
             "@": srcAlias,
             "astro:env/server": astroEnvServerAlias,
+            "astro:middleware": astroMiddlewareAlias,
           },
         },
         test: {
@@ -32,6 +35,7 @@ export default defineConfig({
           alias: {
             "@": srcAlias,
             "astro:env/server": astroEnvServerAlias,
+            "astro:middleware": astroMiddlewareAlias,
           },
         },
         test: {

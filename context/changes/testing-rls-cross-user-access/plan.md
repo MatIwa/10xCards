@@ -292,30 +292,30 @@ Extend [context/foundation/test-plan.md](../../foundation/test-plan.md) §6.2 wi
 
 #### Automated
 
-- [x] 1.1 `npm run test:integration` includes the smoke file and exits 0.
-- [x] 1.2 `npx vitest run test/helpers/harness.smoke.integration.test.ts` exits 0 on its own.
-- [x] 1.3 `npm run lint` stays green.
-- [x] 1.4 `npm run build` stays green (no type regressions in helper signatures).
+- [x] 1.1 `npm run test:integration` includes the smoke file and exits 0. — a82e2ce
+- [x] 1.2 `npx vitest run test/helpers/harness.smoke.integration.test.ts` exits 0 on its own. — a82e2ce
+- [x] 1.3 `npm run lint` stays green. — a82e2ce
+- [x] 1.4 `npm run build` stays green (no type regressions in helper signatures). — a82e2ce
 
 #### Manual
 
-- [x] 1.5 Existing Phase 1 tests (`ai-generation.service.test.ts`, `GenerateFlashcards.integration.test.tsx`) still pass with no edit.
-- [x] 1.6 A test author reading `test/helpers/invoke-api-route.ts` can identify how to invoke any Astro API route without following a chain of imports.
+- [x] 1.5 Existing Phase 1 tests (`ai-generation.service.test.ts`, `GenerateFlashcards.integration.test.tsx`) still pass with no edit. — a82e2ce
+- [x] 1.6 A test author reading `test/helpers/invoke-api-route.ts` can identify how to invoke any Astro API route without following a chain of imports. — a82e2ce
 
 ### Phase 2: RLS integration tests
 
 #### Automated
 
-- [ ] 2.1 `npx vitest run test/rls/flashcards-cross-user.integration.test.ts` exits 0.
-- [ ] 2.2 `npm run test:integration` includes this file and exits 0.
-- [ ] 2.3 `npm run lint` stays green.
-- [ ] 2.4 `npx prettier --check "test/rls/flashcards-cross-user.integration.test.ts"` exits 0.
+- [x] 2.1 `npx vitest run test/rls/flashcards-cross-user.integration.test.ts` exits 0.
+- [x] 2.2 `npm run test:integration` includes this file and exits 0.
+- [x] 2.3 `npm run lint` stays green.
+- [x] 2.4 `npx prettier --check "test/rls/flashcards-cross-user.integration.test.ts"` exits 0.
 
 #### Manual
 
-- [ ] 2.5 Temporarily commenting `.eq("user_id", userId)` in `updateFlashcard` breaks case (4). Revert.
-- [ ] 2.6 Temporarily switching `updateFlashcardSchema` to `.passthrough()` does NOT break case (3) — RLS `with check` still catches it. Revert.
-- [ ] 2.7 Test file reads top-to-bottom like the research.md §6 oracle table.
+- [x] 2.5 Temporarily commenting `.eq("user_id", userId)` in `updateFlashcard` breaks case (4). Revert.
+- [x] 2.6 Temporarily switching `updateFlashcardSchema` to `.passthrough()` does NOT break case (3) — RLS `with check` still catches it. Revert.
+- [x] 2.7 Test file reads top-to-bottom like the research.md §6 oracle table.
 
 ### Phase 3: Structural guard on `@/lib/supabase-admin`
 
