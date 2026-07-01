@@ -2,11 +2,13 @@ import { defineConfig } from "vitest/config";
 import { fileURLToPath } from "node:url";
 
 const srcAlias = fileURLToPath(new URL("./src", import.meta.url));
+const astroEnvServerAlias = fileURLToPath(new URL("./test/setup/astro-env-server.ts", import.meta.url));
 
 export default defineConfig({
   resolve: {
     alias: {
       "@": srcAlias,
+      "astro:env/server": astroEnvServerAlias,
     },
   },
   test: {
@@ -15,6 +17,7 @@ export default defineConfig({
         resolve: {
           alias: {
             "@": srcAlias,
+            "astro:env/server": astroEnvServerAlias,
           },
         },
         test: {
@@ -29,6 +32,7 @@ export default defineConfig({
         resolve: {
           alias: {
             "@": srcAlias,
+            "astro:env/server": astroEnvServerAlias,
           },
         },
         test: {

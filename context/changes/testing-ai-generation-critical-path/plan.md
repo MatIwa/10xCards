@@ -404,29 +404,29 @@ None. This change is additive: new files, three new npm scripts, no changes to e
 
 #### Automated
 
-- [x] 2.1 New unit test passes: `npx vitest run src/lib/services/ai-generation.service.test.ts`.
-- [x] 2.2 Full unit project passes: `npm run test:unit`.
-- [x] 2.3 Lint stays green: `npm run lint`.
-- [x] 2.4 Format stays green: `npx prettier --check "src/lib/services/ai-generation.service.test.ts" "context/foundation/test-plan.md"`.
+- [x] 2.1 New unit test passes: `npx vitest run src/lib/services/ai-generation.service.test.ts`. — b13995c
+- [x] 2.2 Full unit project passes: `npm run test:unit`. — b13995c
+- [x] 2.3 Lint stays green: `npm run lint`. — b13995c
+- [x] 2.4 Format stays green: `npx prettier --check "src/lib/services/ai-generation.service.test.ts" "context/foundation/test-plan.md"`. — b13995c
 
 #### Manual
 
-- [x] 2.5 Cookbook §6.1 reads correctly and is enough for a future contributor to write their own unit test without asking questions.
-- [x] 2.6 Deliberately breaking `generateProposals` (e.g., changing the empty-cards branch to return `{ data: [], error: null }`) causes the empty-result test to fail — proves the test locks the contract, not the current line-count.
+- [x] 2.5 Cookbook §6.1 reads correctly and is enough for a future contributor to write their own unit test without asking questions. — b13995c
+- [x] 2.6 Deliberately breaking `generateProposals` (e.g., changing the empty-cards branch to return `{ data: [], error: null }`) causes the empty-result test to fail — proves the test locks the contract, not the current line-count. — b13995c
 
 ### Phase 3: Risk #2 — candidate save reference integration test
 
 #### Automated
 
-- [ ] 3.1 New integration test passes: `npx vitest run src/components/dashboard/GenerateFlashcards.integration.test.tsx`.
-- [ ] 3.2 Full integration project passes: `npm run test:integration`.
-- [ ] 3.3 Full suite passes: `npm test`.
-- [ ] 3.4 Lint stays green: `npm run lint`.
-- [ ] 3.5 Format stays green: `npx prettier --check "src/components/dashboard/GenerateFlashcards.integration.test.tsx" "test/helpers/**" "context/foundation/test-plan.md"`.
+- [x] 3.1 New integration test passes: `npx vitest run src/components/dashboard/GenerateFlashcards.integration.test.tsx`.
+- [x] 3.2 Full integration project passes: `npm run test:integration`.
+- [x] 3.3 Full suite passes: `npm test`.
+- [x] 3.4 Lint stays green: `npm run lint`.
+- [x] 3.5 Format stays green: `npx prettier --check "src/components/dashboard/GenerateFlashcards.integration.test.tsx" "test/helpers/**" "context/foundation/test-plan.md"`.
 
 #### Manual
 
-- [ ] 3.6 Cookbook §6.2 reads correctly and is enough for a future contributor to write their own integration test.
-- [ ] 3.7 Deliberately breaking the component (e.g., making "Accept selected" also POST rejected cards) causes the test to fail with a clear assertion (extra rows in DB).
-- [ ] 3.8 Running the integration test with Supabase down produces the fail-fast message defined in `global-integration.ts`.
-- [ ] 3.9 Manually running the wedge flow in the browser after this phase still works — nothing in the test infra leaked into production behavior.
+- [x] 3.6 Cookbook §6.2 reads correctly and is enough for a future contributor to write their own integration test.
+- [x] 3.7 Deliberately breaking the component (e.g., making "Accept selected" also POST rejected cards) causes the test to fail with a clear assertion (extra rows in DB).
+- [x] 3.8 Running the integration test with Supabase down produces the fail-fast message defined in `global-integration.ts`.
+- [x] 3.9 Manually running the wedge flow in the browser after this phase still works — nothing in the test infra leaked into production behavior.

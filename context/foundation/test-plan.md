@@ -127,7 +127,13 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 ### 6.2 Adding an integration test (service + API route)
 
-TBD — see §3 Phase 1 (the candidate-save integration test for Risk #2 will become the reference for form → API route → Supabase local flows).
+- **Location**: colocate integration tests next to the component or service with `src/**/*.integration.test.{ts,tsx}`.
+- **Naming**: `<component-or-service-name>.integration.test.tsx` for React islands, or `.integration.test.ts` for non-React modules.
+- **Prerequisites**: local Supabase running (`npx supabase start`) with `TEST_SUPABASE_URL`, `TEST_SUPABASE_ANON_KEY`, and `TEST_SUPABASE_SERVICE_ROLE_KEY` exported from the local status output.
+- **Run command**: `npm run test:integration` for the integration project, or `npx vitest run --project integration <path>` for a single file.
+- **Reference test**: `src/components/dashboard/GenerateFlashcards.integration.test.tsx`.
+- **Helpers**: `test/helpers/api-route-fetch-stub.ts`, `test/helpers/supabase-session.ts`, `test/helpers/db.ts`.
+- **Pattern**: RTL + jsdom drives the real component; a fetch stub matches app API calls by `URL.pathname + method`, routes `POST /api/flashcards` to the real Astro handler with a synthetic APIContext carrying the seeded user's Supabase session cookie, delegates Supabase network calls back to the original `fetch`, and asserts final DB state through a service-role query.
 
 ### 6.3 Adding a test for a new API endpoint
 
@@ -144,6 +150,8 @@ TBD — see §3 Phase 3 (FSRS wiring phase will establish the pattern: assert th
 ### 6.6 Per-rollout-phase notes
 
 (Optional. After each phase lands, `/10x-implement` appends a 2–3 line note here capturing anything surprising the rollout phase taught — e.g., "Phase 1 chose Vitest workspace mode because Astro's Vite plugin conflicts with a flat config.")
+
+Phase 1 reference tests exposed two harness details worth keeping: dynamic API-route imports need a Vitest alias for `astro:env/server`, and route-level fetch stubs must delegate non-app requests to the original `fetch` so Supabase REST calls remain real. The `@supabase/ssr` cookie value uses the `sb-<project-ref>-auth-token` key with a `base64-` encoded session JSON, captured in `test/helpers/supabase-session.ts`.
 
 ## 7. What We Deliberately Don't Test
 
