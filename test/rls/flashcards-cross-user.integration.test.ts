@@ -99,7 +99,7 @@ describe("flashcards cross-user isolation", () => {
   });
 
   it("GET /api/flashcards unauthenticated returns 401 from middleware", async () => {
-    const next = vi.fn(() => new Response(null, { status: 200 }));
+    const next = vi.fn(async () => new Response(null, { status: 200 }));
     const context = {
       request: new Request("http://localhost/api/flashcards"),
       url: new URL("http://localhost/api/flashcards"),
@@ -109,9 +109,11 @@ describe("flashcards cross-user isolation", () => {
 
     const response = await onRequest(context, next);
 
-    const body = await expectJson(response);
+    expect(response).toBeInstanceOf(Response);
+    const middlewareResponse = response as Response;
+    const body = await expectJson(middlewareResponse);
 
-    expect(response.status).toBe(401);
+    expect(middlewareResponse.status).toBe(401);
     expect(body).toEqual({ error: "Unauthorized" });
     expect(next).not.toHaveBeenCalled();
   });

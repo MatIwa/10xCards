@@ -357,13 +357,13 @@ None. The `USER_SCOPED_TABLES` extraction is a pure source refactor; no schema c
 
 #### Automated
 
-- [ ] 1.1 Type checking passes: `npx astro check`
-- [ ] 1.2 Linting passes: `npm run lint`
-- [ ] 1.3 Build passes: `npm run build`
+- [x] 1.1 Type checking passes: `npx astro check`
+- [x] 1.2 Linting passes: `npm run lint`
+- [x] 1.3 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 1.4 Manual delete flow still works end-to-end (sign up → create flashcards → `POST /api/account/delete` → 303 → auth row and flashcards row gone)
+- [x] 1.4 Manual delete flow still works end-to-end (sign up → create flashcards → `POST /api/account/delete` → 303 → auth row and flashcards row gone)
 
 ### Phase 2: Risk #5 tests — account deletion completeness
 

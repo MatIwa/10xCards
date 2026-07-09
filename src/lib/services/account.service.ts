@@ -5,6 +5,12 @@ interface DataResult<T> {
   error: string | null;
 }
 
+// TABLES: this orphan-check must list every user-scoped table.
+// When adding any new table with user_id -> auth.users(id), declare
+// `on delete cascade` in its migration AND extend this verification.
+// See context/foundation/lessons.md (user-scoped tables rule).
+export const USER_SCOPED_TABLES = ["flashcards"] as const;
+
 export async function deleteAccount(adminClient: SupabaseClient, userId: string): Promise<DataResult<number>> {
   const flashcardCountResponse = await adminClient
     .from("flashcards")
@@ -22,18 +28,16 @@ export async function deleteAccount(adminClient: SupabaseClient, userId: string)
     return { data: null, error: deleteUserResponse.error.message };
   }
 
-  // TABLES: this orphan-check must list every user-scoped table.
-  // When adding any new table with user_id -> auth.users(id), declare
-  // `on delete cascade` in its migration AND extend this verification.
-  // See context/foundation/lessons.md (user-scoped tables rule).
-  const orphanedFlashcardsResponse = await adminClient.from("flashcards").select("id").eq("user_id", userId).limit(1);
+  for (const table of USER_SCOPED_TABLES) {
+    const orphanedRowsResponse = await adminClient.from(table).select("id").eq("user_id", userId).limit(1);
 
-  if (orphanedFlashcardsResponse.error) {
-    return { data: null, error: orphanedFlashcardsResponse.error.message };
-  }
+    if (orphanedRowsResponse.error) {
+      return { data: null, error: orphanedRowsResponse.error.message };
+    }
 
-  if (orphanedFlashcardsResponse.data.length > 0) {
-    return { data: null, error: "Verification failed: orphaned flashcards remain" };
+    if (orphanedRowsResponse.data.length > 0) {
+      return { data: null, error: `Verification failed: orphaned rows in ${table}` };
+    }
   }
 
   return { data: deletedFlashcards, error: null };
