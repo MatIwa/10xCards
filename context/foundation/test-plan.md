@@ -174,7 +174,7 @@ Cross-reference: `context/foundation/lessons.md` — *User-scoped tables must ca
 
 Test the *wiring* (what arguments reach ts-fsrs, what comes back and lands in the DB) — never the library's scheduling math. The oracle is the call contract and the passthrough, not a specific next-due date.
 
-**Reference tests**: `src/lib/services/review.service.test.ts` (unit, stubbed scheduler) + `src/lib/services/review.service.integration.test.ts` (one round-trip per endpoint).
+**Reference tests**: `src/lib/services/review.service.test.ts` (unit, stubbed scheduler) + `test/review/review.service.integration.test.ts` (one round-trip per endpoint).
 
 **Recipe**:
 - (a) Unit test: use `vi.mock("ts-fsrs", async () => { const actual = await vi.importActual("ts-fsrs"); return { ...actual, fsrs: () => ({ next: vi.fn(), repeat: vi.fn() }) }; })` at the top of the test file. The `vi.hoisted` pattern makes the spy references addressable from inside tests. Preserve `Rating` via `vi.importActual` so tests can pass `Rating.Again` etc. as real values.

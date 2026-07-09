@@ -107,42 +107,39 @@ describe("previewRatings", () => {
     vi.clearAllMocks();
   });
 
-  it.each([Rating.Again, Rating.Hard, Rating.Good, Rating.Easy])(
-    "calls scheduler.repeat and returns the due date for rating %s",
-    (_rating) => {
-      const now = new Date("2027-01-01T00:00:00.000Z");
-      const row = makeFlashcard();
+  it("returns due dates for all four ratings in a single scheduler.repeat call", () => {
+    const now = new Date("2027-01-01T00:00:00.000Z");
+    const row = makeFlashcard();
 
-      const againDue = new Date("2027-01-01T00:10:00.000Z");
-      const hardDue = new Date("2027-01-01T04:00:00.000Z");
-      const goodDue = new Date("2027-01-02T00:00:00.000Z");
-      const easyDue = new Date("2027-01-04T00:00:00.000Z");
+    const againDue = new Date("2027-01-01T00:10:00.000Z");
+    const hardDue = new Date("2027-01-01T04:00:00.000Z");
+    const goodDue = new Date("2027-01-02T00:00:00.000Z");
+    const easyDue = new Date("2027-01-04T00:00:00.000Z");
 
-      const repeatReturn: Partial<Record<number, RecordLogItem>> = {
-        [Rating.Again]: { card: { ...makeFsrsCard(), due: againDue }, log: {} } as unknown as RecordLogItem,
-        [Rating.Hard]: { card: { ...makeFsrsCard(), due: hardDue }, log: {} } as unknown as RecordLogItem,
-        [Rating.Good]: { card: { ...makeFsrsCard(), due: goodDue }, log: {} } as unknown as RecordLogItem,
-        [Rating.Easy]: { card: { ...makeFsrsCard(), due: easyDue }, log: {} } as unknown as RecordLogItem,
-      };
+    const repeatReturn: Partial<Record<number, RecordLogItem>> = {
+      [Rating.Again]: { card: { ...makeFsrsCard(), due: againDue }, log: {} } as unknown as RecordLogItem,
+      [Rating.Hard]: { card: { ...makeFsrsCard(), due: hardDue }, log: {} } as unknown as RecordLogItem,
+      [Rating.Good]: { card: { ...makeFsrsCard(), due: goodDue }, log: {} } as unknown as RecordLogItem,
+      [Rating.Easy]: { card: { ...makeFsrsCard(), due: easyDue }, log: {} } as unknown as RecordLogItem,
+    };
 
-      schedulerSpies.repeat.mockReturnValueOnce(repeatReturn);
+    schedulerSpies.repeat.mockReturnValueOnce(repeatReturn);
 
-      const result = previewRatings(row, now);
+    const result = previewRatings(row, now);
 
-      expect(schedulerSpies.repeat).toHaveBeenCalledOnce();
-      const [calledCard, calledDate] = schedulerSpies.repeat.mock.calls[0] as [Card, Date];
-      expect(calledDate).toEqual(now);
-      // The rehydrated card should have the same FSRS fields as the row
-      expect(calledCard.stability).toBe(row.stability);
-      expect(calledCard.difficulty).toBe(row.difficulty);
-      expect(calledCard.reps).toBe(row.reps);
+    expect(schedulerSpies.repeat).toHaveBeenCalledOnce();
+    const [calledCard, calledDate] = schedulerSpies.repeat.mock.calls[0] as [Card, Date];
+    expect(calledDate).toEqual(now);
+    // The rehydrated card should have the same FSRS fields as the row
+    expect(calledCard.stability).toBe(row.stability);
+    expect(calledCard.difficulty).toBe(row.difficulty);
+    expect(calledCard.reps).toBe(row.reps);
 
-      expect(result.again).toEqual(againDue);
-      expect(result.hard).toEqual(hardDue);
-      expect(result.good).toEqual(goodDue);
-      expect(result.easy).toEqual(easyDue);
-    },
-  );
+    expect(result.again).toEqual(againDue);
+    expect(result.hard).toEqual(hardDue);
+    expect(result.good).toEqual(goodDue);
+    expect(result.easy).toEqual(easyDue);
+  });
 });
 
 // ---------------------------------------------------------------------------

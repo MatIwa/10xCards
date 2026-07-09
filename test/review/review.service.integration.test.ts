@@ -8,9 +8,9 @@ import { POST } from "@/pages/api/flashcards/[id]/review";
 import { GET } from "@/pages/api/flashcards/review/queue";
 import type { Flashcard } from "@/types";
 
-import { readFlashcardById, resetFlashcards } from "../../../test/helpers/db";
-import { createIntegrationUser } from "../../../test/helpers/integration-user";
-import { createCookieSink, invokeApiRoute } from "../../../test/helpers/invoke-api-route";
+import { readFlashcardById, resetFlashcards } from "../helpers/db";
+import { createIntegrationUser } from "../helpers/integration-user";
+import { createCookieSink, invokeApiRoute } from "../helpers/invoke-api-route";
 
 type IntegrationUser = Awaited<ReturnType<typeof createIntegrationUser>>;
 type IntegrationSession = Awaited<ReturnType<IntegrationUser["signIn"]>>;

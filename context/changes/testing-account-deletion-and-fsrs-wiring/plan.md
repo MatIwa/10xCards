@@ -214,7 +214,7 @@ One unit file pins the wiring contract with a stubbed scheduler across all four 
 
 #### 2. Integration test — API round-trip + review-surface RLS
 
-**File**: `src/lib/services/review.service.integration.test.ts` (new)
+**File**: `test/review/review.service.integration.test.ts` (new)
 
 **Intent**: Prove the wiring works end-to-end through the review endpoints, and close the Risk #3 gap the Phase 2 test file left open (review sub-routes were not covered).
 
@@ -275,7 +275,7 @@ Fill in the two cookbook sub-sections whose "TBD — see §3 Phase 3" placeholde
 **Intent**: Replace the "TBD — see §3 Phase 3" placeholder in §6.5 with a concrete recipe: stub the `ts-fsrs` module at the boundary, keep `Rating` real via `vi.importActual`, assert on the call + passthrough, never assert a specific next-due date, one integration per endpoint proving the real scheduler runs.
 
 **Contract**: §6.5 gains bullet items:
-- Reference test: `src/lib/services/review.service.test.ts` (unit, stubbed scheduler) + `src/lib/services/review.service.integration.test.ts` (one round-trip per endpoint).
+- Reference test: `src/lib/services/review.service.test.ts` (unit, stubbed scheduler) + `test/review/review.service.integration.test.ts` (one round-trip per endpoint).
 - Pattern: (a) unit test uses `vi.mock("ts-fsrs")` with `vi.importActual` to preserve `Rating`; (b) assert `scheduler.next` / `scheduler.repeat` was called with the rehydrated card + a Date + rating; (c) assert the persisted or returned state deep-equals `serialize(<mock-scheduler-return>)`; (d) never assert a specific next-due date computed from the real scheduler; (e) integration proves the endpoint ran the real scheduler at least once by asserting FSRS columns changed (state-shape assertion), not by asserting specific values.
 - Cross-link the test-plan §2 Risk #6 anti-pattern column.
 
@@ -314,7 +314,7 @@ Fill in the two cookbook sub-sections whose "TBD — see §3 Phase 3" placeholde
 ### Integration Tests
 
 - `test/account-deletion/account-delete.integration.test.ts` — happy path (303 + audit log + zero rows across `USER_SCOPED_TABLES` + zero `auth.users`), validation branch (400 + rows preserved), unauth (401).
-- `src/lib/services/review.service.integration.test.ts` — grade round-trip + practice short-circuit pin + foreign-card 404 + unauth 401 + queue actor-only + queue middleware unauth.
+- `test/review/review.service.integration.test.ts` — grade round-trip + practice short-circuit pin + foreign-card 404 + unauth 401 + queue actor-only + queue middleware unauth.
 - Local Supabase required (`npx supabase start`) with `TEST_SUPABASE_URL / TEST_SUPABASE_ANON_KEY / TEST_SUPABASE_SERVICE_ROLE_KEY` exported. Same env contract as Phase 2.
 - Users are hermetic (`createIntegrationUser` with random suffix); DB state read for assertions via `readFlashcardById` / new `readFlashcardsForUser` if useful (add to `test/helpers/db.ts` only if the queue test needs it and existing `readFlashcards` is close enough).
 

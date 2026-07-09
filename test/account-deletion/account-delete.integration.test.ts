@@ -120,12 +120,18 @@ describe("POST /api/account/delete", () => {
       expect(data).toEqual([]);
     }
 
-    expect(logSpy).toHaveBeenCalledTimes(1);
-    const auditPayload = JSON.parse(String(logSpy.mock.calls[0]?.[0])) as unknown;
-    expect(isAccountDeletedAuditPayload(auditPayload)).toBe(true);
-    if (!isAccountDeletedAuditPayload(auditPayload)) {
-      throw new Error("Expected account_deleted audit payload");
-    }
+    const auditCalls = logSpy.mock.calls
+      .map((call) => {
+        try {
+          return JSON.parse(String(call[0])) as unknown;
+        } catch {
+          return null;
+        }
+      })
+      .filter(isAccountDeletedAuditPayload);
+
+    expect(auditCalls).toHaveLength(1);
+    const auditPayload = auditCalls[0];
     expect(auditPayload).toMatchObject({
       event: "account_deleted",
       user_id: user.userId,
