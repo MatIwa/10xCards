@@ -165,6 +165,7 @@ describe("POST /api/flashcards/generate", () => {
 
       expect(response.status).toBe(200);
       expect(openRouterFetch).toHaveBeenCalledTimes(1);
+      expect(openRouterFetch.mock.calls[0][1]?.body as string).not.toContain("stray");
       expect(await readFlashcards(user.userId)).toHaveLength(0);
     });
   });
@@ -302,6 +303,7 @@ describe("POST /api/flashcards/generate", () => {
       const responseText = await response.text();
 
       expect(response.status).toBe(500);
+      expect(openRouterFetch).not.toHaveBeenCalled();
       expect(responseText).not.toContain(probe);
       assertProbeAbsentFromConsoleCalls(probe);
       expect(await readFlashcards(user.userId)).toHaveLength(0);

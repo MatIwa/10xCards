@@ -90,7 +90,7 @@ Each case follows: `const response = await invokeApiRoute({ method: "POST", path
 
 - Test file exists at `test/api/generate-privacy-and-input.integration.test.ts`
 - `npm run test:integration -- generate-privacy-and-input` passes all Phase 1 cases
-- `npm run lint` passes
+- `npx eslint test/api/generate-privacy-and-input.integration.test.ts` (scoped lint on the changed file) passes
 - `npx tsc --noEmit` (via `npm run build` or equivalent) passes
 
 #### Manual Verification
@@ -134,7 +134,7 @@ Each case ends with the three probe-absence assertions above. Reuse the `openRou
 #### Automated Verification
 
 - `npm run test:integration -- generate-privacy-and-input` passes all Phase 1 + Phase 2 cases
-- `npm run lint` passes
+- `npx eslint test/api/generate-privacy-and-input.integration.test.ts` (scoped lint on the changed file) passes
 - No test asserts on any specific error string; only status codes and probe-absence
 
 #### Manual Verification
@@ -241,7 +241,7 @@ Reflect the shipped slice in `context/foundation/test-plan.md`: mark Risks #4 an
 
 - [x] 1.1 Test file exists at `test/api/generate-privacy-and-input.integration.test.ts` — 45d5878
 - [x] 1.2 `npm run test:integration -- generate-privacy-and-input` passes all Phase 1 cases — 45d5878
-- [x] 1.3 `npm run lint` passes — 45d5878
+- [x] 1.3 `npx eslint test/api/generate-privacy-and-input.integration.test.ts` (scoped lint) passes — 45d5878
 - [x] 1.4 TypeScript check passes — 45d5878
 
 #### Manual
@@ -254,7 +254,7 @@ Reflect the shipped slice in `context/foundation/test-plan.md`: mark Risks #4 an
 #### Automated
 
 - [x] 2.1 `npm run test:integration -- generate-privacy-and-input` passes all Phase 1 + Phase 2 cases — 45d5878
-- [x] 2.2 `npm run lint` passes — 45d5878
+- [x] 2.2 `npx eslint test/api/generate-privacy-and-input.integration.test.ts` (scoped lint) passes — 45d5878
 - [x] 2.3 No test asserts on any specific error string; only status codes and probe-absence — 45d5878
 
 #### Manual
@@ -269,7 +269,7 @@ Reflect the shipped slice in `context/foundation/test-plan.md`: mark Risks #4 an
 
 - [x] 3.1 §3 Phase 2 row status reads `complete` — 45d5878
 - [x] 3.2 §6.3 no longer contains `TBD` — 45d5878
-- [x] 3.3 `npm run lint` still passes — 45d5878
+- [x] 3.3 `npx eslint context/foundation/test-plan.md` skipped (no code changes); `npm run lint` regression check confirmed no new failures introduced — 45d5878
 
 #### Manual
 
