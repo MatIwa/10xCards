@@ -27,3 +27,8 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# stryker mutation testing artifacts
+.stryker-tmp/
+reports/
+stryker.log

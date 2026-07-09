@@ -6,23 +6,33 @@ import type { Flashcard } from "@/types";
 // ---------------------------------------------------------------------------
 // Mock ts-fsrs: replace the `fsrs()` factory with a spy-able version while
 // keeping `Rating` real so tests can pass Rating.Again etc. as inputs.
+// The factory itself is a spy so we can assert on the config the service
+// passes into it (see "fsrs scheduler configuration" below).
 // ---------------------------------------------------------------------------
 const schedulerSpies = vi.hoisted(() => ({
   next: vi.fn(),
   repeat: vi.fn(),
 }));
 
+const fsrsFactorySpy = vi.hoisted(() => vi.fn(() => schedulerSpies));
+
 vi.mock("ts-fsrs", async () => {
   const actual = await vi.importActual<typeof import("ts-fsrs")>("ts-fsrs");
   return {
     ...actual,
-    fsrs: () => schedulerSpies,
+    fsrs: fsrsFactorySpy,
   };
 });
 
 // Import service AFTER mock is set up (module is resolved fresh due to vi.mock hoisting)
-import { gradeCard, previewRatings, rehydrate, serialize } from "./review.service";
+import { gradeCard, listDueCards, listPracticeCards, previewRatings, rehydrate, serialize } from "./review.service";
 import { Rating } from "ts-fsrs";
+
+// Snapshot the fsrs factory call that happens during service module import. The
+// existing test suites call `vi.clearAllMocks()` in afterEach hooks, which
+// would otherwise wipe this call before the "fsrs scheduler configuration"
+// test runs.
+const initialFsrsFactoryArgs = fsrsFactorySpy.mock.calls[0]?.[0];
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -250,5 +260,174 @@ describe("gradeCard", () => {
 
     expect(result).toEqual({ data: null, error: "db down" });
     expect(schedulerSpies.next).not.toHaveBeenCalled();
+  });
+
+  it("surfaces update errors from Supabase", async () => {
+    // Select succeeds, scheduler runs, but the persisting `update()` fails.
+    // The service must return the update error verbatim so the API layer can
+    // convert it into an HTTP 5xx — silently swallowing it would leave the
+    // caller thinking the grade was saved.
+    const row = makeFlashcard();
+    schedulerSpies.next.mockReturnValueOnce({ card: makeFsrsCard(), log: {} });
+
+    const { supabase } = createSupabaseStub({
+      selectReturn: { data: row, error: null },
+      updateReturn: { data: null, error: { message: "constraint violation" } },
+    });
+
+    const result = await gradeCard(supabase, "card-uuid", "user-uuid", Rating.Good);
+
+    expect(result).toEqual({ data: null, error: "constraint violation" });
+  });
+
+  it("returns Flashcard not found when the update returns no row", async () => {
+    // A missing return row after update means RLS silently filtered it out
+    // (row belongs to another user). The service must map that to a
+    // "Flashcard not found" error rather than returning `data: null` with no
+    // error, which would look like a successful no-op to the caller.
+    const row = makeFlashcard();
+    schedulerSpies.next.mockReturnValueOnce({ card: makeFsrsCard(), log: {} });
+
+    const { supabase } = createSupabaseStub({
+      selectReturn: { data: row, error: null },
+      updateReturn: { data: null, error: null },
+    });
+
+    const result = await gradeCard(supabase, "card-uuid", "user-uuid", Rating.Good);
+
+    expect(result).toEqual({ data: null, error: "Flashcard not found" });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// fsrs scheduler configuration
+// ---------------------------------------------------------------------------
+// Pins the FSRS scheduler configuration the service must run with — PRD Risk #6
+// requires request_retention=0.9, enable_fuzz=true, enable_short_term=true.
+// Any change to these values silently alters spaced-repetition scheduling for
+// every user, so they belong in an assertion rather than a comment.
+describe("fsrs scheduler configuration", () => {
+  it("is instantiated with the PRD-mandated retention, fuzz, and short-term flags", () => {
+    expect(initialFsrsFactoryArgs).toEqual({
+      request_retention: 0.9,
+      enable_fuzz: true,
+      enable_short_term: true,
+    });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// listDueCards / listPracticeCards — Supabase query shape + result mapping
+// ---------------------------------------------------------------------------
+// The oracle for these tests comes from the review-session PRD slice: cards
+// are fetched from `flashcards`, filtered/ordered such that the ones most in
+// need of review come first, and errors from Supabase are surfaced verbatim
+// so upstream handlers can convert them to HTTP responses.
+
+interface ListChain {
+  select: ReturnType<typeof vi.fn>;
+  lte: ReturnType<typeof vi.fn>;
+  order: ReturnType<typeof vi.fn>;
+  limit: ReturnType<typeof vi.fn>;
+  then: (onFulfilled: (value: { data: Flashcard[] | null; error: { message: string } | null }) => unknown) => unknown;
+}
+
+function createListStub(response: { data: Flashcard[] | null; error: { message: string } | null }) {
+  const chain: ListChain = {
+    select: vi.fn(() => chain),
+    lte: vi.fn(() => chain),
+    order: vi.fn(() => chain),
+    limit: vi.fn(() => chain),
+    // Make the chain thenable so `await supabase.from(...).select(...).order(...)` resolves to `response`.
+    then: (onFulfilled) => Promise.resolve(response).then(onFulfilled),
+  };
+
+  const fromFn = vi.fn(() => chain);
+
+  return {
+    supabase: { from: fromFn } as unknown as SupabaseClient,
+    fromFn,
+    chain,
+  };
+}
+
+describe("listDueCards", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.clearAllMocks();
+  });
+
+  it("queries flashcards for rows due now, ordered by due ascending, and returns them", async () => {
+    const FIXED_NOW = new Date("2027-06-15T12:00:00.000Z");
+    vi.useFakeTimers();
+    vi.setSystemTime(FIXED_NOW);
+
+    const earlier = makeFlashcard({ id: "earlier", due: "2027-06-14T00:00:00.000Z" });
+    const later = makeFlashcard({ id: "later", due: "2027-06-15T00:00:00.000Z" });
+
+    const { supabase, fromFn, chain } = createListStub({ data: [earlier, later], error: null });
+
+    const result = await listDueCards(supabase);
+
+    expect(fromFn).toHaveBeenCalledWith("flashcards");
+    expect(chain.select).toHaveBeenCalledWith("*");
+    expect(chain.lte).toHaveBeenCalledWith("due", FIXED_NOW.toISOString());
+    expect(chain.order).toHaveBeenCalledWith("due", { ascending: true });
+
+    expect(result.error).toBeNull();
+    expect(result.data).toHaveLength(2);
+    // Ordering: earlier `due` must precede later `due` — flip to `ascending: false` and this fails.
+    expect(result.data?.[0]?.id).toBe("earlier");
+    expect(result.data?.[1]?.id).toBe("later");
+  });
+
+  it("surfaces Supabase errors as { data: null, error: message }", async () => {
+    const { supabase } = createListStub({ data: null, error: { message: "connection refused" } });
+
+    const result = await listDueCards(supabase);
+
+    expect(result).toEqual({ data: null, error: "connection refused" });
+  });
+});
+
+describe("listPracticeCards", () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("orders by last_review asc (nulls last) then due asc and applies the default limit of 20", async () => {
+    const reviewed = makeFlashcard({ id: "reviewed", last_review: "2027-06-10T00:00:00.000Z" });
+    const neverReviewed = makeFlashcard({ id: "never-reviewed", last_review: null });
+
+    // Service must place already-reviewed cards before never-reviewed ones (nullsFirst: false).
+    const { supabase, fromFn, chain } = createListStub({ data: [reviewed, neverReviewed], error: null });
+
+    const result = await listPracticeCards(supabase);
+
+    expect(fromFn).toHaveBeenCalledWith("flashcards");
+    expect(chain.select).toHaveBeenCalledWith("*");
+    expect(chain.order).toHaveBeenNthCalledWith(1, "last_review", { ascending: true, nullsFirst: false });
+    expect(chain.order).toHaveBeenNthCalledWith(2, "due", { ascending: true });
+    expect(chain.limit).toHaveBeenCalledWith(20);
+
+    expect(result.error).toBeNull();
+    expect(result.data?.[0]?.id).toBe("reviewed");
+    expect(result.data?.[1]?.id).toBe("never-reviewed");
+  });
+
+  it("honours a caller-supplied limit", async () => {
+    const { supabase, chain } = createListStub({ data: [], error: null });
+
+    await listPracticeCards(supabase, 5);
+
+    expect(chain.limit).toHaveBeenCalledWith(5);
+  });
+
+  it("surfaces Supabase errors as { data: null, error: message }", async () => {
+    const { supabase } = createListStub({ data: null, error: { message: "network down" } });
+
+    const result = await listPracticeCards(supabase);
+
+    expect(result).toEqual({ data: null, error: "network down" });
   });
 });

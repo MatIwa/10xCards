@@ -67,6 +67,39 @@ describe("deleteAccount", () => {
     expect(fromMock).toHaveBeenCalledTimes(1);
   });
 
+  it("returns the pre-delete flashcard count when all orphan checks pass", async () => {
+    // Happy path: pre-count returns 7 rows, delete-user succeeds, and each
+    // user-scoped table's orphan check yields an empty array (no leftover
+    // rows). The service must surface the pre-count value verbatim as `data`
+    // so the caller can report "N flashcards deleted" back to the user.
+    const { client, deleteUserMock } = createAdminClientStub({
+      preCount: { count: 7, error: null },
+      deleteUser: { error: null },
+      orphanChecks: Object.fromEntries(USER_SCOPED_TABLES.map((table) => [table, { data: [], error: null }])),
+    });
+
+    const result = await deleteAccount(client, "user-id");
+
+    expect(result).toEqual({ data: 7, error: null });
+    expect(deleteUserMock).toHaveBeenCalledWith("user-id");
+  });
+
+  it("treats a null pre-count as zero deletions", async () => {
+    // Supabase's HEAD count query can legitimately return `count: null` (for
+    // example when the underlying table is empty). The service must coerce
+    // that to 0 rather than propagating null, so downstream UI can format
+    // "0 flashcards deleted" without a null check.
+    const { client } = createAdminClientStub({
+      preCount: { count: null, error: null },
+      deleteUser: { error: null },
+      orphanChecks: Object.fromEntries(USER_SCOPED_TABLES.map((table) => [table, { data: [], error: null }])),
+    });
+
+    const result = await deleteAccount(client, "user-id");
+
+    expect(result).toEqual({ data: 0, error: null });
+  });
+
   it("returns a verification error when the orphan check finds a row", async () => {
     const { client } = createAdminClientStub({
       preCount: { count: 3, error: null },
