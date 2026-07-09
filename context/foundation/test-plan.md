@@ -157,11 +157,33 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 ### 6.4 Adding a test for a new user-scoped table
 
-TBD — see §3 Phase 3 (account-deletion phase will establish the orphan-check fixture pattern; every new user-scoped table thereafter reuses it, per the lessons.md rule).
+Every table that stores per-user data must cascade on `auth.users` delete and be listed in the orphan-check in `src/lib/services/account.service.ts`. The structural guard in the unit test makes forgetting either step fail at edit time.
+
+**Reference tests**: `src/lib/services/account.service.test.ts` (structural guard) + `test/account-deletion/account-delete.integration.test.ts` (happy-path sweep).
+
+**Recipe**:
+- (a) Declare `user_id uuid not null references auth.users(id) on delete cascade` in the migration.
+- (b) Add the table name to `USER_SCOPED_TABLES` in `src/lib/services/account.service.ts`.
+- (c) Mirror the same name in `EXPECTED_USER_SCOPED_TABLES` in `src/lib/services/account.service.test.ts` — the roster-equality assertion (`expect([...USER_SCOPED_TABLES].sort()).toEqual([...EXPECTED_USER_SCOPED_TABLES].sort())`) will fail until both sides match.
+- (d) In the integration happy-path test, seed at least one fixture row in the new table before calling the endpoint and assert zero rows remain after (`adminClient.from(table).select("id").eq("user_id", userId)` returns an empty array).
+- (e) Confirm `npm run test:unit -- account.service` passes (guard) and `npm run test:integration -- account-delete` passes (full sweep).
+
+Cross-reference: `context/foundation/lessons.md` — *User-scoped tables must cascade on `auth.users` delete AND be covered by the orphan-check.*
 
 ### 6.5 Adding a test for FSRS / review-scheduling wiring
 
-TBD — see §3 Phase 3 (FSRS wiring phase will establish the pattern: assert the call to ts-fsrs and the persisted state, never the specific next-due date).
+Test the *wiring* (what arguments reach ts-fsrs, what comes back and lands in the DB) — never the library's scheduling math. The oracle is the call contract and the passthrough, not a specific next-due date.
+
+**Reference tests**: `src/lib/services/review.service.test.ts` (unit, stubbed scheduler) + `src/lib/services/review.service.integration.test.ts` (one round-trip per endpoint).
+
+**Recipe**:
+- (a) Unit test: use `vi.mock("ts-fsrs", async () => { const actual = await vi.importActual("ts-fsrs"); return { ...actual, fsrs: () => ({ next: vi.fn(), repeat: vi.fn() }) }; })` at the top of the test file. The `vi.hoisted` pattern makes the spy references addressable from inside tests. Preserve `Rating` via `vi.importActual` so tests can pass `Rating.Again` etc. as real values.
+- (b) Assert `scheduler.next` (or `.repeat`) was called with the rehydrated card, a `Date` argument, and the correct rating. Use `vi.useFakeTimers()` + `vi.setSystemTime(fixedDate)` to make the `new Date()` inside `gradeCard` deterministic.
+- (c) Assert the `.update(...)` call received exactly `serialize(<mock-scheduler-return>)` (deep-equal via `toMatchObject`). This is the passthrough check — if the service mutates the card before persisting, the assertion fails.
+- (d) Do **not** assert a specific next-due date from the real scheduler; that tests the library, not us.
+- (e) Integration test: assert at least one FSRS column changed after grading (`reps`, `stability`, `difficulty`, `last_review`, or `due`). This proves the real scheduler ran and its output was persisted without depending on specific values.
+
+Cross-reference: §2 Risk #6 anti-pattern column — *Mirror implementation: assertion computes the expected value with the same logic as the tested code.*
 
 ### 6.6 Per-rollout-phase notes
 
@@ -174,6 +196,8 @@ The API-route fetch stub (`test/helpers/api-route-fetch-stub.ts`) implements the
 **Phase 2 (Risk #3):** Direct `APIContext` fabrication is cheap; the `AstroCookies` sink only needs `.get`/`.getAll`/`.has` populated from the request `Cookie` header — writes are no-ops. ESLint `no-restricted-imports` with file-scoped overrides gave us an edit-time regression net over the admin-client surface at zero runtime cost.
 
 **Phase 2 (Risks #4 + #7):** Zod v4 issue output is safe for the current generate schema, but response bodies remain the live leak surface. A UUID probe plus `.not.toContain` across response text, console calls, and the DB is the cheapest non-retention oracle; the happy-path DB post-check locks that generate never persists source text.
+
+**Phase 3 (Risks #5 + #6):** The `USER_SCOPED_TABLES` const doubles as internal documentation for the extensibility rule — positioning it next to the `// TABLES:` marker comment makes the service self-documenting. Stubbing the `ts-fsrs` module at the boundary (not inside the service) is not the anti-pattern: the anti-pattern is recomputing the library's math in the assertion. Fake timers (`vi.useFakeTimers`) were required to pin the inline `new Date()` inside `gradeCard`; without them the Date argument assertion is clock-flaky. The `practice: true` short-circuit is a regression-pin test, not a wiring test — it guards existing behaviour that a Risk #6 refactor could silently erase.
 
 ## 7. What We Deliberately Don't Test
 

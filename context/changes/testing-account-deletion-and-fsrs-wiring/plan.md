@@ -383,16 +383,16 @@ None. The `USER_SCOPED_TABLES` extraction is a pure source refactor; no schema c
 
 #### Automated
 
-- [x] 3.1 `npm run test:unit -- review.service` passes (12 cases)
-- [x] 3.2 `npm run test:integration -- review.service` passes (6 cases)
-- [x] 3.3 Type checking passes: `npx astro check`
-- [x] 3.4 Linting passes: `npm run lint`
+- [x] 3.1 `npm run test:unit -- review.service` passes (12 cases) — ecb3ae6
+- [x] 3.2 `npm run test:integration -- review.service` passes (6 cases) — ecb3ae6
+- [x] 3.3 Type checking passes: `npx astro check` — ecb3ae6
+- [x] 3.4 Linting passes: `npm run lint` — ecb3ae6
 
 #### Manual
 
-- [x] 3.5 Wiring sabotage on `.eq("user_id", ...)` is caught by a Phase 3 test
-- [x] 3.6 Passthrough sabotage on `serialize(card)` is caught by the unit test's `.update` deep-equal
-- [x] 3.7 Practice-short-circuit sabotage is caught by integration test #2
+- [x] 3.5 Wiring sabotage on `.eq("user_id", ...)` is caught by a Phase 3 test — ecb3ae6
+- [x] 3.6 Passthrough sabotage on `serialize(card)` is caught by the unit test's `.update` deep-equal — ecb3ae6
+- [x] 3.7 Practice-short-circuit sabotage is caught by integration test #2 — ecb3ae6
 
 ### Phase 4: Cookbook sync
 
