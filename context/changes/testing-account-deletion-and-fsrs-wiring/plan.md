@@ -398,9 +398,9 @@ None. The `USER_SCOPED_TABLES` extraction is a pure source refactor; no schema c
 
 #### Automated
 
-- [x] 4.1 `npm run lint` passes
-- [x] 4.2 `git diff context/foundation/test-plan.md` shows edits only in §6.4, §6.5, §6.6
+- [x] 4.1 `npm run lint` passes — c675313
+- [x] 4.2 `git diff context/foundation/test-plan.md` shows edits only in §6.4, §6.5, §6.6 — c675313
 
 #### Manual
 
-- [x] 4.3 Read §6.4 and §6.5 top-to-bottom — a new contributor could follow the recipe without asking questions
+- [x] 4.3 Read §6.4 and §6.5 top-to-bottom — a new contributor could follow the recipe without asking questions — c675313

@@ -1,7 +1,7 @@
 ---
 change_id: testing-account-deletion-and-fsrs-wiring
 title: Testing account deletion completeness and FSRS wiring
-status: implementing
+status: implemented
 created: 2026-07-09
 updated: 2026-07-09
 archived_at: null
