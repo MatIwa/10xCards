@@ -369,38 +369,38 @@ None. The `USER_SCOPED_TABLES` extraction is a pure source refactor; no schema c
 
 #### Automated
 
-- [ ] 2.1 `npm run test:unit -- account.service` passes (4 partial-failure cases + 1 structural guard case)
-- [ ] 2.2 `npm run test:integration -- account-delete` passes (happy path + validation branch + unauth branch)
-- [ ] 2.3 Type checking passes: `npx astro check`
-- [ ] 2.4 Linting passes: `npm run lint`
+- [x] 2.1 `npm run test:unit -- account.service` passes (4 partial-failure cases + 1 structural guard case)
+- [x] 2.2 `npm run test:integration -- account-delete` passes (happy path + validation branch + unauth branch)
+- [x] 2.3 Type checking passes: `npx astro check`
+- [x] 2.4 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 2.5 Roster-equality guard fires when `USER_SCOPED_TABLES` in the service is temporarily extended
-- [ ] 2.6 Roster-equality guard fires when the test-side roster is temporarily extended
+- [x] 2.5 Roster-equality guard fires when `USER_SCOPED_TABLES` in the service is temporarily extended
+- [x] 2.6 Roster-equality guard fires when the test-side roster is temporarily extended
 
 ### Phase 3: Risk #6 tests — FSRS wiring passthrough + review-surface RLS
 
 #### Automated
 
-- [ ] 3.1 `npm run test:unit -- review.service` passes (12 cases)
-- [ ] 3.2 `npm run test:integration -- review.service` passes (6 cases)
-- [ ] 3.3 Type checking passes: `npx astro check`
-- [ ] 3.4 Linting passes: `npm run lint`
+- [x] 3.1 `npm run test:unit -- review.service` passes (12 cases)
+- [x] 3.2 `npm run test:integration -- review.service` passes (6 cases)
+- [x] 3.3 Type checking passes: `npx astro check`
+- [x] 3.4 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 3.5 Wiring sabotage on `.eq("user_id", ...)` is caught by a Phase 3 test
-- [ ] 3.6 Passthrough sabotage on `serialize(card)` is caught by the unit test's `.update` deep-equal
-- [ ] 3.7 Practice-short-circuit sabotage is caught by integration test #2
+- [x] 3.5 Wiring sabotage on `.eq("user_id", ...)` is caught by a Phase 3 test
+- [x] 3.6 Passthrough sabotage on `serialize(card)` is caught by the unit test's `.update` deep-equal
+- [x] 3.7 Practice-short-circuit sabotage is caught by integration test #2
 
 ### Phase 4: Cookbook sync
 
 #### Automated
 
-- [ ] 4.1 `npm run lint` passes
-- [ ] 4.2 `git diff context/foundation/test-plan.md` shows edits only in §6.4, §6.5, §6.6
+- [x] 4.1 `npm run lint` passes
+- [x] 4.2 `git diff context/foundation/test-plan.md` shows edits only in §6.4, §6.5, §6.6
 
 #### Manual
 
-- [ ] 4.3 Read §6.4 and §6.5 top-to-bottom — a new contributor could follow the recipe without asking questions
+- [x] 4.3 Read §6.4 and §6.5 top-to-bottom — a new contributor could follow the recipe without asking questions
