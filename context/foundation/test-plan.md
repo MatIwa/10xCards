@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-07-01 (§3 Phase 1 opened)
+> Last updated: 2026-07-09 (§3 Phase 2 completed via `testing-rls-cross-user-access/` and `testing-generate-privacy-and-input/`)
 
 ## 1. Strategy
 
@@ -67,8 +67,8 @@ orchestrator updates Status as artifacts appear on disk.
 
 | #   | Phase name                                       | Goal (one line)                                                                                                                                                           | Risks covered | Test types         | Status       | Change folder                                          |
 | --- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------ | ------------ | ------------------------------------------------------ |
-| 1   | Bootstrap runner + AI generation critical path   | Install Vitest, wire the first test infra, and prove Risks #1 and #2 at the cheapest layer that catches them                                                              | #1, #2        | unit + integration | implementing | `context/changes/testing-ai-generation-critical-path/` |
-| 2   | Server-boundary contracts (auth, privacy, input) | Prove Risks #3, #4, #7 at the API-route boundary — RLS ownership across endpoints, source-text non-retention on success and error paths, and server-side input validation | #3, #4, #7    | integration + unit | not started  | —                                                      |
+| 1   | Bootstrap runner + AI generation critical path   | Install Vitest, wire the first test infra, and prove Risks #1 and #2 at the cheapest layer that catches them                                                              | #1, #2        | unit + integration | complete     | `context/changes/testing-ai-generation-critical-path/`                                                                                                                                                            |
+| 2   | Server-boundary contracts (auth, privacy, input) | Prove Risks #3, #4, #7 at the API-route boundary — RLS ownership across endpoints, source-text non-retention on success and error paths, and server-side input validation | #3, #4, #7    | integration + unit | complete     | Risk #3 via `context/changes/testing-rls-cross-user-access/`; Risks #4 + #7 via `context/changes/testing-generate-privacy-and-input/` |
 | 3   | Account deletion completeness + FSRS wiring      | Prove Risks #5 and #6 as durable regression tests — orphan-check enforcement across all user-scoped tables, FSRS state passthrough correctness                            | #5, #6        | integration + unit | not started  | —                                                      |
 | 4   | Quality-gates wiring in CI                       | Enforce the suite as a required CI check on push/PR; only meaningful once phases 1–3 have produced a suite worth enforcing                                                | cross-cutting | gates              | not started  | —                                                      |
 
@@ -146,7 +146,14 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 ### 6.3 Adding a test for a new API endpoint
 
-TBD — see §3 Phase 2 (server-boundary contracts phase will establish the canonical two-user RLS pattern, the source-text-leakage pattern, and the Zod-at-boundary pattern).
+- **Location**: put direct route-boundary specs under `test/api/<endpoint>.integration.test.ts`.
+- **Run command**: `npm run test:integration -- <endpoint-name>` for one endpoint file.
+- **Imports**: use `invokeApiRoute()` for the Astro handler, `createIntegrationUser()` for a real owner id, and `resetFlashcards()` / `readFlashcards()` for admin DB post-checks.
+- **Harness**: create/reset the integration user in `beforeEach`/`afterEach`; spy on `console.error` when log leakage is in scope.
+- **Outbound edges**: use `vi.stubGlobal("fetch", ...)` with a dedicated provider mock, but delegate Supabase URLs back to the original `fetch` so DB checks remain real.
+- **Privacy oracle**: when the endpoint handles user-submitted content, embed a `randomUUID()` probe in the request and assert it is absent from response text, every captured log call, and DB rows.
+- **Persistence check**: if the endpoint should not write, assert `readFlashcards(userId)` stays empty on both success and failure paths.
+- **Reference test**: `test/api/generate-privacy-and-input.integration.test.ts` covers Zod boundary rejection, provider failures, log checks, and non-retention.
 
 ### 6.4 Adding a test for a new user-scoped table
 
@@ -165,6 +172,8 @@ Phase 1 reference tests exposed two harness details worth keeping: dynamic API-r
 The API-route fetch stub (`test/helpers/api-route-fetch-stub.ts`) implements the full `APIContext["cookies"]` surface (`get`, `getAll`, `has`, `set`, `delete`, `merge`, `headers`) — not just `set` — so any future route that reads cookies before creating the Supabase client (e.g., `cookies.get("sb-...-auth-token")`) works out of the box. Reads are backed by the session cookie the test already puts in the request header; writes are no-ops because we do not exercise token refresh in tests.
 
 **Phase 2 (Risk #3):** Direct `APIContext` fabrication is cheap; the `AstroCookies` sink only needs `.get`/`.getAll`/`.has` populated from the request `Cookie` header — writes are no-ops. ESLint `no-restricted-imports` with file-scoped overrides gave us an edit-time regression net over the admin-client surface at zero runtime cost.
+
+**Phase 2 (Risks #4 + #7):** Zod v4 issue output is safe for the current generate schema, but response bodies remain the live leak surface. A UUID probe plus `.not.toContain` across response text, console calls, and the DB is the cheapest non-retention oracle; the happy-path DB post-check locks that generate never persists source text.
 
 ## 7. What We Deliberately Don't Test
 
