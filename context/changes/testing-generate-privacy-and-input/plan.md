@@ -239,39 +239,39 @@ Reflect the shipped slice in `context/foundation/test-plan.md`: mark Risks #4 an
 
 #### Automated
 
-- [x] 1.1 Test file exists at `test/api/generate-privacy-and-input.integration.test.ts`
-- [x] 1.2 `npm run test:integration -- generate-privacy-and-input` passes all Phase 1 cases
-- [x] 1.3 `npm run lint` passes
-- [x] 1.4 TypeScript check passes
+- [x] 1.1 Test file exists at `test/api/generate-privacy-and-input.integration.test.ts` — 45d5878
+- [x] 1.2 `npm run test:integration -- generate-privacy-and-input` passes all Phase 1 cases — 45d5878
+- [x] 1.3 `npm run lint` passes — 45d5878
+- [x] 1.4 TypeScript check passes — 45d5878
 
 #### Manual
 
-- [x] 1.5 No raw error strings from `generate.ts` used as assertion values
-- [x] 1.6 Test does not import `generateFlashcardsSchema` to inspect its shape
+- [x] 1.5 No raw error strings from `generate.ts` used as assertion values — 45d5878
+- [x] 1.6 Test does not import `generateFlashcardsSchema` to inspect its shape — 45d5878
 
 ### Phase 2: Privacy / non-retention contract (Risk #4)
 
 #### Automated
 
-- [x] 2.1 `npm run test:integration -- generate-privacy-and-input` passes all Phase 1 + Phase 2 cases
-- [x] 2.2 `npm run lint` passes
-- [x] 2.3 No test asserts on any specific error string; only status codes and probe-absence
+- [x] 2.1 `npm run test:integration -- generate-privacy-and-input` passes all Phase 1 + Phase 2 cases — 45d5878
+- [x] 2.2 `npm run lint` passes — 45d5878
+- [x] 2.3 No test asserts on any specific error string; only status codes and probe-absence — 45d5878
 
 #### Manual
 
-- [x] 2.4 Probe-absence assertion iterates every `console.error` call
-- [x] 2.5 DB post-check runs on every case (success and failure)
-- [x] 2.6 No case asserts on `body.issues` shape
+- [x] 2.4 Probe-absence assertion iterates every `console.error` call — 45d5878
+- [x] 2.5 DB post-check runs on every case (success and failure) — 45d5878
+- [x] 2.6 No case asserts on `body.issues` shape — 45d5878
 
 ### Phase 3: Test-plan §3 status update + §6 cookbook entry
 
 #### Automated
 
-- [x] 3.1 §3 Phase 2 row status reads `complete`
-- [x] 3.2 §6.3 no longer contains `TBD`
-- [x] 3.3 `npm run lint` still passes
+- [x] 3.1 §3 Phase 2 row status reads `complete` — 45d5878
+- [x] 3.2 §6.3 no longer contains `TBD` — 45d5878
+- [x] 3.3 `npm run lint` still passes — 45d5878
 
 #### Manual
 
-- [x] 3.4 §6.3 is self-sufficient for a new contributor writing a route-boundary test
-- [x] 3.5 §6.6 note is factual and short
+- [x] 3.4 §6.3 is self-sufficient for a new contributor writing a route-boundary test — 45d5878
+- [x] 3.5 §6.6 note is factual and short — 45d5878

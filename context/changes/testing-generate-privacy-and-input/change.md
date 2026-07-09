@@ -1,7 +1,7 @@
 ---
 change_id: testing-generate-privacy-and-input
 title: Phase 2 slice: privacy and input validation on the generate endpoint
-status: implementing
+status: implemented
 created: 2026-07-09
 updated: 2026-07-09
 archived_at: null
