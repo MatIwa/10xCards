@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-07-09 (§3 Phase 2 completed via `testing-rls-cross-user-access/` and `testing-generate-privacy-and-input/`)
+> Last updated: 2026-07-09 (§3 Phase 3 completed via `testing-account-deletion-and-fsrs-wiring/`)
 
 ## 1. Strategy
 
@@ -69,7 +69,7 @@ orchestrator updates Status as artifacts appear on disk.
 | --- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------ | ------------ | ------------------------------------------------------ |
 | 1   | Bootstrap runner + AI generation critical path   | Install Vitest, wire the first test infra, and prove Risks #1 and #2 at the cheapest layer that catches them                                                              | #1, #2        | unit + integration | complete     | `context/changes/testing-ai-generation-critical-path/`                                                                                                                                                            |
 | 2   | Server-boundary contracts (auth, privacy, input) | Prove Risks #3, #4, #7 at the API-route boundary — RLS ownership across endpoints, source-text non-retention on success and error paths, and server-side input validation | #3, #4, #7    | integration + unit | complete     | Risk #3 via `context/changes/testing-rls-cross-user-access/`; Risks #4 + #7 via `context/changes/testing-generate-privacy-and-input/` |
-| 3   | Account deletion completeness + FSRS wiring      | Prove Risks #5 and #6 as durable regression tests — orphan-check enforcement across all user-scoped tables, FSRS state passthrough correctness                            | #5, #6        | integration + unit | not started  | —                                                      |
+| 3   | Account deletion completeness + FSRS wiring      | Prove Risks #5 and #6 as durable regression tests — orphan-check enforcement across all user-scoped tables, FSRS state passthrough correctness                            | #5, #6        | integration + unit | complete     | `context/changes/testing-account-deletion-and-fsrs-wiring/` |
 | 4   | Quality-gates wiring in CI                       | Enforce the suite as a required CI check on push/PR; only meaningful once phases 1–3 have produced a suite worth enforcing                                                | cross-cutting | gates              | not started  | —                                                      |
 
 ## 4. Stack

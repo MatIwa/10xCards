@@ -1,7 +1,7 @@
 # GitHub Issues — Roadmap Migration
 
 Created: 2026-05-31
-Updated: 2026-07-01
+Updated: 2026-07-09
 Repository: MatIwa/10xCards
 
 ## Labels
@@ -33,7 +33,7 @@ Repository: MatIwa/10xCards
 | TP-00 | #17 | Track phased test rollout | foundation | #13, #14, #15, #16 | OPEN |
 | TP-01 | #13 | Bootstrap Vitest runner and AI generation critical-path tests | foundation, stream:B | — | CLOSED |
 | TP-02 | #14 | Add server-boundary contract tests | foundation, stream:B, stream:C | #13 | OPEN |
-| TP-03 | #15 | Add account deletion and FSRS wiring tests | foundation, stream:A, stream:C | #13 | OPEN |
+| TP-03 | #15 | Add account deletion and FSRS wiring tests | foundation, stream:A, stream:C | #13 | CLOSED |
 | TP-04 | #16 | Wire test suite into CI | foundation | #14, #15 | OPEN |
 
 Duplicate setup issues #9, #10, #11, and #12 were closed; #13-#17 are canonical.
