@@ -369,15 +369,15 @@ None. The `USER_SCOPED_TABLES` extraction is a pure source refactor; no schema c
 
 #### Automated
 
-- [x] 2.1 `npm run test:unit -- account.service` passes (4 partial-failure cases + 1 structural guard case)
-- [x] 2.2 `npm run test:integration -- account-delete` passes (happy path + validation branch + unauth branch)
-- [x] 2.3 Type checking passes: `npx astro check`
-- [x] 2.4 Linting passes: `npm run lint`
+- [x] 2.1 `npm run test:unit -- account.service` passes (4 partial-failure cases + 1 structural guard case) — 260f0bd
+- [x] 2.2 `npm run test:integration -- account-delete` passes (happy path + validation branch + unauth branch) — 260f0bd
+- [x] 2.3 Type checking passes: `npx astro check` — 260f0bd
+- [x] 2.4 Linting passes: `npm run lint` — 260f0bd
 
 #### Manual
 
-- [x] 2.5 Roster-equality guard fires when `USER_SCOPED_TABLES` in the service is temporarily extended
-- [x] 2.6 Roster-equality guard fires when the test-side roster is temporarily extended
+- [x] 2.5 Roster-equality guard fires when `USER_SCOPED_TABLES` in the service is temporarily extended — 260f0bd
+- [x] 2.6 Roster-equality guard fires when the test-side roster is temporarily extended — 260f0bd
 
 ### Phase 3: Risk #6 tests — FSRS wiring passthrough + review-surface RLS
 
