@@ -67,6 +67,7 @@ export async function invokeApiRoute<TBody = unknown>(options: InvokeApiRouteOpt
     locals: {
       user: options.session ? { id: options.session.userId } : null,
     },
+    redirect: (path: string, status = 302) => new Response(null, { status, headers: { Location: path } }),
   } as unknown as APIContext;
 
   return options.handler(context);

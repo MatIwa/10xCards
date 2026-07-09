@@ -99,7 +99,7 @@ describe("flashcards cross-user isolation", () => {
   });
 
   it("GET /api/flashcards unauthenticated returns 401 from middleware", async () => {
-    const next = vi.fn(async () => new Response(null, { status: 200 }));
+    const next = vi.fn(() => Promise.resolve(new Response(null, { status: 200 })));
     const context = {
       request: new Request("http://localhost/api/flashcards"),
       url: new URL("http://localhost/api/flashcards"),

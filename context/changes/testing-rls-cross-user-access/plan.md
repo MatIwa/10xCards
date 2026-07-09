@@ -306,37 +306,37 @@ Extend [context/foundation/test-plan.md](../../foundation/test-plan.md) §6.2 wi
 
 #### Automated
 
-- [x] 2.1 `npx vitest run test/rls/flashcards-cross-user.integration.test.ts` exits 0. — 69e6536
-- [x] 2.2 `npm run test:integration` includes this file and exits 0. — 69e6536
-- [x] 2.3 `npm run lint` stays green. — 69e6536
-- [x] 2.4 `npx prettier --check "test/rls/flashcards-cross-user.integration.test.ts"` exits 0. — 69e6536
+- [ ] 2.1 `npx vitest run test/rls/flashcards-cross-user.integration.test.ts` exits 0.
+- [ ] 2.2 `npm run test:integration` includes this file and exits 0.
+- [x] 2.3 `npm run lint` stays green.
+- [x] 2.4 `npx prettier --check "test/rls/flashcards-cross-user.integration.test.ts"` exits 0.
 
 #### Manual
 
-- [x] 2.5 Temporarily commenting `.eq("user_id", userId)` in `updateFlashcard` breaks case (4). Revert. — 69e6536
-- [x] 2.6 Temporarily switching `updateFlashcardSchema` to `.passthrough()` does NOT break case (3) — RLS `with check` still catches it. Revert. — 69e6536
-- [x] 2.7 Test file reads top-to-bottom like the research.md §6 oracle table. — 69e6536
+- [ ] 2.5 Temporarily commenting `.eq("user_id", userId)` in `updateFlashcard` breaks case (4). Revert.
+- [ ] 2.6 Temporarily switching `updateFlashcardSchema` to `.passthrough()` does NOT break case (3) — RLS `with check` still catches it. Revert.
+- [ ] 2.7 Test file reads top-to-bottom like the research.md §6 oracle table.
 
 ### Phase 3: Structural guard on `@/lib/supabase-admin`
 
 #### Automated
 
-- [x] 3.1 `npm run lint` exits 0 on the current codebase. — d74bbbb
-- [x] 3.2 Deliberately adding the import to any of the four scoped files causes lint to fail with the plan-referenced message. Revert. — d74bbbb
-- [x] 3.3 `src/pages/api/account/delete.ts` still lints clean. — d74bbbb
+- [ ] 3.1 `npm run lint` exits 0 on the current codebase.
+- [ ] 3.2 Deliberately adding the import to any of the four scoped files causes lint to fail with the plan-referenced message. Revert.
+- [ ] 3.3 `src/pages/api/account/delete.ts` still lints clean.
 
 #### Manual
 
-- [x] 3.4 The "deliberately add the import" experiment on each of `flashcard.service.ts`, `review.service.ts`, and `src/pages/api/flashcards/index.ts` fails lint. Revert each. — d74bbbb
+- [ ] 3.4 The "deliberately add the import" experiment on each of `flashcard.service.ts`, `review.service.ts`, and `src/pages/api/flashcards/index.ts` fails lint. Revert each.
 
 ### Phase 4: Cookbook sync
 
 #### Automated
 
-- [x] 4.1 `npx prettier --check "context/foundation/test-plan.md"` exits 0. — aaf04d1
-- [x] 4.2 `npm run lint` stays green. — aaf04d1
+- [ ] 4.1 `npx prettier --check "context/foundation/test-plan.md"` exits 0.
+- [ ] 4.2 `npm run lint` stays green.
 
 #### Manual
 
-- [x] 4.3 A reader landing on §6.2 can locate the reference test and helpers in one hop. — aaf04d1
-- [x] 4.4 §6.6 phase note reads as one paragraph, not a bullet dump. — aaf04d1
+- [ ] 4.3 A reader landing on §6.2 can locate the reference test and helpers in one hop.
+- [ ] 4.4 §6.6 phase note reads as one paragraph, not a bullet dump.
