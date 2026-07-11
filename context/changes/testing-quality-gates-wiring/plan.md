@@ -261,22 +261,22 @@ Rollback: revert the `ci.yml` change to the previous commit. The `gh api` PATCH 
 
 #### Automated
 
-- [x] 1.1 Workflow YAML is valid (`actionlint` exits 0)
-- [ ] 1.2 PR shows `ci` job running `Checkout → Setup Node → npm ci → astro sync → npm run lint → npm run test:unit → npm run build` all green
-- [x] 1.3 `npm run test:unit` completes green locally
-- [ ] 1.4 Follow-up push to same PR branch cancels the prior in-flight run
+- [x] 1.1 Workflow YAML is valid (`actionlint` exits 0) — cf1a89f
+- [x] 1.2 PR shows `ci` job running `Checkout → Setup Node → npm ci → astro sync → npm run lint → npm run test:unit → npm run build` all green — cf1a89f
+- [x] 1.3 `npm run test:unit` completes green locally — cf1a89f
+- [x] 1.4 Follow-up push to same PR branch cancels the prior in-flight run — cf1a89f
 
 #### Manual
 
-- [ ] 1.5 Lint failure still fails the job before unit tests run
-- [ ] 1.6 A deliberately broken unit test fails `ci` at the `Run unit tests` step
-- [ ] 1.7 Existing `deploy` on master push continues to work unchanged
+- [x] 1.5 Lint failure still fails the job before unit tests run — cf1a89f
+- [x] 1.6 A deliberately broken unit test fails `ci` at the `Run unit tests` step — cf1a89f
+- [x] 1.7 Existing `deploy` on master push continues to work unchanged — cf1a89f
 
 ### Phase 2: Add `integration` job with local Supabase
 
 #### Automated
 
-- [ ] 2.1 Workflow YAML remains valid (`actionlint` exits 0)
+- [x] 2.1 Workflow YAML remains valid (`actionlint` exits 0)
 - [ ] 2.2 PR shows `ci` and `integration` jobs running in parallel
 - [ ] 2.3 `supabase db start` step completes and applies all migrations
 - [ ] 2.4 `Export local Supabase env vars` step writes three `TEST_SUPABASE_*` names to `$GITHUB_ENV`
