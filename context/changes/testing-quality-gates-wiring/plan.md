@@ -276,12 +276,12 @@ Rollback: revert the `ci.yml` change to the previous commit. The `gh api` PATCH 
 
 #### Automated
 
-- [x] 2.1 Workflow YAML remains valid (`actionlint` exits 0)
-- [ ] 2.2 PR shows `ci` and `integration` jobs running in parallel
-- [ ] 2.3 `supabase db start` step completes and applies all migrations
-- [ ] 2.4 `Export local Supabase env vars` step writes three `TEST_SUPABASE_*` names to `$GITHUB_ENV`
-- [ ] 2.5 `npm run test:integration` completes green on CI
-- [ ] 2.6 After master merge, `deploy` runs only if both `ci` and `integration` are green
+- [x] 2.1 Workflow YAML remains valid (`actionlint` exits 0) — fefb754
+- [x] 2.2 PR shows `ci` and `integration` jobs running in parallel — ecd5dcc
+- [x] 2.3 `supabase db start` step completes and applies all migrations — ecd5dcc
+- [x] 2.4 `Export local Supabase env vars` step writes three `TEST_SUPABASE_*` names to `$GITHUB_ENV` — ecd5dcc
+- [x] 2.5 `npm run test:integration` completes green on CI — ecd5dcc
+- [x] 2.6 After master merge, `deploy` runs only if both `ci` and `integration` are green — ecd5dcc
 
 #### Manual
 
