@@ -261,9 +261,9 @@ Rollback: revert the `ci.yml` change to the previous commit. The `gh api` PATCH 
 
 #### Automated
 
-- [ ] 1.1 Workflow YAML is valid (`actionlint` exits 0)
+- [x] 1.1 Workflow YAML is valid (`actionlint` exits 0)
 - [ ] 1.2 PR shows `ci` job running `Checkout → Setup Node → npm ci → astro sync → npm run lint → npm run test:unit → npm run build` all green
-- [ ] 1.3 `npm run test:unit` completes green locally
+- [x] 1.3 `npm run test:unit` completes green locally
 - [ ] 1.4 Follow-up push to same PR branch cancels the prior in-flight run
 
 #### Manual
