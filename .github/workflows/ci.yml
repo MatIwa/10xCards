@@ -40,7 +40,7 @@ jobs:
       - run: npm ci
       - run: npx astro sync
       - uses: supabase/setup-cli@v3
-      - run: supabase db start
+      - run: supabase start
       - name: Export local Supabase env vars
         run: |
           SUPABASE_ENV=$(supabase status -o env 2>&1)
