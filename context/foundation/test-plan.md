@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-07-09 (§3 Phase 3 completed via `testing-account-deletion-and-fsrs-wiring/`)
+> Last updated: 2026-07-11 (§3 Phase 4 completed via `testing-quality-gates-wiring/`)
 
 ## 1. Strategy
 
@@ -70,7 +70,7 @@ orchestrator updates Status as artifacts appear on disk.
 | 1   | Bootstrap runner + AI generation critical path   | Install Vitest, wire the first test infra, and prove Risks #1 and #2 at the cheapest layer that catches them                                                              | #1, #2        | unit + integration | complete     | `context/changes/testing-ai-generation-critical-path/`                                                                                                                                                            |
 | 2   | Server-boundary contracts (auth, privacy, input) | Prove Risks #3, #4, #7 at the API-route boundary — RLS ownership across endpoints, source-text non-retention on success and error paths, and server-side input validation | #3, #4, #7    | integration + unit | complete     | Risk #3 via `context/changes/testing-rls-cross-user-access/`; Risks #4 + #7 via `context/changes/testing-generate-privacy-and-input/` |
 | 3   | Account deletion completeness + FSRS wiring      | Prove Risks #5 and #6 as durable regression tests — orphan-check enforcement across all user-scoped tables, FSRS state passthrough correctness                            | #5, #6        | integration + unit | complete     | `context/changes/testing-account-deletion-and-fsrs-wiring/` |
-| 4   | Quality-gates wiring in CI                       | Enforce the suite as a required CI check on push/PR; only meaningful once phases 1–3 have produced a suite worth enforcing                                                | cross-cutting | gates              | implementing  | `context/changes/testing-quality-gates-wiring/`        |
+| 4   | Quality-gates wiring in CI                       | Enforce the suite as a required CI check on push/PR; only meaningful once phases 1–3 have produced a suite worth enforcing                                                | cross-cutting | gates              | complete      | `context/archive/2026-07-11-testing-quality-gates-wiring/` |
 
 ## 4. Stack
 
@@ -105,8 +105,8 @@ rollout phase lands; before that, the gate is `planned`.
 | ----------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | lint (`npm run lint`)               | local pre-commit (husky + lint-staged) + CI | required (already wired — see [.github/workflows/ci.yml](.github/workflows/ci.yml)) | style + a11y + syntactic drift on `*.{ts,tsx,astro}`                         |
 | build / typecheck (`npm run build`) | CI                                          | required (already wired)                                                            | type errors, Astro build regressions                                         |
-| unit + integration (`npm test`)     | local + CI                                  | required after §3 Phase 4                                                           | logic regressions and boundary contracts (Risks #1–#7)                       |
-| server-boundary integration         | CI                                          | required after §3 Phase 4                                                           | Risks #3, #4, #7 — regressions across RLS, privacy, input validation         |
+| unit + integration (`npm test`)     | local + CI                                  | required (enforced in CI; §3 Phase 4 complete)                                     | logic regressions and boundary contracts (Risks #1–#7)                       |
+| server-boundary integration         | CI                                          | required (enforced in CI; §3 Phase 4 complete)                                     | Risks #3, #4, #7 — regressions across RLS, privacy, input validation         |
 | e2e on critical flows               | CI on PR                                    | optional                                                                            | reserved — adopt only if §3 Phase 2 finds an integration-untestable boundary |
 | post-edit hook                      | local (agent loop)                          | optional                                                                            | deliberately deferred — Module 3 Lesson 3 territory; not this rollout        |
 | visual diff / multimodal review     | CI on PR                                    | not adopted                                                                         | interview Q5 explicit: no UI look-and-feel testing                           |
