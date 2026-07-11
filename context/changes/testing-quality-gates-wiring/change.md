@@ -21,3 +21,27 @@ Risk response intent (from test-plan.md §5 Quality Gates):
 - Respect §7 negative-space: no e2e, no visual-diff, no AI-native gates added here.
 
 After creating the folder, follow the downstream continuation rule (suggest /10x-research next).
+
+## Follow-up: required-status wiring (executed)
+
+Branch protection for `master` was successfully configured on 2026-07-11 via:
+
+```bash
+gh api -X PUT /repos/MatIwa/10xCards/branches/master/protection \
+  --input - <<'EOF'
+{
+  "required_status_checks": {
+    "strict": true,
+    "contexts": ["ci", "integration"]
+  },
+  "enforce_admins": false,
+  "dismiss_stale_reviews": false,
+  "required_pull_request_reviews": null,
+  "restrictions": null
+}
+EOF
+```
+
+**Result**: Both `ci` and `integration` check contexts are now required on `master`. Any PR with a red check is blocked from merging. To update this rule in the future, re-run the command with the modified contexts array.
+
+**Verification**: Run `gh api repos/MatIwa/10xCards/branches/master/protection/required_status_checks` to inspect the current rule.
