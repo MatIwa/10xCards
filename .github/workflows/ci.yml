@@ -43,15 +43,11 @@ jobs:
       - run: supabase start
       - name: Export local Supabase env vars
         run: |
-          SUPABASE_ENV=$(supabase status -o env 2>&1)
-          echo "Available keys: $(echo "$SUPABASE_ENV" | grep -o '^[^=]*' | tr '\n' ' ')"
-          echo "$SUPABASE_ENV" | grep -E '^(API_URL|SUPABASE_URL)=' \
-            | head -1 | sed 's/^[^=]*=/TEST_SUPABASE_URL=/' >> "$GITHUB_ENV"
-          echo "$SUPABASE_ENV" | grep -E '^(ANON_KEY|SUPABASE_ANON_KEY)=' \
-            | head -1 | sed 's/^[^=]*=/TEST_SUPABASE_ANON_KEY=/' >> "$GITHUB_ENV"
-          echo "$SUPABASE_ENV" | grep -E '^(SERVICE_ROLE_KEY|SUPABASE_SERVICE_ROLE_KEY)=' \
-            | head -1 | sed 's/^[^=]*=/TEST_SUPABASE_SERVICE_ROLE_KEY=/' >> "$GITHUB_ENV"
-          echo "Exported keys: $(grep -o '^TEST_SUPABASE_[^=]*' "$GITHUB_ENV" | tr '\n' ' ')"
+          STATUS=$(supabase status 2>/dev/null)
+          echo "TEST_SUPABASE_URL=$(echo "$STATUS" | grep 'API URL' | awk '{print $NF}')" >> "$GITHUB_ENV"
+          echo "TEST_SUPABASE_ANON_KEY=$(echo "$STATUS" | grep 'anon key' | awk '{print $NF}')" >> "$GITHUB_ENV"
+          echo "TEST_SUPABASE_SERVICE_ROLE_KEY=$(echo "$STATUS" | grep 'service_role key' | awk '{print $NF}')" >> "$GITHUB_ENV"
+          echo "Exported: $(grep '^TEST_SUPABASE_URL=' "$GITHUB_ENV" | cut -c1-40)"
       - run: npm run test:integration
 
   deploy:
