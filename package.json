@@ -76,6 +76,9 @@
     "*.{ts,tsx,astro}": [
       "eslint --fix"
     ],
+    "*.{ts,tsx}": [
+      "vitest related --run --project unit"
+    ],
     "*.{json,css,md}": [
       "prettier --write"
     ]
