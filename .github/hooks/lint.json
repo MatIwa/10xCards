@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/github/copilot-cli/main/schemas/hooks.json",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "node .github/hooks/scripts/post-edit-lint.mjs",
+        "timeout": 60
+      }
+    ]
+  }
+}

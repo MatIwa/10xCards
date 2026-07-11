@@ -32,7 +32,9 @@ import { Rating } from "ts-fsrs";
 // existing test suites call `vi.clearAllMocks()` in afterEach hooks, which
 // would otherwise wipe this call before the "fsrs scheduler configuration"
 // test runs.
-const initialFsrsFactoryArgs = fsrsFactorySpy.mock.calls[0]?.[0];
+// Cast via `unknown[]` because vi.fn infers an empty-tuple args type for a
+// zero-arg factory, even though ts-fsrs invokes it with a config object.
+const initialFsrsFactoryArgs = (fsrsFactorySpy.mock.calls[0] as unknown[] | undefined)?.[0];
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -231,7 +233,9 @@ describe("gradeCard", () => {
 
       // update() received serialize(fakeUpdatedCard)
       expect(updateFn).toHaveBeenCalledOnce();
-      const updatePayload = updateFn.mock.calls[0]?.[0] as Partial<Flashcard>;
+      // Cast via `unknown[]` for the same reason as `initialFsrsFactoryArgs`
+      // above: the stub `vi.fn(() => updateChain)` has a zero-arg inferred type.
+      const updatePayload = (updateFn.mock.calls[0] as unknown[] | undefined)?.[0] as Partial<Flashcard>;
       expect(updatePayload).toMatchObject(serialize(fakeUpdatedCard));
 
       expect(result).toEqual({ data: fakeUpdatedRow, error: null });
