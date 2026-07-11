@@ -100,6 +100,12 @@ const restrictedAdminClientConfig = tseslint.config({
 
 export default tseslint.config(
   includeIgnoreFile(gitignorePath),
+  {
+    // Agent hook scripts live outside `tsconfig.json` include paths, so the
+    // typescript-eslint `strictTypeChecked` project service can't parse them.
+    // They are not application source code; skip them.
+    ignores: [".github/hooks/**"],
+  },
   baseConfig,
   reactConfig,
   eslintPluginAstro.configs["flat/recommended"],
