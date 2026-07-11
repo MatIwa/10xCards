@@ -28,6 +28,11 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
+# 10xDevs course materials (local development only, not tracked)
+.github/skills/
+.agents/skills/
+skills-lock.json
+
 # stryker mutation testing artifacts
 .stryker-tmp/
 reports/
