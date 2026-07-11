@@ -285,10 +285,10 @@ Rollback: revert the `ci.yml` change to the previous commit. The `gh api` PATCH 
 
 #### Manual
 
-- [x] 2.7 Deliberately broken integration test fails `integration` job on PR
-- [x] 2.8 Deliberately broken migration fails `supabase db start` step
-- [x] 2.9 `integration` runtime is within expected 1.5–3 min range
-- [x] 2.10 `ci` runtime unchanged from Phase 1
+- [x] 2.7 Deliberately broken integration test fails `integration` job on PR — 137a4d4
+- [x] 2.8 Deliberately broken migration fails `supabase db start` step — 137a4d4
+- [x] 2.9 `integration` runtime is within expected 1.5–3 min range — 137a4d4
+- [x] 2.10 `ci` runtime unchanged from Phase 1 — 137a4d4
 
 ### Phase 3: Register `ci` and `integration` as required status checks
 
