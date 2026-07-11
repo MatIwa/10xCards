@@ -299,6 +299,6 @@ Rollback: revert the `ci.yml` change to the previous commit. The `gh api` PATCH 
 
 #### Manual
 
-- [x] 3.3 PR with all green checks remains mergeable (no false positive block) — 9d16612
-- [x] 3.4 Master `deploy` continues to run after merge (no accidental block) — 9d16612
+- [x] 3.3 PR with all green checks remains mergeable (no false positive block) — f7098f8
+- [x] 3.4 Master `deploy` continues to run after merge (no accidental block) — f7098f8
 - [x] 3.5 `change.md` contains the runnable `gh api` command under `## Follow-up: required-status wiring` — 9d16612
