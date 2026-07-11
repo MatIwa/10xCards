@@ -43,11 +43,15 @@ jobs:
       - run: supabase start
       - name: Export local Supabase env vars
         run: |
-          STATUS=$(supabase status 2>/dev/null)
-          echo "TEST_SUPABASE_URL=$(echo "$STATUS" | grep 'API URL' | awk '{print $NF}')" >> "$GITHUB_ENV"
-          echo "TEST_SUPABASE_ANON_KEY=$(echo "$STATUS" | grep 'anon key' | awk '{print $NF}')" >> "$GITHUB_ENV"
-          echo "TEST_SUPABASE_SERVICE_ROLE_KEY=$(echo "$STATUS" | grep 'service_role key' | awk '{print $NF}')" >> "$GITHUB_ENV"
-          echo "Exported: $(grep '^TEST_SUPABASE_URL=' "$GITHUB_ENV" | cut -c1-40)"
+          supabase status -o env > /tmp/supa.env
+          echo "--- /tmp/supa.env contents ---"
+          cat /tmp/supa.env
+          echo "--- end ---"
+          extract() { grep "^$1=" /tmp/supa.env | head -1 | sed -e "s/^$1=//" -e 's/^"//' -e 's/"$//'; }
+          echo "TEST_SUPABASE_URL=$(extract API_URL)" >> "$GITHUB_ENV"
+          echo "TEST_SUPABASE_ANON_KEY=$(extract ANON_KEY)" >> "$GITHUB_ENV"
+          echo "TEST_SUPABASE_SERVICE_ROLE_KEY=$(extract SERVICE_ROLE_KEY)" >> "$GITHUB_ENV"
+          echo "Sanity: TEST_SUPABASE_URL=$(extract API_URL)"
       - run: npm run test:integration
 
   deploy:
