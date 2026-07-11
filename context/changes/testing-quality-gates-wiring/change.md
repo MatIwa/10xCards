@@ -1,7 +1,7 @@
 ---
 change_id: testing-quality-gates-wiring
 title: Enforce test suite as required CI gate on push/PR
-status: implemented
+status: impl_reviewed
 created: 2026-07-09
 updated: 2026-07-11
 archived_at: null
@@ -24,24 +24,17 @@ After creating the folder, follow the downstream continuation rule (suggest /10x
 
 ## Follow-up: required-status wiring (executed)
 
-Branch protection for `master` was successfully configured on 2026-07-11 via:
+Branch protection for `master` was successfully configured on 2026-07-11. The recorded command below is the plan's targeted `PATCH` on the `required_status_checks` sub-resource — it updates only the required-status contexts and leaves every other protection setting (admin enforcement, reviews, restrictions, etc.) untouched. Safe to re-run at any time.
 
 ```bash
-gh api -X PUT /repos/MatIwa/10xCards/branches/master/protection \
-  --input - <<'EOF'
-{
-  "required_status_checks": {
-    "strict": true,
-    "contexts": ["ci", "integration"]
-  },
-  "enforce_admins": false,
-  "dismiss_stale_reviews": false,
-  "required_pull_request_reviews": null,
-  "restrictions": null
-}
-EOF
+gh api -X PATCH /repos/MatIwa/10xCards/branches/master/protection/required_status_checks \
+  -f strict=true \
+  -f 'contexts[]=ci' \
+  -f 'contexts[]=integration'
 ```
 
-**Result**: Both `ci` and `integration` check contexts are now required on `master`. Any PR with a red check is blocked from merging. To update this rule in the future, re-run the command with the modified contexts array.
+**Result**: Both `ci` and `integration` check contexts are now required on `master`. Any PR with a red check is blocked from merging. To update this rule in the future, re-run the command with the modified `contexts[]=` list.
 
 **Verification**: Run `gh api repos/MatIwa/10xCards/branches/master/protection/required_status_checks` to inspect the current rule.
+
+**Historical note**: The initial configuration on 2026-07-11 was applied via a `PUT` on the full `/branches/master/protection` resource (see git history for commit 9d16612). That form works for a first-time setup on a repo with no prior protection, but it clobbers any unrelated protection settings on re-run — hence the switch to the targeted `PATCH` recorded above.

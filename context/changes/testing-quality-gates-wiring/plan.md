@@ -110,7 +110,7 @@ Add a new sibling job `integration` that installs the Supabase CLI, brings up lo
   3. `npm ci`
   4. `npx astro sync`
   5. `supabase/setup-cli@v3` (no `version:` — reads from lockfile)
-  6. `supabase db start` (applies migrations to fresh Postgres)
+  6. `supabase start` (boots full local stack — Postgres + Auth + PostgREST + Storage — and applies all migrations). The full stack is required because integration tests exercise the Auth API (creating test users via `SERVICE_ROLE_KEY`), not just Postgres; `supabase db start` alone would not boot Auth.
   7. Named step `Export local Supabase env vars` that runs:
      ```bash
      supabase status -o env \
@@ -278,7 +278,7 @@ Rollback: revert the `ci.yml` change to the previous commit. The `gh api` PATCH 
 
 - [x] 2.1 Workflow YAML remains valid (`actionlint` exits 0) — fefb754
 - [x] 2.2 PR shows `ci` and `integration` jobs running in parallel — ecd5dcc
-- [x] 2.3 `supabase db start` step completes and applies all migrations — ecd5dcc
+- [x] 2.3 `supabase start` step completes and applies all migrations — ecd5dcc
 - [x] 2.4 `Export local Supabase env vars` step writes three `TEST_SUPABASE_*` names to `$GITHUB_ENV` — ecd5dcc
 - [x] 2.5 `npm run test:integration` completes green on CI — ecd5dcc
 - [x] 2.6 After master merge, `deploy` runs only if both `ci` and `integration` are green — ecd5dcc
@@ -286,7 +286,7 @@ Rollback: revert the `ci.yml` change to the previous commit. The `gh api` PATCH 
 #### Manual
 
 - [x] 2.7 Deliberately broken integration test fails `integration` job on PR — 137a4d4
-- [x] 2.8 Deliberately broken migration fails `supabase db start` step — 137a4d4
+- [x] 2.8 Deliberately broken migration fails `supabase start` step — 137a4d4
 - [x] 2.9 `integration` runtime is within expected 1.5–3 min range — 137a4d4
 - [x] 2.10 `ci` runtime unchanged from Phase 1 — 137a4d4
 
@@ -302,3 +302,25 @@ Rollback: revert the `ci.yml` change to the previous commit. The `gh api` PATCH 
 - [x] 3.3 PR with all green checks remains mergeable (no false positive block) — f7098f8
 - [x] 3.4 Master `deploy` continues to run after merge (no accidental block) — f7098f8
 - [x] 3.5 `change.md` contains the runnable `gh api` command under `## Follow-up: required-status wiring` — 9d16612
+
+## Addenda
+
+### A1 — Phase 2 Step 7: `--override-name` fallback (2026-07-11)
+
+The plan's Phase 2 Step 7 prescribed a single-command export:
+
+```bash
+supabase status -o env \
+  --override-name api.url=TEST_SUPABASE_URL \
+  --override-name auth.anon_key=TEST_SUPABASE_ANON_KEY \
+  --override-name auth.service_role_key=TEST_SUPABASE_SERVICE_ROLE_KEY \
+  >> "$GITHUB_ENV"
+```
+
+With the Supabase CLI version pinned by `supabase/setup-cli@v3` at implementation time, this command did not produce the expected `KEY=value` env-file shape (commits 5852726, e4ed6b3). The accepted contract going forward is the grep/extract fallback recorded in `.github/workflows/ci.yml` step `Export local Supabase env vars`:
+
+1. `supabase status -o env > /tmp/supa.env`
+2. `grep` the three canonical keys (`API_URL`, `ANON_KEY`, `SERVICE_ROLE_KEY`) out of `/tmp/supa.env` and rewrite them as `TEST_SUPABASE_URL`, `TEST_SUPABASE_ANON_KEY`, `TEST_SUPABASE_SERVICE_ROLE_KEY` into `$GITHUB_ENV`.
+
+Revisit this workaround if the pinned Supabase CLI version is bumped and restores the documented `--override-name` behaviour.
+
