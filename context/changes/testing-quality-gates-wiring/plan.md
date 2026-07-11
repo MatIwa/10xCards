@@ -294,11 +294,11 @@ Rollback: revert the `ci.yml` change to the previous commit. The `gh api` PATCH 
 
 #### Automated
 
-- [ ] 3.1 `gh api repos/MatIwa/10xCards/branches/master/protection/required_status_checks` returns contexts array containing both `"ci"` and `"integration"`
-- [ ] 3.2 PR with broken integration test shows "Required statuses must pass before merging" on merge button
+- [x] 3.1 `gh api repos/MatIwa/10xCards/branches/master/protection/required_status_checks` returns contexts array containing both `"ci"` and `"integration"` — 9d16612
+- [x] 3.2 PR with broken integration test shows "Required statuses must pass before merging" on merge button — 9d16612
 
 #### Manual
 
-- [ ] 3.3 PR with all green checks remains mergeable (no false positive block)
-- [ ] 3.4 Master `deploy` continues to run after merge (no accidental block)
-- [ ] 3.5 `change.md` contains the runnable `gh api` command under `## Follow-up: required-status wiring`
+- [x] 3.3 PR with all green checks remains mergeable (no false positive block) — 9d16612
+- [x] 3.4 Master `deploy` continues to run after merge (no accidental block) — 9d16612
+- [x] 3.5 `change.md` contains the runnable `gh api` command under `## Follow-up: required-status wiring` — 9d16612
