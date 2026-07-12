@@ -46,16 +46,21 @@ test.describe("Risk #2 — flashcard save persists the exact content across boun
     await page.goto("/dashboard");
     await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
 
-    // PLAN step 2: open the create form.
+    // PLAN step 2: open the create form. The retry guard uses an auto-retrying
+    // `toBeVisible` with a short timeout as the probe (NOT `isVisible()`, which
+    // is a non-retrying snapshot). Using `isVisible()` here caused a real flake:
+    // it raced the open animation, returned false, and the "retry" click then
+    // toggled the just-opened form CLOSED. Only re-click if the first click
+    // genuinely did not produce the form within the short window.
     const newFlashcardButton = page.getByRole("button", { name: "New flashcard" });
-    await newFlashcardButton.click();
-
     const createFormHeading = page.getByRole("heading", { name: "Create flashcard" });
-    if (!(await createFormHeading.isVisible())) {
-      // If hydration lag swallowed the first click, retry once and assert state change.
+    await newFlashcardButton.click();
+    try {
+      await expect(createFormHeading).toBeVisible({ timeout: 2_000 });
+    } catch {
       await newFlashcardButton.click();
+      await expect(createFormHeading).toBeVisible();
     }
-    await expect(createFormHeading).toBeVisible();
 
     // PLAN step 3: fill front + back. `getByLabel` reads more naturally than
     // `getByRole('textbox', { name })` for form fields, but both are accessibility-tree
@@ -74,31 +79,49 @@ test.describe("Risk #2 — flashcard save persists the exact content across boun
     ]);
     expect(createResponse.status(), "create request should succeed").toBe(201);
 
-    // PLAN step 5: the new card is now in the rendered list.
-    const cardBeforeReload: Locator = page.getByRole("listitem").filter({ hasText: front });
-    await expect(cardBeforeReload).toBeVisible();
+    // Capture the created id up front so the `finally` block below can tear
+    // down the row via the DB-backed DELETE even if any assertion between here
+    // and the UI-driven cleanup throws (see anti-pattern #5 — no cleanup).
+    const createdBody = (await createResponse.json()) as { data: { id: string } };
+    const createdId = createdBody.data.id;
 
-    // PLAN step 6 (the risk-defining check): reload and confirm the exact same
-    // content is served back by SSR — this is what fails if the save wrote the
-    // wrong subset, dropped edits, or persisted to a different user's scope.
-    await page.reload();
-    const cardAfterReload: Locator = page.getByRole("listitem").filter({ hasText: front });
-    await expect(cardAfterReload).toBeVisible();
-    await expect(cardAfterReload).toContainText(back);
+    try {
+      // PLAN step 5: the new card is now in the rendered list.
+      const cardBeforeReload: Locator = page.getByRole("listitem").filter({ hasText: front });
+      await expect(cardBeforeReload).toBeVisible();
 
-    // CLEANUP: delete via the UI so the test leaves the DB exactly as it found
-    // it. Two-step confirm — the top action button flips to "Cancel" once a
-    // delete is pending, so the confirmation block's "Delete" is unambiguous.
-    // We again wait for the API response, not a timer.
-    await cardAfterReload.getByRole("button", { name: "Delete" }).click();
-    const [deleteResponse] = await Promise.all([
-      page.waitForResponse(
-        (response: Response) =>
-          /\/api\/flashcards\/[^/]+$/.test(response.url()) && response.request().method() === "DELETE",
-      ),
-      cardAfterReload.getByRole("button", { name: "Delete" }).click(),
-    ]);
-    expect(deleteResponse.status(), "delete request should succeed").toBe(204);
-    await expect(cardAfterReload).toHaveCount(0);
+      // PLAN step 6 (the risk-defining check): reload and confirm the exact same
+      // content is served back by SSR — this is what fails if the save wrote the
+      // wrong subset, dropped edits, or persisted to a different user's scope.
+      await page.reload();
+      const cardAfterReload: Locator = page.getByRole("listitem").filter({ hasText: front });
+      await expect(cardAfterReload).toBeVisible();
+      await expect(cardAfterReload).toContainText(back);
+
+      // CLEANUP (happy path): delete via the UI so the test leaves the DB
+      // exactly as it found it AND exercises the delete button. Two-step
+      // confirm — the top action button flips to "Cancel" once a delete is
+      // pending, so the confirmation block's "Delete" is unambiguous. We again
+      // wait for the API response, not a timer.
+      await cardAfterReload.getByRole("button", { name: "Delete" }).click();
+      const [deleteResponse] = await Promise.all([
+        page.waitForResponse(
+          (response: Response) =>
+            /\/api\/flashcards\/[^/]+$/.test(response.url()) && response.request().method() === "DELETE",
+        ),
+        cardAfterReload.getByRole("button", { name: "Delete" }).click(),
+      ]);
+      expect(deleteResponse.status(), "delete request should succeed").toBe(204);
+      await expect(cardAfterReload).toHaveCount(0);
+    } finally {
+      // Belt-and-braces cleanup: if any of the assertions above threw before
+      // the UI-driven delete completed, this DB-backed DELETE guarantees the
+      // row never leaks into the shared E2E user's deck across runs. If the UI
+      // delete already succeeded, this is a harmless 404 — hence best-effort,
+      // no assertion.
+      await page.evaluate(async (flashcardId) => {
+        await fetch(`/api/flashcards/${flashcardId}`, { method: "DELETE" });
+      }, createdId);
+    }
   });
 });

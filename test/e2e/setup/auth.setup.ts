@@ -118,8 +118,18 @@ setup("authenticate the E2E user and persist storageState", async ({ page }) => 
   await page.getByLabel("Email").fill(email);
   await page.getByRole("textbox", { name: "Password" }).fill(password);
 
-  await page.getByRole("button", { name: /sign in/i }).click();
-  await page.waitForLoadState("networkidle");
+  // Wait for the post-signin redirect: on success we land off /auth/signin (home
+  // page); on failure the app bounces back to /auth/signin?error=... — both
+  // satisfy the predicate so we can then inspect page.url() to detect the error
+  // branch. Deliberately not using waitForLoadState("networkidle"), which is a
+  // Playwright-discouraged heuristic (see e2e anti-pattern #4 — wait for state,
+  // not for time-adjacent signals).
+  await Promise.all([
+    page.waitForURL((url) => url.pathname !== "/auth/signin" || url.searchParams.has("error"), {
+      timeout: 15_000,
+    }),
+    page.getByRole("button", { name: /sign in/i }).click(),
+  ]);
 
   if (page.url().includes("/auth/signin")) {
     const url = new URL(page.url());
