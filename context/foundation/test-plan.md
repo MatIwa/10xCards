@@ -187,7 +187,31 @@ Test the _wiring_ (what arguments reach ts-fsrs, what comes back and lands in th
 
 Cross-reference: §2 Risk #6 anti-pattern column — _Mirror implementation: assertion computes the expected value with the same logic as the tested code._
 
-### 6.6 Per-rollout-phase notes
+### 6.6 Adding an E2E (browser-level) test
+
+E2E is **optional** in this project (see §5 and §7). Add one only when the risk crosses several system boundaries (auth → routing → API → DB → SSR reload) or exists only in the rendered UI — everything else stays at unit + integration. The one-per-risk budget is tight; don't sweep pages or buttons.
+
+**Reference tests**: `test/e2e/seed.spec.ts` (the seed exemplar — manual create round-trip), `test/e2e/ai-candidate-save.spec.ts` (Risk #2 — AI candidate accept/edit/reject → save), `test/e2e/review-fsrs-wiring.spec.ts` (Risk #6 — FSRS review wiring).
+
+**Prerequisites**: `npx supabase start` (Docker), `.dev.vars` with `SUPABASE_URL` / `SUPABASE_KEY` / `SUPABASE_SERVICE_ROLE_KEY`. Auth setup (`test/e2e/setup/auth.setup.ts`) auto-provisions `test@integration.local` via the service-role admin API. Playwright's `webServer` starts `npm run dev` on 4321 if it's free.
+
+**Run command**: `npm run test:e2e` (whole suite) or `npx playwright test <spec>` for one file. `npm run test:e2e:ui` for the Playwright UI runner.
+
+**Recipe**:
+
+- (a) Copy the seed's shape: role-based locators (`getByRole` / `getByLabel`), a `Date.now()` + `randomUUID()` `runId` on every test-created row, own setup / action / assertion / cleanup inside one test, storageState-backed auth (never sign in through the UI in a spec).
+- (b) Wait for state, never for time. Use `waitForResponse((r) => r.url().endsWith("/api/…") && r.request().method() === "POST")`, `toBeVisible()`, `toHaveCount()`, `toHaveValue()`. No `page.waitForTimeout`.
+- (c) Assert on the business outcome across the full round-trip. Prefer response body / request body / DB-backed page state over intermediate DOM. Every assertion must fail if the risk materializes — do the deliberate-break check locally before commit (invert the production behavior, run the spec, confirm red, revert).
+- (d) Cleanup by id via in-browser `page.evaluate(async (id) => (await fetch(\`/api/flashcards/\${id}\`, { method: 'DELETE' })).status, id)`. Do NOT use `page.request.delete/post` on Astro handlers here — see the gotchas cross-reference. Cleanup runs in `finally` when the flow can throw mid-test.
+- (e) Mocking policy: internal boundaries (auth, routing, DB, RLS) stay real. Only the LLM boundary is mocked, and even then at the browser edge via `page.route("**/api/flashcards/generate", …)` — the risk lives downstream in the accept/save flow, not in the generator itself.
+- (f) File placement: `test/e2e/<feature>.spec.ts`, one test per file, name the `describe` after the risk it protects and cross-reference the risk map in the file header (see the two reference specs' provenance comments).
+
+**Cross-references**:
+
+- `/memories/repo/e2e-gotchas.md` — project-specific browser quirks (`fill()` unreliable on controlled inputs; `page.request` returns 403; per-item click double-fire under stability retry; role-name substring collisions; queue-order-agnostic assertions in review flows). Consult BEFORE writing a new spec — several of these look like "just use the docs" but silently produce false green/red.
+- `context/foundation/lessons.md` — _E2E specs in this project follow project-specific browser quirks — start from the seed + gotchas._
+
+### 6.7 Per-rollout-phase notes
 
 (Optional. After each phase lands, `/10x-implement` appends a 2–3 line note here capturing anything surprising the rollout phase taught — e.g., "Phase 1 chose Vitest workspace mode because Astro's Vite plugin conflicts with a flat config.")
 
