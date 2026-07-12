@@ -65,12 +65,12 @@ Each row is a discrete rollout phase that will open its own change folder
 via `/10x-new`. Status moves left-to-right through the values below; the
 orchestrator updates Status as artifacts appear on disk.
 
-| #   | Phase name                                       | Goal (one line)                                                                                                                                                           | Risks covered | Test types         | Status       | Change folder                                          |
-| --- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------ | ------------ | ------------------------------------------------------ |
-| 1   | Bootstrap runner + AI generation critical path   | Install Vitest, wire the first test infra, and prove Risks #1 and #2 at the cheapest layer that catches them                                                              | #1, #2        | unit + integration | complete     | `context/changes/testing-ai-generation-critical-path/`                                                                                                                                                            |
-| 2   | Server-boundary contracts (auth, privacy, input) | Prove Risks #3, #4, #7 at the API-route boundary — RLS ownership across endpoints, source-text non-retention on success and error paths, and server-side input validation | #3, #4, #7    | integration + unit | complete     | Risk #3 via `context/changes/testing-rls-cross-user-access/`; Risks #4 + #7 via `context/changes/testing-generate-privacy-and-input/` |
-| 3   | Account deletion completeness + FSRS wiring      | Prove Risks #5 and #6 as durable regression tests — orphan-check enforcement across all user-scoped tables, FSRS state passthrough correctness                            | #5, #6        | integration + unit | complete     | `context/changes/testing-account-deletion-and-fsrs-wiring/` |
-| 4   | Quality-gates wiring in CI                       | Enforce the suite as a required CI check on push/PR; only meaningful once phases 1–3 have produced a suite worth enforcing                                                | cross-cutting | gates              | complete      | `context/archive/2026-07-11-testing-quality-gates-wiring/` |
+| #   | Phase name                                       | Goal (one line)                                                                                                                                                           | Risks covered | Test types         | Status   | Change folder                                                                                                                         |
+| --- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Bootstrap runner + AI generation critical path   | Install Vitest, wire the first test infra, and prove Risks #1 and #2 at the cheapest layer that catches them                                                              | #1, #2        | unit + integration | complete | `context/changes/testing-ai-generation-critical-path/`                                                                                |
+| 2   | Server-boundary contracts (auth, privacy, input) | Prove Risks #3, #4, #7 at the API-route boundary — RLS ownership across endpoints, source-text non-retention on success and error paths, and server-side input validation | #3, #4, #7    | integration + unit | complete | Risk #3 via `context/changes/testing-rls-cross-user-access/`; Risks #4 + #7 via `context/changes/testing-generate-privacy-and-input/` |
+| 3   | Account deletion completeness + FSRS wiring      | Prove Risks #5 and #6 as durable regression tests — orphan-check enforcement across all user-scoped tables, FSRS state passthrough correctness                            | #5, #6        | integration + unit | complete | `context/changes/testing-account-deletion-and-fsrs-wiring/`                                                                           |
+| 4   | Quality-gates wiring in CI                       | Enforce the suite as a required CI check on push/PR; only meaningful once phases 1–3 have produced a suite worth enforcing                                                | cross-cutting | gates              | complete | `context/archive/2026-07-11-testing-quality-gates-wiring/`                                                                            |
 
 ## 4. Stack
 
@@ -105,8 +105,8 @@ rollout phase lands; before that, the gate is `planned`.
 | ----------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | lint (`npm run lint`)               | local pre-commit (husky + lint-staged) + CI | required (already wired — see [.github/workflows/ci.yml](.github/workflows/ci.yml)) | style + a11y + syntactic drift on `*.{ts,tsx,astro}`                         |
 | build / typecheck (`npm run build`) | CI                                          | required (already wired)                                                            | type errors, Astro build regressions                                         |
-| unit + integration (`npm test`)     | local + CI                                  | required (enforced in CI; §3 Phase 4 complete)                                     | logic regressions and boundary contracts (Risks #1–#7)                       |
-| server-boundary integration         | CI                                          | required (enforced in CI; §3 Phase 4 complete)                                     | Risks #3, #4, #7 — regressions across RLS, privacy, input validation         |
+| unit + integration (`npm test`)     | local + CI                                  | required (enforced in CI; §3 Phase 4 complete)                                      | logic regressions and boundary contracts (Risks #1–#7)                       |
+| server-boundary integration         | CI                                          | required (enforced in CI; §3 Phase 4 complete)                                      | Risks #3, #4, #7 — regressions across RLS, privacy, input validation         |
 | e2e on critical flows               | CI on PR                                    | optional                                                                            | reserved — adopt only if §3 Phase 2 finds an integration-untestable boundary |
 | post-edit hook                      | local (agent loop)                          | optional                                                                            | deliberately deferred — Module 3 Lesson 3 territory; not this rollout        |
 | visual diff / multimodal review     | CI on PR                                    | not adopted                                                                         | interview Q5 explicit: no UI look-and-feel testing                           |
@@ -162,28 +162,30 @@ Every table that stores per-user data must cascade on `auth.users` delete and be
 **Reference tests**: `src/lib/services/account.service.test.ts` (structural guard) + `test/account-deletion/account-delete.integration.test.ts` (happy-path sweep).
 
 **Recipe**:
+
 - (a) Declare `user_id uuid not null references auth.users(id) on delete cascade` in the migration.
 - (b) Add the table name to `USER_SCOPED_TABLES` in `src/lib/services/account.service.ts`.
 - (c) Mirror the same name in `EXPECTED_USER_SCOPED_TABLES` in `src/lib/services/account.service.test.ts` — the roster-equality assertion (`expect([...USER_SCOPED_TABLES].sort()).toEqual([...EXPECTED_USER_SCOPED_TABLES].sort())`) will fail until both sides match.
 - (d) In the integration happy-path test, seed at least one fixture row in the new table before calling the endpoint and assert zero rows remain after (`adminClient.from(table).select("id").eq("user_id", userId)` returns an empty array).
 - (e) Confirm `npm run test:unit -- account.service` passes (guard) and `npm run test:integration -- account-delete` passes (full sweep).
 
-Cross-reference: `context/foundation/lessons.md` — *User-scoped tables must cascade on `auth.users` delete AND be covered by the orphan-check.*
+Cross-reference: `context/foundation/lessons.md` — _User-scoped tables must cascade on `auth.users` delete AND be covered by the orphan-check._
 
 ### 6.5 Adding a test for FSRS / review-scheduling wiring
 
-Test the *wiring* (what arguments reach ts-fsrs, what comes back and lands in the DB) — never the library's scheduling math. The oracle is the call contract and the passthrough, not a specific next-due date.
+Test the _wiring_ (what arguments reach ts-fsrs, what comes back and lands in the DB) — never the library's scheduling math. The oracle is the call contract and the passthrough, not a specific next-due date.
 
 **Reference tests**: `src/lib/services/review.service.test.ts` (unit, stubbed scheduler) + `test/review/review.service.integration.test.ts` (one round-trip per endpoint).
 
 **Recipe**:
+
 - (a) Unit test: use `vi.mock("ts-fsrs", async () => { const actual = await vi.importActual("ts-fsrs"); return { ...actual, fsrs: () => ({ next: vi.fn(), repeat: vi.fn() }) }; })` at the top of the test file. The `vi.hoisted` pattern makes the spy references addressable from inside tests. Preserve `Rating` via `vi.importActual` so tests can pass `Rating.Again` etc. as real values.
 - (b) Assert `scheduler.next` (or `.repeat`) was called with the rehydrated card, a `Date` argument, and the correct rating. Use `vi.useFakeTimers()` + `vi.setSystemTime(fixedDate)` to make the `new Date()` inside `gradeCard` deterministic.
 - (c) Assert the `.update(...)` call received exactly `serialize(<mock-scheduler-return>)` (deep-equal via `toMatchObject`). This is the passthrough check — if the service mutates the card before persisting, the assertion fails.
 - (d) Do **not** assert a specific next-due date from the real scheduler; that tests the library, not us.
 - (e) Integration test: assert at least one FSRS column changed after grading (`reps`, `stability`, `difficulty`, `last_review`, or `due`). This proves the real scheduler ran and its output was persisted without depending on specific values.
 
-Cross-reference: §2 Risk #6 anti-pattern column — *Mirror implementation: assertion computes the expected value with the same logic as the tested code.*
+Cross-reference: §2 Risk #6 anti-pattern column — _Mirror implementation: assertion computes the expected value with the same logic as the tested code._
 
 ### 6.6 Per-rollout-phase notes
 
