@@ -104,7 +104,7 @@ export default tseslint.config(
     // Agent hook scripts live outside `tsconfig.json` include paths, so the
     // typescript-eslint `strictTypeChecked` project service can't parse them.
     // They are not application source code; skip them.
-    ignores: [".github/hooks/**"],
+    ignores: [".github/hooks/**", "scripts/**"],
   },
   baseConfig,
   reactConfig,
