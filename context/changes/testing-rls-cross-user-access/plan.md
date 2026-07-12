@@ -333,10 +333,10 @@ Extend [context/foundation/test-plan.md](../../foundation/test-plan.md) §6.2 wi
 
 #### Automated
 
-- [x] 4.1 `npx prettier --check "context/foundation/test-plan.md"` exits 0.
-- [x] 4.2 `npm run lint` stays green.
+- [x] 4.1 `npx prettier --check "context/foundation/test-plan.md"` exits 0. — 946235f
+- [x] 4.2 `npm run lint` stays green. — 946235f
 
 #### Manual
 
-- [x] 4.3 A reader landing on §6.2 can locate the reference test and helpers in one hop.
-- [x] 4.4 §6.6 phase note reads as one paragraph, not a bullet dump.
+- [x] 4.3 A reader landing on §6.2 can locate the reference test and helpers in one hop. — 946235f
+- [x] 4.4 §6.6 phase note reads as one paragraph, not a bullet dump. — 946235f
