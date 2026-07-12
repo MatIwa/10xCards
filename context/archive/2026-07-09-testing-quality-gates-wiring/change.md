@@ -1,10 +1,10 @@
 ---
 change_id: testing-quality-gates-wiring
 title: Enforce test suite as required CI gate on push/PR
-status: impl_reviewed
+status: archived
 created: 2026-07-09
-updated: 2026-07-11
-archived_at: null
+updated: 2026-07-12
+archived_at: 2026-07-12T11:25:52Z
 ---
 
 ## Notes
