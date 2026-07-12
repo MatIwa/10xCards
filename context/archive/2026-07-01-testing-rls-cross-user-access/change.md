@@ -1,10 +1,10 @@
 ---
 change_id: testing-rls-cross-user-access
 title: Cross-user access tests for flashcards CRUD (Risk #3)
-status: implemented
+status: archived
 created: 2026-07-01
 updated: 2026-07-12
-archived_at: null
+archived_at: 2026-07-12T11:55:16Z
 ---
 
 ## Notes
