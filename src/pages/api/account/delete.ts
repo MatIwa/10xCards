@@ -53,8 +53,16 @@ export const POST: APIRoute = async (context) => {
   );
 
   // Local scope: cookie clear only, no server round-trip to the deleted user's session.
-  // Errors are deliberately ignored — the destructive work succeeded and we must still redirect.
-  await userSupabase.auth.signOut({ scope: "local" }).catch(() => undefined);
+  const { error: signOutError } = await userSupabase.auth.signOut({ scope: "local" });
+  if (signOutError) {
+    // GDPR audit log — sign-out failure after destructive operation should be visible and returned.
+    // eslint-disable-next-line no-console
+    console.error("account_delete_signout_failed", { user_id: context.locals.user.id, error: signOutError.message });
+    return Response.json(
+      { error: "Account deleted, but sign-out failed. Please refresh and sign in again.", code: "signout_failed" },
+      { status: 500 },
+    );
+  }
 
   return context.redirect("/auth/signin?deleted=1", 303);
 };

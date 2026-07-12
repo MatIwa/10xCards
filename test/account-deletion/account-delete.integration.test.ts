@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import * as supabaseModule from "@/lib/supabase";
 import { USER_SCOPED_TABLES } from "@/lib/services/account.service";
 import { POST } from "@/pages/api/account/delete";
 import type { Flashcard } from "@/types";
@@ -172,5 +173,49 @@ describe("POST /api/account/delete", () => {
 
     expect(response.status).toBe(401);
     expect(body).toEqual({ error: "Unauthorized" });
+  });
+
+  it("propagates sign-out failures to the API response", async () => {
+    const originalCreateClient = supabaseModule.createClient;
+    const signOutErrorMessage = "local signout failed";
+    const signOutSpy = vi.fn().mockResolvedValue({ error: { message: signOutErrorMessage } });
+
+    vi.spyOn(supabaseModule, "createClient").mockImplementation((...args) => {
+      const original = originalCreateClient(...args);
+      if (!original) {
+        return null;
+      }
+
+      Object.defineProperty(original.auth, "signOut", {
+        value: signOutSpy,
+        configurable: true,
+      });
+
+      return original;
+    });
+
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    const response = await invokeApiRoute({
+      method: "POST",
+      pathname: "/api/account/delete",
+      session,
+      body: { confirmation: "DELETE" },
+      handler: POST,
+    });
+    const body = await expectJson(response);
+
+    expect(response.status).toBe(500);
+    expect(body).toMatchObject({
+      error: "Account deleted, but sign-out failed. Please refresh and sign in again.",
+      code: "signout_failed",
+    });
+    expect(signOutSpy).toHaveBeenCalledWith({ scope: "local" });
+    expect(errorSpy).toHaveBeenCalledWith("account_delete_signout_failed", {
+      user_id: user.userId,
+      error: signOutErrorMessage,
+    });
+
+    deleted = true;
   });
 });
