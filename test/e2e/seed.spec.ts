@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return */
 // Provenance: seed exemplar for this project's E2E suite.
 // Risk anchor: context/foundation/test-plan.md — Risk #2
 //   "Candidate accept/edit/reject state tangled during save — wrong subset persisted,

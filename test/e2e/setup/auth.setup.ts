@@ -29,14 +29,14 @@ const devVarsPath = path.join(path.dirname(fileURLToPath(import.meta.url)), ".."
 const DEFAULT_E2E_USER_EMAIL = "test@integration.local";
 const DEFAULT_E2E_USER_PASSWORD = "integration-test-password";
 
-let cachedDevVars: Record<string, string> | null = null;
+let cachedDevVars: Partial<Record<string, string>> | null = null;
 
 function loadDevVarsFile() {
   if (cachedDevVars) {
     return cachedDevVars;
   }
 
-  const loaded: Record<string, string> = {};
+  const loaded: Partial<Record<string, string>> = {};
 
   try {
     if (!fs.existsSync(devVarsPath)) {
@@ -121,7 +121,7 @@ setup("authenticate the E2E user and persist storageState", async ({ page }) => 
   await page.getByRole("button", { name: /sign in/i }).click();
   await page.waitForLoadState("networkidle");
 
-  if (/\/auth\/signin/.test(page.url())) {
+  if (page.url().includes("/auth/signin")) {
     const url = new URL(page.url());
     const error = url.searchParams.get("error") ?? "unknown error";
     throw new Error(
