@@ -1,4 +1,4 @@
-import { OPENROUTER_API_KEY } from "astro:env/server";
+import { OPENROUTER_API_KEY, OPENROUTER_MODEL } from "astro:env/server";
 import { modelOutputSchema, type Proposal } from "@/lib/schemas/ai-generation.schemas";
 
 type GenerationErrorCode = "missing_api_key" | "provider_unavailable" | "invalid_model_output" | "empty_result";
@@ -11,11 +11,11 @@ export interface GenerationError {
 export type GenerateResult = { data: Proposal[]; error: null } | { data: null; error: GenerationError };
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-// Swapped from the planned `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free` to this lighter
-// free-tier model after the original proved unreliable on OpenRouter during implementation.
-// See the addendum at the bottom of `context/changes/ai-flashcard-generation/plan.md` and the
-// Phase 1 note in `context/changes/ai-flashcard-generation/change.md`.
-const MODEL_ID = "liquid/lfm-2.5-1.2b-instruct:free";
+// The OpenRouter free-tier model to use. Configurable via the `OPENROUTER_MODEL` env var so a
+// retired/renamed model can be swapped without a redeploy — OpenRouter periodically removes free
+// models, and an unknown model id yields a non-200 that surfaces as `provider_unavailable`.
+// Default is a currently-available free instruct model that supports JSON `response_format`.
+const MODEL_ID = OPENROUTER_MODEL;
 const REQUEST_TIMEOUT_MS = 30000;
 const MAX_OUTPUT_TOKENS = 2500;
 

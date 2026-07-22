@@ -8,6 +8,9 @@ vi.mock("astro:env/server", () => ({
   get OPENROUTER_API_KEY() {
     return envMock.openrouterApiKey;
   },
+  get OPENROUTER_MODEL() {
+    return "test-model";
+  },
 }));
 
 const sourceText =

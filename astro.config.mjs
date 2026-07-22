@@ -21,6 +21,12 @@ export default defineConfig({
       SUPABASE_KEY: envField.string({ context: "server", access: "secret", optional: true }),
       SUPABASE_SERVICE_ROLE_KEY: envField.string({ context: "server", access: "secret", optional: true }),
       OPENROUTER_API_KEY: envField.string({ context: "server", access: "secret", optional: true }),
+      OPENROUTER_MODEL: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+        default: "google/gemma-4-26b-a4b-it:free",
+      }),
       SENTRY_DSN: envField.string({ context: "server", access: "secret", optional: true }),
     },
   },
