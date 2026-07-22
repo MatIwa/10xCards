@@ -21,7 +21,7 @@ function formatDate(isoDate: string) {
     return "Unknown date";
   }
 
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",

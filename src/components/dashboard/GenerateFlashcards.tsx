@@ -273,7 +273,7 @@ export default function GenerateFlashcards() {
           onClick={() => {
             setStatusMessage(null);
           }}
-          className="border-emerald-100/50 text-emerald-50 hover:bg-emerald-100/10 hover:text-white"
+          className="border-emerald-100/50 bg-transparent text-emerald-50 hover:bg-emerald-100/10 hover:text-white"
         >
           Dismiss
         </Button>
@@ -554,7 +554,7 @@ export default function GenerateFlashcards() {
               size="sm"
               disabled={isBulkRunning || proposals.length === 0}
               onClick={toggleAllSelected}
-              className="border-white/25 text-white hover:bg-white/10 hover:text-white"
+              className="border-white/25 bg-transparent text-white hover:bg-white/10 hover:text-white"
             >
               {allSelected ? "Select none" : "Select all"}
             </Button>

@@ -12,16 +12,16 @@ export const configStatuses: ConfigStatus[] = [
   {
     name: "Supabase",
     configured: Boolean(SUPABASE_URL && SUPABASE_KEY),
-    message: "Supabase nie jest skonfigurowany — funkcje uwierzytelniania są wyłączone.",
+    message: "Supabase is not configured — authentication features are disabled.",
     docsUrl: "https://github.com/przeprogramowani/10x-astro-starter#supabase-configuration",
-    docsLabel: "Zobacz instrukcję konfiguracji",
+    docsLabel: "View configuration guide",
   },
   {
     name: "Supabase service role",
     configured: Boolean(SUPABASE_SERVICE_ROLE_KEY),
-    message: "Klucz service role Supabase nie jest skonfigurowany — usuwanie konta jest niedostępne.",
+    message: "The Supabase service role key is not configured — account deletion is unavailable.",
     docsUrl: "https://github.com/przeprogramowani/10x-astro-starter#supabase-configuration",
-    docsLabel: "Zobacz instrukcję konfiguracji",
+    docsLabel: "View configuration guide",
   },
 ];
 

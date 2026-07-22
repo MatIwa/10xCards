@@ -62,7 +62,7 @@ function formatRelativeTime(isoDate: string) {
     ["hour", 1000 * 60 * 60],
     ["minute", 1000 * 60],
   ];
-  const formatter = new Intl.RelativeTimeFormat(undefined, { numeric: "auto" });
+  const formatter = new Intl.RelativeTimeFormat("en-US", { numeric: "auto" });
 
   for (const [unit, unitMs] of units) {
     const value = Math.round(differenceMs / unitMs);
