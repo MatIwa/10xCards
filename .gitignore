@@ -30,6 +30,7 @@ pnpm-debug.log*
 
 # 10xDevs course materials (local development only, not tracked)
 .github/skills/
+.github/prompts/
 .agents/skills/
 skills-lock.json
 
