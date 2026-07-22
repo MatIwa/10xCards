@@ -15,6 +15,9 @@ vi.mock("astro:env/server", () => ({
   get OPENROUTER_API_KEY() {
     return envMock.openrouterApiKey;
   },
+  get OPENROUTER_MODEL() {
+    return "google/gemma-4-26b-a4b-it:free";
+  },
   get SUPABASE_URL() {
     return process.env.TEST_SUPABASE_URL;
   },
