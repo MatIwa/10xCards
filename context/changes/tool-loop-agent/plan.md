@@ -231,9 +231,9 @@ Consumers importing `createRootAgent` or `generateStarterResponse` from this pac
 
 #### Automated
 
-- [ ] 2.1 Type checking passes: `npm run typecheck`
-- [ ] 2.2 Build passes: `npm run build`
-- [ ] 2.3 `result.output` is typed as `ReviewOutput` (no `any` / casts)
+- [x] 2.1 Type checking passes: `npm run typecheck`
+- [x] 2.2 Build passes: `npm run build`
+- [x] 2.3 `result.output` is typed as `ReviewOutput` (no `any` / casts)
 
 #### Manual
 
