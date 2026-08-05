@@ -56,7 +56,7 @@ runs:
 
         RESULT_FILE="${RUNNER_TEMP}/ai-cr-review.json"
 
-        cat "$DIFF_PATH" | npm run start -- --title "$PR_TITLE" --description "$PR_DESCRIPTION" > "$RESULT_FILE"
+        cat "$DIFF_PATH" | npm run --silent start -- --title "$PR_TITLE" --description "$PR_DESCRIPTION" > "$RESULT_FILE"
 
         echo "review-json-path=$RESULT_FILE" >> "$GITHUB_OUTPUT"
 
