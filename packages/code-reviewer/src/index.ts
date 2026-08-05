@@ -10,20 +10,25 @@ import { reviewDiff } from "./agent.js";
 
 const USAGE = [
   "Usage:",
-  "  npm run dev -- [diff-file] [--files <path> ...]",
+  "  npm run dev -- [diff-file] [--files <path> ...] [--title <text>] [--description <text>]",
   "",
   "Provide a unified diff via stdin or pass a diff file path as the first argument.",
   "Use --files to pass changed file paths for extra context.",
+  "Use --title and --description to pass pull request metadata.",
 ].join("\n");
 
 interface CliArgs {
   diffFile?: string;
   filePaths: string[];
+  title?: string;
+  description?: string;
 }
 
 function parseArgs(argv: string[]): CliArgs {
   const filePaths: string[] = [];
   let diffFile: string | undefined;
+  let title: string | undefined;
+  let description: string | undefined;
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -40,6 +45,30 @@ function parseArgs(argv: string[]): CliArgs {
       continue;
     }
 
+    if (arg === "--title") {
+      const value = argv[index + 1];
+
+      if (!value || value.startsWith("--")) {
+        throw new Error("Missing value for --title");
+      }
+
+      title = value;
+      index += 1;
+      continue;
+    }
+
+    if (arg === "--description") {
+      const value = argv[index + 1];
+
+      if (!value || value.startsWith("--")) {
+        throw new Error("Missing value for --description");
+      }
+
+      description = value;
+      index += 1;
+      continue;
+    }
+
     if (arg.startsWith("--")) {
       throw new Error(`Unknown argument: ${arg}`);
     }
@@ -52,7 +81,7 @@ function parseArgs(argv: string[]): CliArgs {
     filePaths.push(arg);
   }
 
-  return { diffFile, filePaths };
+  return { diffFile, filePaths, title, description };
 }
 
 async function readStdin(): Promise<string> {
@@ -98,6 +127,8 @@ export async function main() {
     const review = await reviewDiff({
       diff: trimmedDiff,
       filePaths: args.filePaths.length > 0 ? args.filePaths : undefined,
+      title: args.title,
+      description: args.description,
     });
 
     process.stdout.write(`${JSON.stringify(review, null, 2)}\n`);
