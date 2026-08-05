@@ -307,14 +307,14 @@ Add the PR-triggered `ai-code-review` workflow that guards triggers (including t
 
 #### Automated
 
-- [x] 3.1 Workflow YAML valid: `action-validator .github/workflows/ai-code-review.yml` (or YAML parse)
-- [x] 3.2 Root CI unaffected: `npm run lint` and `npm run build`
+- [x] 3.1 Workflow YAML valid: `action-validator .github/workflows/ai-code-review.yml` (or YAML parse) — 1e8393d
+- [x] 3.2 Root CI unaffected: `npm run lint` and `npm run build` — 1e8393d
 
 #### Manual
 
-- [x] 3.3 Test PR: exactly one comment (7-score table + summary) and correct pass/fail label
-- [x] 3.4 New commit: comment updates in place, labels re-toggle
-- [x] 3.5 Adding `ai-cr:review` re-runs the review
-- [x] 3.6 Adding an unrelated label does NOT re-run the workflow
-- [x] 3.7 Fork / secret-absent PR skips green (no red failure)
-- [x] 3.8 `ai-code-review` check is NOT a required branch-protection context
+- [x] 3.3 Test PR: exactly one comment (7-score table + summary) and correct pass/fail label — 1e8393d
+- [x] 3.4 New commit: comment updates in place, labels re-toggle — 1e8393d
+- [x] 3.5 Adding `ai-cr:review` re-runs the review — 1e8393d
+- [x] 3.6 Adding an unrelated label does NOT re-run the workflow — 1e8393d
+- [x] 3.7 Fork / secret-absent PR skips green (no red failure) — 1e8393d
+- [x] 3.8 `ai-code-review` check is NOT a required branch-protection context — 1e8393d
