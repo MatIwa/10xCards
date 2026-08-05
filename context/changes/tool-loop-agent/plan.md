@@ -237,19 +237,19 @@ Consumers importing `createRootAgent` or `generateStarterResponse` from this pac
 
 #### Manual
 
-- [x] 2.4 `reviewDiff` returns a well-formed `ReviewOutput` for a flawed sample diff
-- [x] 2.5 `createReviewer` importable standalone with `.generate()` callable directly
+- [x] 2.4 `reviewDiff` returns a well-formed `ReviewOutput` for a flawed sample diff — 93d2245
+- [x] 2.5 `createReviewer` importable standalone with `.generate()` callable directly — 93d2245
 
 ### Phase 3: Rewire Entry + Drop ADK
 
 #### Automated
 
-- [x] 3.1 Type checking passes: `npm run typecheck`
-- [x] 3.2 Build passes: `npm run build`
-- [x] 3.3 Repo lint passes: `npm run lint`
-- [x] 3.4 No `@google/adk` references remain in `src` or `package.json`
+- [x] 3.1 Type checking passes: `npm run typecheck` — 93d2245
+- [x] 3.2 Build passes: `npm run build` — 93d2245
+- [x] 3.3 Repo lint passes: `npm run lint` — 93d2245
+- [x] 3.4 No `@google/adk` references remain in `src` or `package.json` — 93d2245
 
 #### Manual
 
-- [x] 3.5 CLI prints a structured review for a sample diff; empty input exits non-zero
-- [x] 3.6 `package-lock.json` no longer resolves `@google/adk*`
+- [x] 3.5 CLI prints a structured review for a sample diff; empty input exits non-zero — 93d2245
+- [x] 3.6 `package-lock.json` no longer resolves `@google/adk*` — 93d2245
