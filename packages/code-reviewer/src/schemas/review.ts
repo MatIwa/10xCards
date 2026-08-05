@@ -36,30 +36,32 @@ export const reviewFindingSchema = z.object({
   recommendation: z.string().min(10),
 });
 
-export const reviewOutputSchema = z.object({
-  summary: z.string().describe("Brief overall summary of the diff quality"),
-  scores: reviewScoresSchema,
-  findings: z.array(reviewFindingSchema).default([]),
-  recommendations: z.array(z.string().min(5)).default([]),
-}).superRefine((value, ctx) => {
-  const hasLowScore = Object.values(value.scores).some((score) => score < 7);
+export const reviewOutputSchema = z
+  .object({
+    summary: z.string().describe("Brief overall summary of the diff quality"),
+    scores: reviewScoresSchema,
+    findings: z.array(reviewFindingSchema).default([]),
+    recommendations: z.array(z.string().min(5)).default([]),
+  })
+  .superRefine((value, ctx) => {
+    const hasLowScore = Object.values(value.scores).some((score) => score < 7);
 
-  if (hasLowScore && (value.findings.length < 3 || value.findings.length > 7)) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["findings"],
-      message: "When any score is below 7, include between 3 and 7 findings.",
-    });
-  }
+    if (hasLowScore && (value.findings.length < 3 || value.findings.length > 7)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["findings"],
+        message: "When any score is below 7, include between 3 and 7 findings.",
+      });
+    }
 
-  if (hasLowScore && value.recommendations.length < 2) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["recommendations"],
-      message: "When any score is below 7, include at least 2 prioritized recommendations.",
-    });
-  }
-});
+    if (hasLowScore && value.recommendations.length < 2) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["recommendations"],
+        message: "When any score is below 7, include at least 2 prioritized recommendations.",
+      });
+    }
+  });
 
 export type ReviewInput = z.infer<typeof reviewInputSchema>;
 export type ReviewOutput = z.infer<typeof reviewOutputSchema>;
