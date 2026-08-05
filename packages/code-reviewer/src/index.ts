@@ -77,7 +77,15 @@ export async function main() {
     return;
   }
 
-  const diff = args.diffFile ? await readFile(args.diffFile, "utf8") : await readStdin();
+  let diff: string;
+  try {
+    diff = args.diffFile ? await readFile(args.diffFile, "utf8") : await readStdin();
+  } catch {
+    process.stderr.write("Failed to read diff input.\n");
+    process.exitCode = 1;
+    return;
+  }
+
   const trimmedDiff = diff.trim();
 
   if (!trimmedDiff) {
@@ -86,12 +94,18 @@ export async function main() {
     return;
   }
 
-  const review = await reviewDiff({
-    diff: trimmedDiff,
-    filePaths: args.filePaths.length > 0 ? args.filePaths : undefined,
-  });
+  try {
+    const review = await reviewDiff({
+      diff: trimmedDiff,
+      filePaths: args.filePaths.length > 0 ? args.filePaths : undefined,
+    });
 
-  process.stdout.write(`${JSON.stringify(review, null, 2)}\n`);
+    process.stdout.write(`${JSON.stringify(review, null, 2)}\n`);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Review failed";
+    process.stderr.write(`Review failed: ${message}\n`);
+    process.exitCode = 1;
+  }
 }
 
 // Node 22 lacks import.meta.main; compare the resolved entry URL instead.
