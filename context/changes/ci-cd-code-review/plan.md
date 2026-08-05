@@ -295,8 +295,8 @@ Add the PR-triggered `ai-code-review` workflow that guards triggers (including t
 
 #### Automated
 
-- [ ] 2.1 Action YAML valid: `action-validator .github/actions/ai-code-review/action.yml` (or YAML parse)
-- [ ] 2.2 Root lint/build still pass: `npm run lint`
+- [x] 2.1 Action YAML valid: `action-validator .github/actions/ai-code-review/action.yml` (or YAML parse)
+- [x] 2.2 Root lint/build still pass: `npm run lint`
 
 #### Manual
 

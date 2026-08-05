@@ -1,0 +1,142 @@
+name: AI Code Review
+description: Runs the code reviewer and emits pass/fail plus a ready-to-upsert comment body.
+
+inputs:
+  title:
+    description: Pull request title
+    required: false
+    default: ""
+  description:
+    description: Pull request description/body
+    required: false
+    default: ""
+  diff:
+    description: Unified diff content
+    required: true
+  openrouter-api-key:
+    description: OpenRouter API key
+    required: true
+
+outputs:
+  passed:
+    description: "true when all scores are >= 7, else false"
+    value: ${{ steps.render.outputs.passed }}
+  comment-body:
+    description: Markdown comment body with marker, score table, and summary
+    value: ${{ steps.render.outputs.comment-body }}
+
+runs:
+  using: composite
+  steps:
+    - name: Ensure Node.js 22 is available
+      shell: bash
+      run: |
+        set -euo pipefail
+        if ! command -v node >/dev/null 2>&1; then
+          echo "Node.js is required but not found on PATH." >&2
+          exit 1
+        fi
+
+        NODE_MAJOR="$(node -p "process.versions.node.split('.')[0]")"
+        if [ "$NODE_MAJOR" -ne 22 ]; then
+          echo "Node.js 22 is required, found $(node -v)." >&2
+          exit 1
+        fi
+
+    - name: Install reviewer dependencies
+      shell: bash
+      working-directory: packages/code-reviewer
+      run: |
+        set -euo pipefail
+        npm ci
+
+    - name: Run AI reviewer
+      id: review
+      shell: bash
+      env:
+        OPENROUTER_API_KEY: ${{ inputs.openrouter-api-key }}
+        PR_TITLE: ${{ inputs.title }}
+        PR_DESCRIPTION: ${{ inputs.description }}
+        DIFF_CONTENT: ${{ inputs.diff }}
+      working-directory: packages/code-reviewer
+      run: |
+        set -euo pipefail
+
+        DIFF_FILE="${RUNNER_TEMP}/ai-cr.diff"
+        RESULT_FILE="${RUNNER_TEMP}/ai-cr-review.json"
+
+        printf '%s' "$DIFF_CONTENT" > "$DIFF_FILE"
+
+        cat "$DIFF_FILE" | npm run start -- --title "$PR_TITLE" --description "$PR_DESCRIPTION" > "$RESULT_FILE"
+
+        echo "review-json-path=$RESULT_FILE" >> "$GITHUB_OUTPUT"
+
+    - name: Compute pass/fail and render comment
+      id: render
+      shell: bash
+      env:
+        REVIEW_JSON_PATH: ${{ steps.review.outputs.review-json-path }}
+        BODY_FILE: ${{ runner.temp }}/ai-cr-comment.md
+      run: |
+        set -euo pipefail
+
+        node <<'NODE'
+        const fs = require("node:fs");
+
+        const reviewPath = process.env.REVIEW_JSON_PATH;
+        const bodyPath = process.env.BODY_FILE;
+        const outputPath = process.env.GITHUB_OUTPUT;
+
+        if (!reviewPath || !bodyPath || !outputPath) {
+          throw new Error("Missing required environment for render step");
+        }
+
+        const raw = fs.readFileSync(reviewPath, "utf8");
+        const parsed = JSON.parse(raw);
+
+        const scores = parsed.scores ?? {};
+        const ordered = [
+          ["Correctness", scores.correctness],
+          ["Readability", scores.readability],
+          ["Test coverage", scores.testCoverage],
+          ["Security", scores.security],
+          ["Error handling", scores.errorHandling],
+          ["Maintainability", scores.maintainability],
+          ["Consistency", scores.consistency],
+        ];
+
+        for (const [label, value] of ordered) {
+          if (!Number.isInteger(value) || value < 1 || value > 10) {
+            throw new Error(`Invalid score for ${label}: ${value}`);
+          }
+        }
+
+        const passed = ordered.every(([, value]) => value >= 7);
+        const verdict = passed ? "PASS" : "FAIL";
+        const summary = typeof parsed.summary === "string" ? parsed.summary.trim() : "";
+
+        const lines = [
+          "<!-- ai-cr:summary -->",
+          "## AI Code Review",
+          "",
+          `**Verdict:** ${verdict} (threshold: all criteria >= 7)`,
+          "",
+          "| Criterion | Score |",
+          "| --- | ---: |",
+          ...ordered.map(([label, value]) => `| ${label} | ${value}/10 |`),
+          "",
+          "### Summary",
+          summary || "No summary provided by the model.",
+          "",
+        ];
+
+        fs.writeFileSync(bodyPath, lines.join("\n"), "utf8");
+
+        const out = [];
+        out.push(`passed=${passed ? "true" : "false"}`);
+        out.push("comment-body<<EOF");
+        out.push(fs.readFileSync(bodyPath, "utf8"));
+        out.push("EOF");
+
+        fs.appendFileSync(outputPath, `${out.join("\n")}\n`, "utf8");
+        NODE
