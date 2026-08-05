@@ -281,15 +281,15 @@ Add the PR-triggered `ai-code-review` workflow that guards triggers (including t
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `cd packages/code-reviewer && npm run typecheck`
-- [x] 1.2 Package builds: `cd packages/code-reviewer && npm run build`
-- [x] 1.3 Schema test passes: `npm run test:unit` (or resolved package-local test command)
-- [x] 1.4 Root lint passes: `npm run lint`
+- [x] 1.1 Type checking passes: `cd packages/code-reviewer && npm run typecheck` — 19c4a54
+- [x] 1.2 Package builds: `cd packages/code-reviewer && npm run build` — 19c4a54
+- [x] 1.3 Schema test passes: `npm run test:unit` (or resolved package-local test command) — 19c4a54
+- [x] 1.4 Root lint passes: `npm run lint` — 19c4a54
 
 #### Manual
 
-- [x] 1.5 `npm run start -- --title --description` prints `{summary, scores(7×1–10)}`, no `verdict`/`findings`
-- [x] 1.6 In-diff injection attempt does not inflate scores (flagged in summary)
+- [x] 1.5 `npm run start -- --title --description` prints `{summary, scores(7×1–10)}`, no `verdict`/`findings` — 19c4a54
+- [x] 1.6 In-diff injection attempt does not inflate scores (flagged in summary) — 19c4a54
 
 ### Phase 2: Composite action
 
