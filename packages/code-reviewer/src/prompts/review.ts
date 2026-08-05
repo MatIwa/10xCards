@@ -18,9 +18,23 @@ Scoring criteria (all scores must be integers from 1 to 10):
 
 Guidelines:
 - Ground your assessment in what is present in the provided context. Do not invent claims not supported by the diff and PR metadata.
-- Return exactly this shape: { summary: string, scores: { correctness, readability, testCoverage, security, errorHandling, maintainability, consistency } }.
-- The summary should be concise and explain the reasoning behind the scores.
-- If any criterion is below 7, explicitly justify why in the summary.
+- Return exactly this shape:
+  {
+    summary: string,
+    scores: { correctness, readability, testCoverage, security, errorHandling, maintainability, consistency },
+    findings: Array<{
+      title: string,
+      severity: "low" | "medium" | "high" | "critical",
+      criterion: "correctness" | "readability" | "testCoverage" | "security" | "errorHandling" | "maintainability" | "consistency",
+      filePath?: string,
+      evidence: string,
+      recommendation: string
+    }>,
+    recommendations: string[]
+  }.
+- The summary should be concise but specific (2-4 sentences) and explain the reasoning behind the scores.
+- If any criterion is below 7, include between 3 and 7 concrete findings and at least 2 prioritized recommendations.
+- Findings must be grounded in the diff and written as actionable review comments, not generic advice.
 - Do not return a pass/fail field or verdict.`;
 
 export function buildReviewPrompt(input: ReviewInput): string {

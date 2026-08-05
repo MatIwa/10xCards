@@ -84,6 +84,8 @@ runs:
         const parsed = JSON.parse(raw);
 
         const scores = parsed.scores ?? {};
+        const findings = Array.isArray(parsed.findings) ? parsed.findings : [];
+        const recommendations = Array.isArray(parsed.recommendations) ? parsed.recommendations : [];
         const ordered = [
           ["Correctness", scores.correctness],
           ["Readability", scores.readability],
@@ -103,6 +105,38 @@ runs:
         const passed = ordered.every(([, value]) => value >= 7);
         const verdict = passed ? "PASS" : "FAIL";
         const summary = typeof parsed.summary === "string" ? parsed.summary.trim() : "";
+        const highRiskFindings = findings.filter((finding) => finding?.severity === "high" || finding?.severity === "critical");
+
+        const findingLines = findings.length
+          ? findings.map((finding, index) => {
+              const fileSuffix = finding.filePath ? ` (${finding.filePath})` : "";
+              const severity = typeof finding.severity === "string" ? finding.severity.toUpperCase() : "UNKNOWN";
+              const criterion = typeof finding.criterion === "string" ? finding.criterion : "unknown";
+              const title = typeof finding.title === "string" ? finding.title : "Untitled finding";
+              const evidence = typeof finding.evidence === "string" ? finding.evidence : "No evidence provided.";
+              const recommendation =
+                typeof finding.recommendation === "string" ? finding.recommendation : "No recommendation provided.";
+
+              return [
+                `${index + 1}. [${severity}] ${title}${fileSuffix}`,
+                `   - Criterion: ${criterion}`,
+                `   - Evidence: ${evidence}`,
+                `   - Recommendation: ${recommendation}`,
+              ].join("\n");
+            })
+          : ["No concrete findings were provided by the model."];
+
+        const recommendationLines = recommendations.length
+          ? recommendations.map((item, index) => `${index + 1}. ${item}`)
+          : ["1. No prioritized recommendations were provided by the model."];
+
+        const riskLines = highRiskFindings.length
+          ? highRiskFindings.map((finding) => {
+              const fileSuffix = finding.filePath ? ` (${finding.filePath})` : "";
+              const title = typeof finding.title === "string" ? finding.title : "Untitled risk";
+              return `- [${String(finding.severity).toUpperCase()}] ${title}${fileSuffix}`;
+            })
+          : ["- No high-severity risks detected."];
 
         const lines = [
           "<!-- ai-cr:summary -->",
@@ -116,6 +150,15 @@ runs:
           "",
           "### Summary",
           summary || "No summary provided by the model.",
+          "",
+          "### Key Risks",
+          ...riskLines,
+          "",
+          "### Findings",
+          ...findingLines,
+          "",
+          "### Suggested Fixes",
+          ...recommendationLines,
           "",
         ];
 

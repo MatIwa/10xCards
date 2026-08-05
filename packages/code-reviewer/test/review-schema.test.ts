@@ -14,6 +14,34 @@ describe("reviewOutputSchema", () => {
       maintainability: 8,
       consistency: 9,
     },
+    findings: [
+      {
+        title: "Potential secret handling issue",
+        severity: "medium",
+        criterion: "security",
+        filePath: "src/lib/supabase.ts",
+        evidence: "A sensitive token appears in log-related code paths.",
+        recommendation: "Remove secret values from logs and mask sensitive fields before output.",
+      },
+      {
+        title: "Insufficient negative-path verification",
+        severity: "low",
+        criterion: "testCoverage",
+        evidence: "No tests are shown for failed validation branches.",
+        recommendation: "Add tests for invalid inputs and expected error responses.",
+      },
+      {
+        title: "Non-idiomatic local error handling",
+        severity: "low",
+        criterion: "consistency",
+        evidence: "The patch introduces handling that diverges from established patterns.",
+        recommendation: "Align error handling with existing service conventions in the repository.",
+      },
+    ],
+    recommendations: [
+      "Block release until secret logging is removed.",
+      "Add focused tests for failure paths and regressions.",
+    ],
   };
 
   it("accepts valid score payload with all 7 criteria", () => {
@@ -60,6 +88,31 @@ describe("reviewOutputSchema", () => {
       reviewOutputSchema.parse({
         ...validOutput,
         scores: scoresWithoutConsistency,
+      }),
+    ).toThrow();
+  });
+
+  it("rejects low-score payloads without 3-7 findings", () => {
+    expect(() =>
+      reviewOutputSchema.parse({
+        ...validOutput,
+        findings: [validOutput.findings[0]],
+      }),
+    ).toThrow();
+
+    expect(() =>
+      reviewOutputSchema.parse({
+        ...validOutput,
+        findings: [...validOutput.findings, ...validOutput.findings, ...validOutput.findings],
+      }),
+    ).toThrow();
+  });
+
+  it("rejects low-score payloads with too few recommendations", () => {
+    expect(() =>
+      reviewOutputSchema.parse({
+        ...validOutput,
+        recommendations: ["Single recommendation"],
       }),
     ).toThrow();
   });
