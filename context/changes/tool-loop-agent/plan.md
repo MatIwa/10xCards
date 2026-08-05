@@ -231,25 +231,25 @@ Consumers importing `createRootAgent` or `generateStarterResponse` from this pac
 
 #### Automated
 
-- [x] 2.1 Type checking passes: `npm run typecheck`
-- [x] 2.2 Build passes: `npm run build`
-- [x] 2.3 `result.output` is typed as `ReviewOutput` (no `any` / casts)
+- [x] 2.1 Type checking passes: `npm run typecheck` — 788fbf4
+- [x] 2.2 Build passes: `npm run build` — 788fbf4
+- [x] 2.3 `result.output` is typed as `ReviewOutput` (no `any` / casts) — 788fbf4
 
 #### Manual
 
-- [ ] 2.4 `reviewDiff` returns a well-formed `ReviewOutput` for a flawed sample diff
-- [ ] 2.5 `createReviewer` importable standalone with `.generate()` callable directly
+- [x] 2.4 `reviewDiff` returns a well-formed `ReviewOutput` for a flawed sample diff
+- [x] 2.5 `createReviewer` importable standalone with `.generate()` callable directly
 
 ### Phase 3: Rewire Entry + Drop ADK
 
 #### Automated
 
-- [ ] 3.1 Type checking passes: `npm run typecheck`
-- [ ] 3.2 Build passes: `npm run build`
-- [ ] 3.3 Repo lint passes: `npm run lint`
-- [ ] 3.4 No `@google/adk` references remain in `src` or `package.json`
+- [x] 3.1 Type checking passes: `npm run typecheck`
+- [x] 3.2 Build passes: `npm run build`
+- [x] 3.3 Repo lint passes: `npm run lint`
+- [x] 3.4 No `@google/adk` references remain in `src` or `package.json`
 
 #### Manual
 
-- [ ] 3.5 CLI prints a structured review for a sample diff; empty input exits non-zero
-- [ ] 3.6 `package-lock.json` no longer resolves `@google/adk*`
+- [x] 3.5 CLI prints a structured review for a sample diff; empty input exits non-zero
+- [x] 3.6 `package-lock.json` no longer resolves `@google/adk*`

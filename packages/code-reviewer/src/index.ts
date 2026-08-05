@@ -1,80 +1,97 @@
-import { LlmAgent } from "@google/adk";
-import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { generateText } from "ai";
+import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
-import { z } from "zod";
 
-// Load .env into process.env if present (Node >=20.12 built-in; no dependency needed).
-try {
-  process.loadEnvFile();
-} catch {
-  // No .env file found; rely on the ambient environment instead.
+export * from "./config.js";
+export * from "./schemas/review.js";
+export * from "./prompts/review.js";
+export * from "./agent.js";
+
+import { reviewDiff } from "./agent.js";
+
+const USAGE = [
+  "Usage:",
+  "  npm run dev -- [diff-file] [--files <path> ...]",
+  "",
+  "Provide a unified diff via stdin or pass a diff file path as the first argument.",
+  "Use --files to pass changed file paths for extra context.",
+].join("\n");
+
+interface CliArgs {
+  diffFile?: string;
+  filePaths: string[];
 }
 
-export const envSchema = z.object({
-  OPENROUTER_API_KEY: z.string().min(1, "OPENROUTER_API_KEY is required"),
-  OPENROUTER_MODEL: z.string().default("openai/gpt-5"),
-  ADK_AGENT_NAME: z.string().default("code-reviewer"),
-  ADK_AGENT_DESCRIPTION: z.string().default("Base ADK agent prepared for future Code Reviewer integration."),
-  ADK_AGENT_INSTRUCTION: z.string().default("You are a helpful coding assistant. Keep answers precise and actionable."),
-});
+function parseArgs(argv: string[]): CliArgs {
+  const filePaths: string[] = [];
+  let diffFile: string | undefined;
 
-export const promptSchema = z.object({
-  prompt: z.string().min(1, "prompt is required"),
-});
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
 
-export type AppEnv = z.infer<typeof envSchema>;
-export type PromptInput = z.infer<typeof promptSchema>;
+    if (arg === "--files") {
+      index += 1;
 
-export function readEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
-  return envSchema.parse(source);
+      while (index < argv.length && !argv[index]?.startsWith("--")) {
+        filePaths.push(argv[index] ?? "");
+        index += 1;
+      }
+
+      index -= 1;
+      continue;
+    }
+
+    if (arg.startsWith("--")) {
+      throw new Error(`Unknown argument: ${arg}`);
+    }
+
+    if (!diffFile) {
+      diffFile = arg;
+      continue;
+    }
+
+    filePaths.push(arg);
+  }
+
+  return { diffFile, filePaths };
 }
 
-export function createOpenRouterClient(overrides: Partial<AppEnv> = {}) {
-  const env = envSchema.parse({ ...process.env, ...overrides });
+async function readStdin(): Promise<string> {
+  const chunks: Buffer[] = [];
 
-  return {
-    env,
-    openrouter: createOpenRouter({
-      apiKey: env.OPENROUTER_API_KEY,
-    }),
-  };
-}
+  for await (const chunk of process.stdin as AsyncIterable<string | Buffer>) {
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+  }
 
-export function createRootAgent(overrides: Partial<AppEnv> = {}) {
-  const env = envSchema.parse({ ...process.env, ...overrides });
-
-  return new LlmAgent({
-    name: env.ADK_AGENT_NAME,
-    description: env.ADK_AGENT_DESCRIPTION,
-    instruction: env.ADK_AGENT_INSTRUCTION,
-    model: env.OPENROUTER_MODEL,
-  });
-}
-
-export async function generateStarterResponse(input: PromptInput | string, overrides: Partial<AppEnv> = {}) {
-  const { env, openrouter } = createOpenRouterClient(overrides);
-  const { prompt } = typeof input === "string" ? promptSchema.parse({ prompt: input }) : promptSchema.parse(input);
-
-  const result = await generateText({
-    model: openrouter(env.OPENROUTER_MODEL),
-    prompt,
-  });
-
-  return result.text;
+  return Buffer.concat(chunks).toString("utf8");
 }
 
 export async function main() {
-  const prompt = process.argv.slice(2).join(" ").trim();
+  let args: CliArgs;
 
-  if (!prompt) {
-    process.stderr.write('Usage: npm run dev -- "Your prompt here"\n');
+  try {
+    args = parseArgs(process.argv.slice(2));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Invalid arguments";
+    process.stderr.write(`${message}\n${USAGE}\n`);
     process.exitCode = 1;
     return;
   }
 
-  const text = await generateStarterResponse(prompt);
-  process.stdout.write(`${text}\n`);
+  const diff = args.diffFile ? await readFile(args.diffFile, "utf8") : await readStdin();
+  const trimmedDiff = diff.trim();
+
+  if (!trimmedDiff) {
+    process.stderr.write(`${USAGE}\n`);
+    process.exitCode = 1;
+    return;
+  }
+
+  const review = await reviewDiff({
+    diff: trimmedDiff,
+    filePaths: args.filePaths.length > 0 ? args.filePaths : undefined,
+  });
+
+  process.stdout.write(`${JSON.stringify(review, null, 2)}\n`);
 }
 
 // Node 22 lacks import.meta.main; compare the resolved entry URL instead.
