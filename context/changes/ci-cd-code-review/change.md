@@ -10,3 +10,5 @@ archived_at: null
 ## Notes
 
 First Github Actions workflow for agentic code review based on packages/code-reviewer
+
+Manual setup required: add GitHub Actions secret `OPENROUTER_API_KEY` in repository settings.

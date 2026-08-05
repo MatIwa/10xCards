@@ -1,0 +1,148 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize, reopened, labeled]
+
+concurrency:
+  group: ai-cr-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  ai-code-review:
+    if: github.event.action != 'labeled' || github.event.label.name == 'ai-cr:review'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Check OpenRouter key availability
+        id: key
+        shell: bash
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${OPENROUTER_API_KEY:-}" ]; then
+            echo "has-key=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has-key=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip when OpenRouter key is unavailable
+        if: steps.key.outputs.has-key != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "OPENROUTER_API_KEY is unavailable for this run (for example, fork PR). Skipping AI review."
+
+      - name: Capture PR diff
+        if: steps.key.outputs.has-key == 'true'
+        id: diff
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git fetch origin "${{ github.base_ref }}" --depth=1
+          git diff "origin/${{ github.base_ref }}...HEAD" > "$RUNNER_TEMP/ai-cr.diff"
+
+          {
+            echo "diff<<EOF"
+            cat "$RUNNER_TEMP/ai-cr.diff"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run AI code review
+        if: steps.key.outputs.has-key == 'true'
+        id: review
+        uses: ./.github/actions/ai-code-review
+        with:
+          title: ${{ github.event.pull_request.title }}
+          description: ${{ github.event.pull_request.body || '' }}
+          diff: ${{ steps.diff.outputs.diff }}
+          openrouter-api-key: ${{ secrets.OPENROUTER_API_KEY }}
+
+      - name: Upsert AI code review comment
+        if: steps.key.outputs.has-key == 'true'
+        uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: ${{ steps.review.outputs.comment-body }}
+        with:
+          script: |
+            const marker = "<!-- ai-cr:summary -->";
+            const issueNumber = context.issue.number;
+            const body = process.env.COMMENT_BODY;
+
+            if (!body || !body.includes(marker)) {
+              throw new Error("Comment body missing marker or empty.");
+            }
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              per_page: 100,
+            });
+
+            const existing = comments.find((comment) => comment.body?.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body,
+              });
+            }
+
+      - name: Toggle pass/fail labels
+        if: steps.key.outputs.has-key == 'true'
+        uses: actions/github-script@v7
+        env:
+          PASSED: ${{ steps.review.outputs.passed }}
+        with:
+          script: |
+            const issueNumber = context.issue.number;
+            const passed = process.env.PASSED === "true";
+
+            const addLabel = passed ? "ai-cr:passed" : "ai-cr:failed";
+            const removeLabel = passed ? "ai-cr:failed" : "ai-cr:passed";
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              labels: [addLabel],
+            });
+
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                name: removeLabel,
+              });
+            } catch (error) {
+              if (error.status !== 404) {
+                throw error;
+              }
+            }
