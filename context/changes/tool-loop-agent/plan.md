@@ -218,14 +218,14 @@ Consumers importing `createRootAgent` or `generateStarterResponse` from this pac
 
 #### Automated
 
-- [x] 1.1 Type checking passes: `npm run typecheck`
-- [x] 1.2 Build passes: `npm run build`
-- [x] 1.3 New files exist: `src/config.ts`, `src/schemas/review.ts`, `src/prompts/review.ts`
+- [x] 1.1 Type checking passes: `npm run typecheck` — 5baf965
+- [x] 1.2 Build passes: `npm run build` — 5baf965
+- [x] 1.3 New files exist: `src/config.ts`, `src/schemas/review.ts`, `src/prompts/review.ts` — 5baf965
 
 #### Manual
 
-- [x] 1.4 Schema field names/enums read sensibly and are promptfoo-assertable
-- [x] 1.5 System prompt reflects intended diff-grounded, structured behavior
+- [x] 1.4 Schema field names/enums read sensibly and are promptfoo-assertable — 5baf965
+- [x] 1.5 System prompt reflects intended diff-grounded, structured behavior — 5baf965
 
 ### Phase 2: Reusable Agent Module
 
