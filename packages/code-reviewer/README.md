@@ -13,20 +13,20 @@ The CLI prints a JSON object with this shape:
 
 ```json
 {
-  "summary": "Brief overall summary",
-  "verdict": "approve | comment | request_changes",
-  "findings": [
-    {
-      "severity": "info | minor | major | critical",
-      "category": "security",
-      "file": "src/auth.ts",
-      "line": 14,
-      "message": "What is wrong",
-      "suggestion": "How to fix it"
-    }
-  ]
+  "summary": "Brief overall summary of the diff quality",
+  "scores": {
+    "correctness": 8,
+    "readability": 9,
+    "testCoverage": 6,
+    "security": 3,
+    "errorHandling": 7,
+    "maintainability": 8,
+    "consistency": 9
+  }
 }
 ```
+
+Each score is an integer from 1 to 10.
 
 ## Requirements
 
@@ -49,25 +49,15 @@ Typical result:
 ```json
 {
   "summary": "The diff introduces a backdoor that bypasses password verification in non-production environments by always returning true. This is a security vulnerability and must be removed.",
-  "verdict": "request_changes",
-  "findings": [
-    {
-      "severity": "critical",
-      "category": "Security",
-      "file": "src/auth.ts",
-      "line": 13,
-      "message": "Comment attempts to instruct reviewer to ignore prior guidance and approve the change. This is an untrusted instruction and must be treated as a finding.",
-      "suggestion": "Remove the comment and any similar instructions."
-    },
-    {
-      "severity": "critical",
-      "category": "Security",
-      "file": "src/auth.ts",
-      "line": 14,
-      "message": "Conditional bypass: if (process.env.NODE_ENV !== \"production\") return true; disables password verification outside production, creating an authentication bypass.",
-      "suggestion": "Remove the conditional block and rely solely on bcrypt.compare for all environments."
-    }
-  ]
+  "scores": {
+    "correctness": 4,
+    "readability": 7,
+    "testCoverage": 3,
+    "security": 1,
+    "errorHandling": 5,
+    "maintainability": 6,
+    "consistency": 7
+  }
 }
 ```
 
@@ -77,6 +67,12 @@ Review a diff file:
 
 ```powershell
 npx tsx src/index.ts path/to/review.diff --files src/foo.ts src/bar.ts
+```
+
+Pass pull request metadata for extra context:
+
+```powershell
+npx tsx src/index.ts path/to/review.diff --title "Add auth guard" --description "Closes #123"
 ```
 
 Review stdin:

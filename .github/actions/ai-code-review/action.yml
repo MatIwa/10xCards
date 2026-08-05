@@ -10,8 +10,8 @@ inputs:
     description: Pull request description/body
     required: false
     default: ""
-  diff:
-    description: Unified diff content
+  diff-path:
+    description: Path to a file containing the unified diff content
     required: true
   openrouter-api-key:
     description: OpenRouter API key
@@ -21,27 +21,19 @@ outputs:
   passed:
     description: "true when all scores are >= 7, else false"
     value: ${{ steps.render.outputs.passed }}
-  comment-body:
-    description: Markdown comment body with marker, score table, and summary
-    value: ${{ steps.render.outputs.comment-body }}
+  comment-body-path:
+    description: Path to a file containing the markdown comment body with marker, score table, and summary
+    value: ${{ steps.render.outputs.comment-body-path }}
 
 runs:
   using: composite
   steps:
-    - name: Ensure Node.js 22 is available
-      shell: bash
-      run: |
-        set -euo pipefail
-        if ! command -v node >/dev/null 2>&1; then
-          echo "Node.js is required but not found on PATH." >&2
-          exit 1
-        fi
-
-        NODE_MAJOR="$(node -p "process.versions.node.split('.')[0]")"
-        if [ "$NODE_MAJOR" -ne 22 ]; then
-          echo "Node.js 22 is required, found $(node -v)." >&2
-          exit 1
-        fi
+    - name: Set up Node.js 22
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: packages/code-reviewer/package-lock.json
 
     - name: Install reviewer dependencies
       shell: bash
@@ -57,17 +49,14 @@ runs:
         OPENROUTER_API_KEY: ${{ inputs.openrouter-api-key }}
         PR_TITLE: ${{ inputs.title }}
         PR_DESCRIPTION: ${{ inputs.description }}
-        DIFF_CONTENT: ${{ inputs.diff }}
+        DIFF_PATH: ${{ inputs.diff-path }}
       working-directory: packages/code-reviewer
       run: |
         set -euo pipefail
 
-        DIFF_FILE="${RUNNER_TEMP}/ai-cr.diff"
         RESULT_FILE="${RUNNER_TEMP}/ai-cr-review.json"
 
-        printf '%s' "$DIFF_CONTENT" > "$DIFF_FILE"
-
-        cat "$DIFF_FILE" | npm run start -- --title "$PR_TITLE" --description "$PR_DESCRIPTION" > "$RESULT_FILE"
+        cat "$DIFF_PATH" | npm run start -- --title "$PR_TITLE" --description "$PR_DESCRIPTION" > "$RESULT_FILE"
 
         echo "review-json-path=$RESULT_FILE" >> "$GITHUB_OUTPUT"
 
@@ -134,9 +123,7 @@ runs:
 
         const out = [];
         out.push(`passed=${passed ? "true" : "false"}`);
-        out.push("comment-body<<EOF");
-        out.push(fs.readFileSync(bodyPath, "utf8"));
-        out.push("EOF");
+        out.push(`comment-body-path=${bodyPath}`);
 
         fs.appendFileSync(outputPath, `${out.join("\n")}\n`, "utf8");
         NODE

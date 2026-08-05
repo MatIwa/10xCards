@@ -288,8 +288,8 @@ Add the PR-triggered `ai-code-review` workflow that guards triggers (including t
 
 #### Manual
 
-- [x] 1.5 `npm run start -- --title --description` prints `{summary, scores(7×1–10)}`, no `verdict`/`findings` — 19c4a54
-- [x] 1.6 In-diff injection attempt does not inflate scores (flagged in summary) — 19c4a54
+- [ ] 1.5 `npm run start -- --title --description` prints `{summary, scores(7×1–10)}`, no `verdict`/`findings`
+- [ ] 1.6 In-diff injection attempt does not inflate scores (flagged in summary)
 
 ### Phase 2: Composite action
 
@@ -300,8 +300,8 @@ Add the PR-triggered `ai-code-review` workflow that guards triggers (including t
 
 #### Manual
 
-- [x] 2.3 Action outputs `passed` + `comment-body` (marker, 7-score table, summary) for a sample diff — edb478d
-- [x] 2.4 One score < 7 → `passed=false`; all ≥ 7 → `passed=true` — edb478d
+- [ ] 2.3 Action outputs `passed` + `comment-body` (marker, 7-score table, summary) for a sample diff
+- [ ] 2.4 One score < 7 → `passed=false`; all ≥ 7 → `passed=true`
 
 ### Phase 3: Workflow + GitHub automation
 
@@ -312,9 +312,9 @@ Add the PR-triggered `ai-code-review` workflow that guards triggers (including t
 
 #### Manual
 
-- [x] 3.3 Test PR: exactly one comment (7-score table + summary) and correct pass/fail label — 1e8393d
-- [x] 3.4 New commit: comment updates in place, labels re-toggle — 1e8393d
-- [x] 3.5 Adding `ai-cr:review` re-runs the review — 1e8393d
-- [x] 3.6 Adding an unrelated label does NOT re-run the workflow — 1e8393d
-- [x] 3.7 Fork / secret-absent PR skips green (no red failure) — 1e8393d
-- [x] 3.8 `ai-code-review` check is NOT a required branch-protection context — 1e8393d
+- [ ] 3.3 Test PR: exactly one comment (7-score table + summary) and correct pass/fail label
+- [ ] 3.4 New commit: comment updates in place, labels re-toggle
+- [ ] 3.5 Adding `ai-cr:review` re-runs the review
+- [ ] 3.6 Adding an unrelated label does NOT re-run the workflow
+- [ ] 3.7 Fork / secret-absent PR skips green (no red failure)
+- [ ] 3.8 `ai-code-review` check is NOT a required branch-protection context

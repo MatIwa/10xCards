@@ -23,11 +23,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
       - name: Check OpenRouter key availability
         id: key
         shell: bash
@@ -58,11 +53,7 @@ jobs:
           git fetch origin "${{ github.base_ref }}" --depth=1
           git diff "origin/${{ github.base_ref }}...HEAD" > "$RUNNER_TEMP/ai-cr.diff"
 
-          {
-            echo "diff<<EOF"
-            cat "$RUNNER_TEMP/ai-cr.diff"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
+          echo "diff-path=$RUNNER_TEMP/ai-cr.diff" >> "$GITHUB_OUTPUT"
 
       - name: Run AI code review
         if: steps.key.outputs.has-key == 'true'
@@ -71,19 +62,50 @@ jobs:
         with:
           title: ${{ github.event.pull_request.title }}
           description: ${{ github.event.pull_request.body || '' }}
-          diff: ${{ steps.diff.outputs.diff }}
+          diff-path: ${{ steps.diff.outputs.diff-path }}
           openrouter-api-key: ${{ secrets.OPENROUTER_API_KEY }}
+
+      - name: Ensure AI review labels exist
+        if: steps.key.outputs.has-key == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = [
+              { name: "ai-cr:passed", color: "0e8a16", description: "AI code review passed (all criteria >= 7)" },
+              { name: "ai-cr:failed", color: "d73a4a", description: "AI code review failed (a criterion < 7)" },
+              { name: "ai-cr:review", color: "ededed", description: "Re-run the AI code review on demand" },
+            ];
+
+            for (const label of labels) {
+              try {
+                await github.rest.issues.getLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                });
+              } catch (error) {
+                if (error.status !== 404) {
+                  throw error;
+                }
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ...label,
+                });
+              }
+            }
 
       - name: Upsert AI code review comment
         if: steps.key.outputs.has-key == 'true'
         uses: actions/github-script@v7
         env:
-          COMMENT_BODY: ${{ steps.review.outputs.comment-body }}
+          COMMENT_BODY_PATH: ${{ steps.review.outputs.comment-body-path }}
         with:
           script: |
+            const fs = require("node:fs");
             const marker = "<!-- ai-cr:summary -->";
             const issueNumber = context.issue.number;
-            const body = process.env.COMMENT_BODY;
+            const body = fs.readFileSync(process.env.COMMENT_BODY_PATH, "utf8");
 
             if (!body || !body.includes(marker)) {
               throw new Error("Comment body missing marker or empty.");
