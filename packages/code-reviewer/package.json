@@ -11,6 +11,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsx src/index.ts",
+    "demo:unsafe": "tsx src/index.ts ./examples/unsafe-auth-bypass.diff --files src/auth.ts",
     "start": "tsx src/index.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
