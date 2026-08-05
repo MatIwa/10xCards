@@ -32,7 +32,7 @@ Each score is an integer from 1 to 10.
 
 - Node 22+
 - `OPENROUTER_API_KEY` in `.env` or your shell environment
-- Optional: `OPENROUTER_MODEL` in `.env` (defaults to `openai/gpt-5`)
+- Optional: `OPENROUTER_MODEL` in `.env` (defaults to `openrouter/free`)
 
 ## Demo
 

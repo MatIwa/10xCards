@@ -9,7 +9,7 @@ try {
 
 export const envSchema = z.object({
   OPENROUTER_API_KEY: z.string().min(1, "OPENROUTER_API_KEY is required"),
-  OPENROUTER_MODEL: z.string().default("openai/gpt-5"),
+  OPENROUTER_MODEL: z.string().default("openrouter/free"),
 });
 
 export type AppEnv = z.infer<typeof envSchema>;
